@@ -62,7 +62,7 @@ export default function AboutPage() {
               { icon: 'monitor', value: 'Mobile', label: 'Responsif' },
             ].map(item => (
               <div key={item.label} className="rounded-lg bg-slate-50 border border-slate-200 p-4">
-                <Icon name={item.icon} className="w-5 h-5 text-teal-700 mb-3" />
+                <Icon name={item.icon} className="w-5 h-5 text-amber-600 mb-3" />
                 <p className="text-2xl font-extrabold text-ink">{item.value}</p>
                 <p className="text-sm text-slate-500 mt-1">{item.label}</p>
               </div>
@@ -75,9 +75,9 @@ export default function AboutPage() {
         {highlights.map(item => (
           <div
             key={item.title}
-            className="bg-white border border-slate-200 rounded-lg p-5 shadow-book hover:border-teal-200 transition-colors duration-200"
+            className="bg-white border border-slate-200 rounded-lg p-5 shadow-book hover:border-amber-200 transition-colors duration-200"
           >
-            <span className="w-9 h-9 rounded-lg bg-teal-50 text-teal-700 flex items-center justify-center mb-4">
+            <span className="w-9 h-9 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center mb-4">
               <Icon name={item.icon} className="w-4 h-4" />
             </span>
             <h2 className="font-semibold text-lg text-ink mb-2">{item.title}</h2>
@@ -93,7 +93,7 @@ export default function AboutPage() {
           <div className="space-y-4">
             {steps.map((step, index) => (
               <div key={step.text} className="flex gap-3">
-                <span className="mt-0.5 w-8 h-8 rounded-full bg-teal-50 text-teal-700 flex items-center justify-center flex-shrink-0">
+                <span className="mt-0.5 w-8 h-8 rounded-full bg-amber-50 text-amber-600 flex items-center justify-center flex-shrink-0">
                   <Icon name={step.icon} className="w-4 h-4" />
                 </span>
                 <p className="text-slate-600 leading-relaxed">
@@ -116,7 +116,7 @@ export default function AboutPage() {
             {dataSources.map(source => (
               <span
                 key={source.label}
-                className="inline-flex items-center gap-2 rounded-full border border-teal-100 bg-teal-50 px-3 py-1.5 text-sm font-semibold text-teal-700"
+                className="inline-flex items-center gap-2 rounded-full border border-amber-100 bg-amber-50 px-3 py-1.5 text-sm font-semibold text-amber-600"
               >
                 <Icon name={source.icon} className="w-3.5 h-3.5" />
                 {source.label}

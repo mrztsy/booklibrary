@@ -23,7 +23,7 @@ export default function Footer() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
           <div>
             <div className="flex items-center gap-2 mb-3">
-              <div className="w-8 h-8 bg-teal-600 rounded-lg flex items-center justify-center">
+              <div className="w-8 h-8 bg-ink-800 rounded-lg flex items-center justify-center">
                 <Icon name="bookOpen" className="w-4 h-4 text-white" strokeWidth={2} />
               </div>
               <span className="font-bold text-lg text-ink">Folio</span>
@@ -38,7 +38,7 @@ export default function Footer() {
             <ul className="space-y-2 text-sm">
               {navItems.map(item => (
                 <li key={item.label}>
-                  <a href="#" className="inline-flex items-center gap-2 hover:text-teal-700 transition-colors duration-200">
+                  <a href="#" className="inline-flex items-center gap-2 hover:text-amber-600 transition-colors duration-200">
                     <Icon name={item.icon} className="w-3.5 h-3.5" />
                     {item.label}
                   </a>
@@ -52,7 +52,7 @@ export default function Footer() {
             <ul className="space-y-2 text-sm">
               {genres.map(item => (
                 <li key={item.label}>
-                  <a href="#" className="inline-flex items-center gap-2 hover:text-teal-700 transition-colors duration-200">
+                  <a href="#" className="inline-flex items-center gap-2 hover:text-amber-600 transition-colors duration-200">
                     <Icon name={item.icon} className="w-3.5 h-3.5" />
                     {item.label}
                   </a>
@@ -70,9 +70,9 @@ export default function Footer() {
               <input
                 type="email"
                 placeholder="Email kamu..."
-                className="flex-1 bg-white border border-slate-200 text-ink text-sm px-3 py-2 rounded-lg outline-none focus:border-teal-500 focus:ring-4 focus:ring-teal-100 placeholder:text-slate-400 transition-colors duration-200"
+                className="flex-1 bg-white border border-slate-200 text-ink text-sm px-3 py-2 rounded-lg outline-none focus:border-amber-500 focus:ring-4 focus:ring-amber-100 placeholder:text-slate-400 transition-colors duration-200"
               />
-              <button className="bg-teal-600 hover:bg-teal-700 text-white px-3 py-2 rounded-lg transition-colors duration-200 text-sm">
+              <button className="bg-amber-500 hover:bg-amber-600 text-white px-3 py-2 rounded-lg transition-colors duration-200 text-sm">
                 <Icon name="pen" className="w-4 h-4" />
               </button>
             </div>
@@ -85,7 +85,7 @@ export default function Footer() {
           </p>
           <div className="flex gap-6 text-xs">
             {['Privasi', 'Syarat', 'Kontak'].map(item => (
-              <a key={item} href="#" className="text-slate-400 hover:text-teal-700 transition-colors duration-200">
+              <a key={item} href="#" className="text-slate-400 hover:text-amber-600 transition-colors duration-200">
                 {item}
               </a>
             ))}

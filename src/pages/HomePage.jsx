@@ -18,7 +18,7 @@ const DEFAULT_FILTERS = {
 function StatBadge({ icon, label, value, dark = false }) {
   return (
     <div className="px-4 py-4 flex items-center gap-3">
-      <span className={`w-9 h-9 rounded-lg flex items-center justify-center ${dark ? 'bg-white/10 text-teal-200' : 'bg-teal-50 text-teal-700'}`}>
+      <span className={`w-9 h-9 rounded-lg flex items-center justify-center ${dark ? 'bg-white/10 text-amber-200' : 'bg-amber-50 text-amber-600'}`}>
         <Icon name={icon} className="w-4 h-4" />
       </span>
       <span>
@@ -90,17 +90,17 @@ export default function HomePage() {
           aria-hidden="true"
         />
         <div className="absolute inset-0 bg-gradient-to-r from-ink via-ink/85 to-ink/60" aria-hidden="true" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_72%_45%,rgba(20,184,166,0.20),transparent_34%)]" aria-hidden="true" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_72%_45%,rgba(245,158,11,0.22),transparent_34%)]" aria-hidden="true" />
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 lg:py-16">
           <div className="grid grid-cols-1 lg:grid-cols-[1.15fr_0.85fr] gap-10 items-center">
             <div>
-              <p className="section-label mb-3 text-teal-300">Buku Pilihan Minggu Ini</p>
+              <p className="section-label mb-3 text-amber-300">Buku Pilihan Minggu Ini</p>
               <h1 className="font-playfair font-extrabold text-4xl lg:text-6xl text-white leading-tight mb-4 max-w-2xl">
                 {heroBook.title}
               </h1>
               <p className="text-slate-200 text-lg mb-3">
-                oleh <span className="text-teal-200 font-semibold">{heroBook.author}</span>
+                oleh <span className="text-amber-200 font-semibold">{heroBook.author}</span>
                 <span className="mx-2 text-white/30">-</span>
                 <span>{heroBook.year}</span>
               </p>
@@ -121,7 +121,7 @@ export default function HomePage() {
                     key={i}
                     onClick={() => setHeroIndex(i)}
                     className={`h-1.5 rounded-full transition-all duration-300
-                      ${i === heroIndex ? 'w-8 bg-teal-300' : 'w-2 bg-white/15 hover:bg-white/30'}`}
+                      ${i === heroIndex ? 'w-8 bg-amber-300' : 'w-2 bg-white/15 hover:bg-white/30'}`}
                     aria-label={`Slide ${i + 1}`}
                   />
                 ))}
@@ -140,7 +140,7 @@ export default function HomePage() {
                 />
                 <div className="absolute -bottom-4 -right-4 bg-white/95 text-ink border border-white/30 px-3 py-1.5 rounded-lg shadow-book backdrop-blur">
                   <span className="font-bold text-lg flex items-center gap-2">
-                    <Icon name="star" className="w-4 h-4 text-teal-600" />
+                    <Icon name="star" className="w-4 h-4 text-amber-500" />
                     Rating {heroBook.rating}
                   </span>
                 </div>
@@ -196,7 +196,7 @@ export default function HomePage() {
                     key={mode}
                     onClick={() => setViewMode(mode)}
                     className={`p-2 rounded-md transition-all duration-200
-                      ${viewMode === mode ? 'bg-white shadow-sm text-teal-700' : 'text-slate-400 hover:text-ink'}`}
+                      ${viewMode === mode ? 'bg-white shadow-sm text-amber-600' : 'text-slate-400 hover:text-ink'}`}
                     aria-label={`Tampilan ${mode}`}
                   >
                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">

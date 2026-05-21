@@ -14,13 +14,13 @@ export default function SearchFilter({ filters, setFilters, genres, sortOptions,
         <div>
           <h2 className="font-semibold text-ink">Cari & Filter</h2>
           <p className="text-xs text-slate-500 mt-0.5">
-            Menampilkan <span className="font-semibold text-teal-700">{totalResults}</span> buku
+            Menampilkan <span className="font-semibold text-amber-600">{totalResults}</span> buku
           </p>
         </div>
         <button
           type="button"
           onClick={onReset}
-          className="text-xs font-semibold text-slate-400 hover:text-teal-700 transition-colors"
+          className="text-xs font-semibold text-slate-400 hover:text-amber-600 transition-colors"
         >
           Reset Filter
         </button>
@@ -101,7 +101,7 @@ export default function SearchFilter({ filters, setFilters, genres, sortOptions,
         <div>
           <label htmlFor="year-range" className="section-label block mb-1.5 text-[10px]">
             Tahun Terbit Minimum:{' '}
-            <span className="text-teal-700 font-semibold">{filters.yearMin}</span>
+            <span className="text-amber-600 font-semibold">{filters.yearMin}</span>
           </label>
           <input
             id="year-range"
@@ -112,7 +112,7 @@ export default function SearchFilter({ filters, setFilters, genres, sortOptions,
             value={filters.yearMin}
             onChange={e => handleChange('yearMin', Number(e.target.value))}
             className="w-full h-1.5 rounded-full appearance-none cursor-pointer
-                       bg-slate-200 accent-teal-600"
+                       bg-slate-200 accent-amber-500"
           />
           <div className="flex justify-between text-xs text-slate-400 mt-1">
             <span>1800</span><span>2024</span>
@@ -149,7 +149,7 @@ export default function SearchFilter({ filters, setFilters, genres, sortOptions,
                   type="checkbox"
                   checked={filters[key]}
                   onChange={e => handleChange(key, e.target.checked)}
-                  className="w-4 h-4 accent-teal-600 cursor-pointer"
+                  className="w-4 h-4 accent-amber-500 cursor-pointer"
                 />
                 <span className="text-sm text-slate-600 group-hover:text-ink transition-colors">
                   {label}

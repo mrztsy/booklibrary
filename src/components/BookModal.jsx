@@ -50,7 +50,7 @@ export default function BookModal({ book, onClose }) {
                 onError={() => setImgError(true)}
               />
             ) : (
-              <div className="w-full h-52 sm:h-full bg-gradient-to-br from-teal-700 to-cyan-600 flex items-center justify-center p-6">
+              <div className="w-full h-52 sm:h-full bg-gradient-to-br from-amber-600 to-amber-500 flex items-center justify-center p-6">
                 <p className="font-semibold text-white/80 text-center leading-relaxed">{book.title}</p>
               </div>
             )}
@@ -90,7 +90,7 @@ export default function BookModal({ book, onClose }) {
               <div className="flex flex-wrap gap-1.5 mb-5">
                 {book.tags.map(tag => (
                   <span key={tag}
-                    className="text-xs font-medium bg-teal-50 text-teal-700 px-2.5 py-1 rounded-full border border-teal-100">
+                    className="text-xs font-medium bg-amber-50 text-amber-600 px-2.5 py-1 rounded-full border border-amber-100">
                     {tag}
                   </span>
                 ))}

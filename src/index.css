@@ -15,10 +15,10 @@
 
 @layer components {
   .btn-primary {
-    @apply inline-flex items-center justify-center gap-2 bg-teal-600 text-white font-semibold
+    @apply inline-flex items-center justify-center gap-2 bg-amber-500 text-ink font-semibold
            px-5 py-2.5 rounded-lg cursor-pointer
            transition-all duration-200 ease-out
-           hover:bg-teal-700 hover:shadow-book-hover hover:-translate-y-0.5
+           hover:bg-amber-600 hover:text-white hover:shadow-book-hover hover:-translate-y-0.5
            active:translate-y-0 active:shadow-none;
   }
 
@@ -26,20 +26,20 @@
     @apply inline-flex items-center justify-center gap-2 border border-slate-200 bg-white text-ink font-semibold
            px-5 py-2.5 rounded-lg cursor-pointer
            transition-all duration-200 ease-out
-           hover:border-teal-200 hover:bg-teal-50 hover:text-teal-700;
+           hover:border-amber-200 hover:bg-amber-50 hover:text-amber-600;
   }
 
   .btn-ghost {
     @apply inline-flex items-center gap-2 text-ink
            px-4 py-2 rounded-lg cursor-pointer transition-all duration-200
-           hover:bg-slate-100 hover:text-teal-700;
+           hover:bg-slate-100 hover:text-amber-600;
   }
 
   .input-field {
     @apply w-full bg-white border border-slate-200 text-ink
            px-4 py-2.5 rounded-lg outline-none
            transition-all duration-200
-           focus:border-teal-500 focus:ring-4 focus:ring-teal-100
+           focus:border-amber-500 focus:ring-4 focus:ring-amber-100
            placeholder:text-slate-400;
   }
 
@@ -47,29 +47,29 @@
     @apply w-full bg-white border border-slate-200 text-ink
            px-4 py-2.5 rounded-lg outline-none cursor-pointer
            transition-all duration-200
-           focus:border-teal-500 focus:ring-4 focus:ring-teal-100
+           focus:border-amber-500 focus:ring-4 focus:ring-amber-100
            appearance-none;
   }
 
   .book-card {
     @apply bg-white rounded-lg overflow-hidden border border-slate-200 shadow-book
            transition-all duration-200 ease-out cursor-pointer
-           hover:border-teal-200 hover:shadow-book-hover hover:-translate-y-1;
+           hover:border-amber-200 hover:shadow-book-hover hover:-translate-y-1;
   }
 
   .section-label {
-    @apply text-xs font-semibold tracking-[0.14em] uppercase text-teal-700;
+    @apply text-xs font-semibold tracking-[0.14em] uppercase text-amber-600;
   }
 
   .divider {
-    @apply w-10 h-0.5 bg-teal-500 my-3;
+    @apply w-10 h-0.5 bg-amber-500 my-3;
   }
 }
 
 /* Custom scrollbar */
 ::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: #f1f5f9; }
-::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 3px; }
+::-webkit-scrollbar-track { background: #F8F5F0; }
+::-webkit-scrollbar-thumb { background: #475569; border-radius: 3px; }
 
 /* Modal backdrop */
 .modal-backdrop {
@@ -83,7 +83,7 @@
   100% { background-position: 200% 0; }
 }
 .skeleton {
-  background: linear-gradient(90deg, #e2e8f0 25%, #f8fafc 50%, #e2e8f0 75%);
+  background: linear-gradient(90deg, #e2e8f0 25%, #ffffff 50%, #e2e8f0 75%);
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
 }

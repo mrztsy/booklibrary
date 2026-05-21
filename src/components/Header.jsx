@@ -18,7 +18,7 @@ export default function Header({ activePage, setActivePage }) {
             onClick={() => { setActivePage('home'); setMenuOpen(false) }}
             className="flex items-center gap-3 rounded-lg text-left"
           >
-            <div className="w-10 h-10 bg-teal-600 rounded-lg flex items-center justify-center text-white shadow-book">
+            <div className="w-10 h-10 bg-ink-800 rounded-lg flex items-center justify-center text-white shadow-book">
               <Icon name="bookOpen" className="w-5 h-5" />
             </div>
             <div>
@@ -36,7 +36,7 @@ export default function Header({ activePage, setActivePage }) {
                 onClick={() => setActivePage(link.id)}
                 className={`inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold rounded-md transition-all duration-200
                   ${activePage === link.id
-                    ? 'bg-white text-teal-700 shadow-sm'
+                    ? 'bg-white text-amber-600 shadow-sm'
                     : 'text-slate-500 hover:text-ink'
                   }`}
               >
@@ -51,7 +51,7 @@ export default function Header({ activePage, setActivePage }) {
               onClick={() => setActivePage('library')}
               className="hidden sm:flex items-center gap-2 rounded-lg border border-slate-200 bg-white
                          px-3 py-2 text-sm font-semibold text-slate-600
-                         hover:border-teal-200 hover:bg-teal-50 hover:text-teal-700 transition-all duration-200"
+                         hover:border-amber-200 hover:bg-amber-50 hover:text-amber-600 transition-all duration-200"
             >
               <Icon name="search" className="w-3.5 h-3.5" strokeWidth={2} />
               <span>Cari Buku</span>
@@ -84,7 +84,7 @@ export default function Header({ activePage, setActivePage }) {
                 onClick={() => { setActivePage(link.id); setMenuOpen(false) }}
                 className={`w-full text-left px-4 py-3 text-sm font-semibold rounded-lg transition-colors flex items-center gap-3
                   ${activePage === link.id
-                    ? 'text-teal-700 bg-teal-50'
+                    ? 'text-amber-600 bg-amber-50'
                     : 'text-slate-600 hover:text-ink hover:bg-slate-100'
                   }`}
               >
