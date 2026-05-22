@@ -1,3 +1,13 @@
+import Header from "./components/Header";
+import Footer from "./components/Footer";
+import HomePage from "./pages/HomePage";
+import LibraryPage from "./pages/LibraryPage";
+import AboutPage from "./pages/AboutPage";
+
+export default function App() {
+  return (
+    <div className="min-h-screen flex flex-col bg-parchment-50 font-crimson">
+      <Header />
 import { useEffect, useState } from "react";
 import axios from "axios";
 import BookCard from "./BookCard";
@@ -23,10 +33,10 @@ function App() {
     }
   }
 
-  useEffect(() => {
-    fetchData();
-  }, []);
+      <main id="main-content" className="flex-1" role="main">
+        <HomePage />
 
+        <LibraryPage />
   if (isLoading)
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -38,13 +48,10 @@ function App() {
       </div>
     );
 
-  if (error)
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p className="text-red-500">{error}</p>
-      </div>
-    );
+        <AboutPage />
+      </main>
 
+      <Footer />
   return (
     <div className="min-h-screen bg-gray-50 p-8">
       <h1 className="text-2xl font-semibold text-gray-900 mb-6">Books</h1>
@@ -57,5 +64,3 @@ function App() {
     </div>
   );
 }
-
-export default App;

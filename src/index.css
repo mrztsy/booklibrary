@@ -1,1 +1,65 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply font-crimson bg-parchment-50 text-ink antialiased;
+    font-size: 1rem;
+  }
+  h1, h2, h3, h4, h5 {
+    @apply font-playfair tracking-tight;
+  }
+}
+
+@layer components {
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2
+           bg-amber-500 text-white font-semibold font-crimson
+           px-5 py-2.5 rounded-lg cursor-pointer
+           transition-all duration-200 ease-out
+           hover:bg-amber-600 hover:shadow-book-hover hover:-translate-y-0.5
+           active:translate-y-0 active:shadow-none
+           focus:outline-none focus:ring-2 focus:ring-amber-400 focus:ring-offset-2;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2
+           border border-slate-200 bg-white text-ink font-semibold font-crimson
+           px-5 py-2.5 rounded-lg cursor-pointer
+           transition-all duration-200 ease-out
+           hover:border-amber-300 hover:bg-amber-50 hover:text-amber-700
+           focus:outline-none focus:ring-2 focus:ring-amber-400 focus:ring-offset-2;
+  }
+
+  .input-field {
+    @apply w-full bg-white border border-slate-200 text-ink font-crimson
+           px-4 py-2.5 rounded-lg outline-none
+           transition-all duration-200
+           focus:border-amber-500 focus:ring-4 focus:ring-amber-100
+           placeholder:text-slate-400;
+  }
+
+  .select-field {
+    @apply w-full bg-white border border-slate-200 text-ink font-crimson
+           px-4 py-2.5 rounded-lg outline-none cursor-pointer appearance-none
+           transition-all duration-200
+           focus:border-amber-500 focus:ring-4 focus:ring-amber-100;
+  }
+
+  .book-card {
+    @apply bg-white rounded-lg overflow-hidden border border-slate-200
+           shadow-book cursor-pointer
+           transition-all duration-300 ease-out
+           hover:border-amber-200 hover:shadow-book-hover hover:-translate-y-1;
+  }
+
+  .section-label {
+    @apply text-xs font-semibold font-crimson tracking-[0.14em] uppercase text-amber-600;
+  }
+}
+
+::-webkit-scrollbar        { width: 6px; }
+::-webkit-scrollbar-track  { background: #faf3e4; }
+::-webkit-scrollbar-thumb  { background: #f59e0b; border-radius: 3px; }
