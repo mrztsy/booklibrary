@@ -1,5 +1,6 @@
+import { useState } from "react";
 import BookCard from "../components/BookCard";
-import LoadingSpinner from "../components/LoadingSpinner";
+import BookModal from "../components/BookModal";
 import Icon from "../components/Icon";
 
 const TOPICS = [
@@ -15,6 +16,36 @@ const TOPICS = [
 
 // ✅ Terima prop books dari App
 export default function LibraryPage({ books = [] }) {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedTopic, setSelectedTopic] = useState("fiction");
+  const [selectedBook, setSelectedBook] = useState(null);
+
+  const selectedTopicLabel =
+    TOPICS.find((topic) => topic.value === selectedTopic)?.label || "Fiction";
+
+  const filteredBooks = books.filter((book) => {
+    const keyword = searchTerm.trim().toLowerCase();
+    const searchableText = [
+      book.title,
+      book.author,
+      book.genre,
+      ...(book.tags || []),
+    ]
+      .join(" ")
+      .toLowerCase();
+
+    const matchesSearch = keyword === "" || searchableText.includes(keyword);
+    const matchesTopic =
+      selectedTopic === "fiction" ||
+      searchableText.includes(selectedTopic.toLowerCase());
+
+    return matchesSearch && matchesTopic;
+  });
+
+  const handleSearchSubmit = (event) => {
+    event.preventDefault();
+  };
+
   return (
     <>
       <section
@@ -63,6 +94,7 @@ export default function LibraryPage({ books = [] }) {
             action="#"
             method="get"
             noValidate
+            onSubmit={handleSearchSubmit}
             className="flex flex-col sm:flex-row gap-4"
           >
             <div className="flex-1 relative">
@@ -89,6 +121,8 @@ export default function LibraryPage({ books = [] }) {
                 name="search"
                 placeholder="Cari judul atau penulis..."
                 autoComplete="off"
+                value={searchTerm}
+                onChange={(event) => setSearchTerm(event.target.value)}
                 className="input-field pl-9"
               />
             </div>
@@ -100,7 +134,8 @@ export default function LibraryPage({ books = [] }) {
                     type="radio"
                     name="topic"
                     value={t.value}
-                    defaultChecked={t.value === "fiction"}
+                    checked={selectedTopic === t.value}
+                    onChange={(event) => setSelectedTopic(event.target.value)}
                     className="sr-only peer"
                   />
                   <span
@@ -135,7 +170,7 @@ export default function LibraryPage({ books = [] }) {
               id="results-heading"
               className="font-playfair font-semibold text-xl text-ink"
             >
-              Topik: <span className="text-amber-700">Fiction</span>
+              Topik: <span className="text-amber-700">{selectedTopicLabel}</span>
               <span className="font-crimson font-normal text-base text-slate-400 ml-2">
                 · Halaman 1
               </span>
@@ -147,19 +182,35 @@ export default function LibraryPage({ books = [] }) {
           >
             <Icon name="collection" className="w-4 h-4 text-amber-500" />
             {/* ✅ pakai books.length bukan PLACEHOLDER_BOOKS */}
-            {books.length} buku dimuat
+            {filteredBooks.length} dari {books.length} buku
           </div>
         </div>
 
         {/* ✅ render dari prop books, bukan PLACEHOLDER_BOOKS */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5 mb-10">
-          {books.map((book, i) => (
-            <BookCard key={book.key || i} book={book} index={i} />
-          ))}
-        </div>
+        {filteredBooks.length > 0 ? (
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5 mb-10">
+            {filteredBooks.map((book, i) => (
+              <BookCard
+                key={book.key || book.id || i}
+                book={book}
+                index={i}
+                onSelect={setSelectedBook}
+              />
+            ))}
+          </div>
+        ) : (
+          <div className="rounded-lg border border-slate-200 bg-white p-8 text-center mb-10">
+            <p className="font-playfair text-lg font-semibold text-ink">
+              Buku tidak ditemukan
+            </p>
+            <p className="font-crimson text-sm text-slate-500 mt-1">
+              Coba ubah kata kunci atau pilih topik lain.
+            </p>
+          </div>
+        )}
 
         {/* Statistik rating — hanya muncul jika books punya field rating */}
-        {books.some((b) => b.rating) && (
+        {filteredBooks.some((b) => b.rating) && (
           <section
             aria-labelledby="stats-heading"
             className="bg-parchment-100 border border-parchment-200 rounded-lg p-6 mb-8"
@@ -172,7 +223,7 @@ export default function LibraryPage({ books = [] }) {
               Top 5 Rating Tertinggi
             </h3>
             <div className="space-y-3">
-              {[...books]
+              {[...filteredBooks]
                 .sort((a, b) => b.rating - a.rating)
                 .slice(0, 5)
                 .map((book, i) => (
@@ -214,6 +265,12 @@ export default function LibraryPage({ books = [] }) {
           </button>
         </nav>
       </section>
+
+      <BookModal
+        key={selectedBook?.key || selectedBook?.id || "empty-book-modal"}
+        book={selectedBook}
+        onClose={() => setSelectedBook(null)}
+      />
     </>
   );
 }
