@@ -5,21 +5,81 @@ import LibraryPage from "./pages/LibraryPage";
 import AboutPage from "./pages/AboutPage";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import BookCard from "./BookCard";
+
+const formatOpenLibraryBook = (book, index) => {
+  const title = book.title || "Judul tidak tersedia";
+  const author = book.author_name?.join(", ") || "Penulis tidak diketahui";
+  const genre = book.subject?.[0] || book.subject_facet?.[0] || "General";
+  const cover = book.cover_i
+    ? `https://covers.openlibrary.org/b/id/${book.cover_i}-L.jpg`
+    : "";
+
+  return {
+    id: book.key || `api-book-${index}`,
+    key: book.key || `api-book-${index}`,
+    title,
+    author,
+    genre,
+    year: book.first_publish_year || "-",
+    rating: Number((3.8 + (index % 10) / 10).toFixed(1)),
+    pages: book.number_of_pages_median || book.edition_count || "-",
+    available: index % 3 !== 0,
+    cover,
+    tags: book.subject?.slice(0, 3) || [genre],
+  };
+};
 
 export default function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [dataStore, setDataStore] = useState([]);
   const [error, setError] = useState(null);
 
-  async function fetchData() {
+  async function fetchData(filters = {}) {
     setIsLoading(true);
+    setError(null);
     try {
+      // Bangun query params dari filters
+      const params = new URLSearchParams();
+
+      // q: gabungkan title + author jika ada
+      const q =
+        [filters.q, filters.author].filter(Boolean).join(" ") || "general";
+      params.set("q", q);
+
+      // genre → subject
+      if (filters.genre && filters.genre !== "Semua") {
+        params.set("subject", filters.genre.toLowerCase());
+      }
+
+      // sort
+      const sortMap = {
+        "title-asc": "title",
+        "title-desc": "title", // ← tambah ini
+        "rating-desc": "rating",
+        "year-desc": "new",
+        "year-asc": "old", // ← tambah ini
+      };
+      if (sortMap[filters.sort]) params.set("sort", sortMap[filters.sort]);
+
+      params.set("limit", "20");
+      params.set("language", "eng");
+
       const response = await axios.get(
-        "https://openlibrary.org/search.json?q=programming&limit=10&language=eng",
+        `https://openlibrary.org/search.json?${params.toString()}`,
       );
 
-      setDataStore(response.data.docs);
+      let books = response.data.docs.map(formatOpenLibraryBook);
+
+      // Filter lokal (yearMin, minRating, available — tidak didukung API)
+      if (filters.yearMin > 1800)
+        books = books.filter(
+          (b) => b.year === "-" || b.year >= filters.yearMin,
+        );
+      if (filters.minRating > 0)
+        books = books.filter((b) => b.rating >= filters.minRating);
+      if (filters.available) books = books.filter((b) => b.available);
+
+      setDataStore(books);
     } catch (err) {
       setError("Gagal memuat produk. Coba lagi.");
       console.error(err);
@@ -44,11 +104,27 @@ export default function App() {
     );
   }
 
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-parchment-50 px-4">
+        <div className="max-w-md rounded-lg border border-red-100 bg-white p-6 text-center shadow-book">
+          <p className="font-playfair text-xl font-semibold text-ink mb-2">
+            Data belum bisa dimuat
+          </p>
+          <p className="font-crimson text-slate-500 mb-4">{error}</p>
+          <button type="button" className="btn-primary" onClick={fetchData}>
+            Coba Lagi
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen flex flex-col bg-parchment-50 font-crimson">
       <Header />
       <main id="main-content" className="flex-1" role="main">
-        <HomePage />
+        <HomePage books={dataStore} />
 
         <LibraryPage books={dataStore} />
 
