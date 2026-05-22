@@ -1,5 +1,4 @@
 export default function BookCard({ book }) {
-  console.log("Book", book);
   const coverId = book.cover_i;
   const coverUrl = coverId
     ? `https://covers.openlibrary.org/b/id/${coverId}-M.jpg`

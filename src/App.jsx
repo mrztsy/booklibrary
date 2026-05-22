@@ -50,20 +50,10 @@ export default function App() {
       <main id="main-content" className="flex-1" role="main">
         <HomePage />
 
-        <LibraryPage />
+        <LibraryPage books={dataStore} />
 
         <AboutPage />
       </main>
-
-      <div className="min-h-screen bg-gray-50 p-8">
-        <h1 className="text-2xl font-semibold text-gray-900 mb-6">Books</h1>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {dataStore.map((book, index) => (
-            <BookCard key={book.key || index} book={book} />
-          ))}
-        </div>
-      </div>
 
       <Footer />
     </div>
