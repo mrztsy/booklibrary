@@ -3,14 +3,15 @@ import Footer from "./components/Footer";
 import HomePage from "./pages/HomePage";
 import LibraryPage from "./pages/LibraryPage";
 import AboutPage from "./pages/AboutPage";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import BookCard from "./BookCard";
 
 export default function App() {
   return (
     <div className="min-h-screen flex flex-col bg-parchment-50 font-crimson">
       <Header />
-import { useEffect, useState } from "react";
-import axios from "axios";
-import BookCard from "./BookCard";
+
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);
