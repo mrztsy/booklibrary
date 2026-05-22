@@ -61,7 +61,7 @@ export default function App() {
       };
       if (sortMap[filters.sort]) params.set("sort", sortMap[filters.sort]);
 
-      params.set("limit", "20");
+      params.set("limit", "30");
       params.set("language", "eng");
 
       const response = await axios.get(
@@ -124,7 +124,7 @@ export default function App() {
     <div className="min-h-screen flex flex-col bg-parchment-50 font-crimson">
       <Header />
       <main id="main-content" className="flex-1" role="main">
-        <HomePage books={dataStore} />
+        <HomePage books={dataStore} error={error} fetchData={fetchData} />
 
         <LibraryPage books={dataStore} />
 

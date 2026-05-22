@@ -4,7 +4,7 @@ import BookModal from "../components/BookModal";
 import SearchFilter from "../components/SearchFilter";
 import Icon from "../components/Icon";
 
-export default function HomePage({ books = [] }) {
+export default function HomePage({ books = [], error, fetchData }) {
   const [filters, setFilters] = useState(null);
 
   const filtered = filters
@@ -208,43 +208,63 @@ export default function HomePage({ books = [] }) {
           </aside>
 
           {/* Konten utama: daftar buku */}
-          <div className="flex-1 min-w-0">
-            {/* Header section */}
-            <div className="flex items-center justify-between mb-6 flex-wrap gap-3">
-              <div>
-                <p className="section-label">Koleksi Buku</p>
-                <h2
-                  id="koleksi-heading"
-                  className="font-playfair font-bold text-2xl text-ink"
-                >
-                  Semua Buku
-                </h2>
+          {filtered.length > 0 ? (
+            <div className="flex-1 min-w-0">
+              {/* Header section */}
+              <div className="flex items-center justify-between mb-6 flex-wrap gap-3">
+                <div>
+                  <p className="section-label">Koleksi Buku</p>
+                  <h2
+                    id="koleksi-heading"
+                    className="font-playfair font-bold text-2xl text-ink"
+                  >
+                    Semua Buku
+                  </h2>
+                </div>
+                <p className="font-crimson text-sm text-slate-500">
+                  Menampilkan{" "}
+                  <span className="font-semibold text-amber-600">
+                    {filtered.length} {/* ← bukan collectionBooks.length */}
+                  </span>
+                  buku
+                </p>
               </div>
-              <p className="font-crimson text-sm text-slate-500">
-                Menampilkan{" "}
-                <span className="font-semibold text-amber-600">
-                  {filtered.length} {/* ← bukan collectionBooks.length */}
-                </span>
-                buku
-              </p>
-            </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
-              {filtered.map(
-                (
-                  book,
-                  i, // ← ganti ini
-                ) => (
-                  <BookCard
-                    key={book.key || book.id || i}
-                    book={book}
-                    index={i}
-                    onSelect={setSelectedBook}
-                  />
-                ),
-              )}
+              <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+                {filtered.map(
+                  (
+                    book,
+                    i, // ← ganti ini
+                  ) => (
+                    <BookCard
+                      key={book.key || book.id || i}
+                      book={book}
+                      index={i}
+                      onSelect={setSelectedBook}
+                    />
+                  ),
+                )}
+              </div>
             </div>
-          </div>
+          ) : (
+            <>
+              <div className="min-h-fit max-w-screen w-full flex items-start justify-center bg-parchment-50 px-4">
+                <div className="max-w-screen rounded-lg border border-red-100 p-6 text-center shadow-book">
+                  <p className="font-playfair text-xl font-semibold text-ink mb-2">
+                    Maaf, Data buku tidak tersedia
+                  </p>
+                  <p className="font-crimson text-slate-500 mb-4">{error}</p>
+                  <button
+                    type="button"
+                    className="btn-primary"
+                    onClick={fetchData}
+                  >
+                    Coba Lagi
+                  </button>
+                </div>
+              </div>
+            </>
+          )}
         </div>
       </section>
 

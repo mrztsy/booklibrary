@@ -21,8 +21,6 @@ export default function LibraryPage({ books = [] }) {
   const [selectedTopic, setSelectedTopic] = useState("fiction");
   const [selectedBook, setSelectedBook] = useState(null);
 
-  const selectedTopicLabel =
-    TOPICS.find((topic) => topic.value === selectedTopic)?.label || "Fiction";
   const activeKeyword = debouncedSearchTerm.trim().toLowerCase();
   const hasSearch = activeKeyword !== "";
 
@@ -171,8 +169,6 @@ export default function LibraryPage({ books = [] }) {
               id="results-heading"
               className="font-playfair font-semibold text-xl text-ink"
             >
-              Topik:{" "}
-              <span className="text-amber-700">{selectedTopicLabel}</span>
               <span className="font-crimson font-normal text-base text-slate-400 ml-2">
                 · Halaman 1
               </span>
