@@ -13,7 +13,7 @@ export default function BookCard({ book, index = 0, onSelect }) {
   console.log(book);
 
   const title = book.title || "Judul tidak tersedia";
-  const authors = book.author_name?.join(", ") || "Penulis tidak diketahui";
+  const authors = book.author || "Penulis tidak diketahui";
   const year = book.first_publish_year || "—";
   const subjects = book.subject?.slice(0, 3).join(", ") || "—";
 
