@@ -1,14 +1,20 @@
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import HomePage from "./pages/HomePage";
+import LibraryPage from "./pages/LibraryPage";
+import AboutPage from "./pages/AboutPage";
 
 export default function App() {
   return (
-    <div className="flex min-h-screen flex-col bg-slate-50 text-slate-900">
+    <div className="min-h-screen flex flex-col bg-parchment-50 font-crimson">
       <Header />
 
-      <main className="flex-1">
+      <main id="main-content" className="flex-1" role="main">
         <HomePage />
+
+        <LibraryPage />
+
+        <AboutPage />
       </main>
 
       <Footer />

@@ -1,56 +1,65 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 @layer base {
-  html {
-    @apply scroll-smooth;
-  }
-
   body {
-    @apply bg-slate-50 text-slate-900 antialiased;
+    @apply font-crimson bg-parchment-50 text-ink antialiased;
     font-size: 1rem;
   }
-
-  h1,
-  h2,
-  h3,
-  h4 {
-    @apply tracking-tight;
-  }
-
-  button,
-  input,
-  select,
-  textarea {
-    font: inherit;
+  h1, h2, h3, h4, h5 {
+    @apply font-playfair tracking-tight;
   }
 }
 
 @layer components {
+
   .btn-primary {
-    @apply inline-flex items-center justify-center rounded-lg bg-amber-500 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition duration-200 hover:-translate-y-0.5 hover:bg-amber-600 hover:shadow-md;
+    @apply inline-flex items-center justify-center gap-2
+           bg-amber-500 text-white font-semibold font-crimson
+           px-5 py-2.5 rounded-lg cursor-pointer
+           transition-all duration-200 ease-out
+           hover:bg-amber-600 hover:shadow-book-hover hover:-translate-y-0.5
+           active:translate-y-0 active:shadow-none
+           focus:outline-none focus:ring-2 focus:ring-amber-400 focus:ring-offset-2;
   }
 
   .btn-secondary {
-    @apply inline-flex items-center justify-center rounded-lg border border-slate-200 bg-white px-5 py-2.5 text-sm font-semibold text-slate-600 transition duration-200 hover:border-amber-300 hover:bg-amber-50 hover:text-amber-600;
+    @apply inline-flex items-center justify-center gap-2
+           border border-slate-200 bg-white text-ink font-semibold font-crimson
+           px-5 py-2.5 rounded-lg cursor-pointer
+           transition-all duration-200 ease-out
+           hover:border-amber-300 hover:bg-amber-50 hover:text-amber-700
+           focus:outline-none focus:ring-2 focus:ring-amber-400 focus:ring-offset-2;
   }
 
   .input-field {
-    @apply w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition duration-200 placeholder:text-slate-400 focus:border-amber-500 focus:ring-4 focus:ring-amber-100;
+    @apply w-full bg-white border border-slate-200 text-ink font-crimson
+           px-4 py-2.5 rounded-lg outline-none
+           transition-all duration-200
+           focus:border-amber-500 focus:ring-4 focus:ring-amber-100
+           placeholder:text-slate-400;
   }
 
   .select-field {
-    @apply w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition duration-200 focus:border-amber-500 focus:ring-4 focus:ring-amber-100;
+    @apply w-full bg-white border border-slate-200 text-ink font-crimson
+           px-4 py-2.5 rounded-lg outline-none cursor-pointer appearance-none
+           transition-all duration-200
+           focus:border-amber-500 focus:ring-4 focus:ring-amber-100;
   }
 
-  .form-label {
-    @apply mb-1.5 block text-xs font-bold uppercase tracking-[0.16em] text-slate-500;
+  .book-card {
+    @apply bg-white rounded-lg overflow-hidden border border-slate-200
+           shadow-book cursor-pointer
+           transition-all duration-300 ease-out
+           hover:border-amber-200 hover:shadow-book-hover hover:-translate-y-1;
   }
 
   .section-label {
-    @apply text-sm font-bold uppercase tracking-[0.2em] text-amber-600;
-  }
-
-  .card {
-    @apply rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-amber-200 hover:shadow-lg;
+    @apply text-xs font-semibold font-crimson tracking-[0.14em] uppercase text-amber-600;
   }
 }
+
+::-webkit-scrollbar        { width: 6px; }
+::-webkit-scrollbar-track  { background: #faf3e4; }
+::-webkit-scrollbar-thumb  { background: #f59e0b; border-radius: 3px; }

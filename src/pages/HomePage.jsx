@@ -1,134 +1,207 @@
+import BookCard from "../components/BookCard";
 import SearchFilter from "../components/SearchFilter";
+import Icon from "../components/Icon";
+import { LOCAL_BOOKS } from "../data/books";
+
+/* Buku unggulan untuk hero */
+const FEATURED = LOCAL_BOOKS.filter((b) => b.featured);
+const HERO = FEATURED[0];
 
 export default function HomePage() {
   return (
     <>
-      <section id="home" className="overflow-hidden bg-slate-900 text-white">
-        <div className="mx-auto grid max-w-7xl grid-cols-1 gap-10 px-4 py-16 sm:px-6 lg:grid-cols-2 lg:items-center lg:px-8 lg:py-20">
-          <div>
-            <p className="mb-3 text-sm font-semibold uppercase tracking-[0.2em] text-amber-300">
-              Modern Digital Library
-            </p>
-            <h1 className="text-4xl font-extrabold leading-tight tracking-tight sm:text-5xl">
-              Temukan Buku Favoritmu dengan Tampilan yang Rapi dan Responsif
-            </h1>
-            <p className="mt-5 max-w-2xl text-base leading-relaxed text-slate-300 sm:text-lg">
-              Folio adalah halaman perpustakaan digital yang menerapkan Semantic
-              HTML dan Tailwind CSS sebagai fondasi awal project Pemrograman
-              Web.
-            </p>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <a href="#search" className="btn-primary">
-                Cari Buku
-              </a>
-              <a
-                href="#library"
-                className="rounded-lg border border-white/20 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-white/10"
+      {/* ══════════════════════════════════════════════
+          HERO SECTION — <section> Semantic HTML
+          Tailwind: flex, gradient bg, responsive grid
+      ══════════════════════════════════════════════ */}
+      <section
+        id="beranda"
+        aria-labelledby="hero-heading"
+        className="relative overflow-hidden bg-ink text-white"
+      >
+        {/* Background blur cover */}
+        <div
+          className="absolute inset-0 scale-110 bg-cover bg-center opacity-30 blur-2xl"
+          style={{ backgroundImage: `url(${HERO.cover})` }}
+          aria-hidden="true"
+        />
+        <div
+          className="absolute inset-0 bg-gradient-to-r from-ink via-ink/85 to-ink/60"
+          aria-hidden="true"
+        />
+
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 lg:py-20">
+          {/* Flexbox / Grid dua kolom */}
+          <div className="grid grid-cols-1 lg:grid-cols-[1.2fr_0.8fr] gap-12 items-center">
+            {/* Teks hero */}
+            <div>
+              <p className="section-label mb-3 text-amber-300">
+                Buku Pilihan Minggu Ini
+              </p>
+              <h1
+                id="hero-heading"
+                className="font-playfair font-extrabold text-4xl lg:text-6xl
+                           text-white leading-tight mb-4 max-w-2xl"
               >
-                Lihat Katalog
-              </a>
+                {HERO.title}
+              </h1>
+              <p className="text-slate-200 text-lg mb-8">
+                oleh{" "}
+                <span className="text-amber-200 font-semibold">
+                  {HERO.author}
+                </span>
+                <span className="mx-2 text-white/30">·</span>
+                <span>{HERO.year}</span>
+              </p>
+              <div className="flex flex-wrap gap-3">
+                <a href="#koleksi" className="btn-primary">
+                  <Icon name="eye" className="w-4 h-4" strokeWidth={2} />
+                  Lihat Koleksi
+                </a>
+                <a href="#katalog" className="btn-secondary text-ink">
+                  <Icon name="cloud" className="w-4 h-4" />
+                  Katalog API
+                </a>
+              </div>
+            </div>
+
+            {/* Gambar cover hero */}
+            <div className="hidden lg:flex justify-center">
+              <figure className="relative w-52">
+                <img
+                  src={HERO.cover}
+                  alt={`Sampul buku ${HERO.title}`}
+                  className="w-full rounded-lg shadow-2xl border border-white/10
+                             hover:scale-105 transition-transform duration-500"
+                />
+                <figcaption
+                  className="absolute -bottom-4 -right-4 bg-white text-ink
+                             px-3 py-1.5 rounded-lg shadow-book flex items-center gap-2"
+                >
+                  <Icon name="star" className="w-4 h-4 text-amber-500" />
+                  <span className="font-playfair font-bold text-lg">
+                    {HERO.rating}
+                  </span>
+                </figcaption>
+              </figure>
+            </div>
+          </div>
+        </div>
+
+        {/* Stats bar — Tailwind flex + divide */}
+        <div className="relative border-t border-white/10 bg-white/5">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="grid grid-cols-3 divide-x divide-white/10">
+              {[
+                { icon: "collection", label: "Total Koleksi", value: "12+" },
+                { icon: "users", label: "Penulis", value: "12" },
+                { icon: "tag", label: "Genre", value: "8" },
+              ].map((stat) => (
+                <div
+                  key={stat.label}
+                  className="flex items-center gap-3 px-4 py-4"
+                >
+                  <span className="w-9 h-9 rounded-lg bg-white/10 flex items-center justify-center text-amber-300">
+                    <Icon name={stat.icon} className="w-4 h-4" />
+                  </span>
+                  <span>
+                    <span className="block text-2xl font-extrabold font-playfair text-white leading-none">
+                      {stat.value}
+                    </span>
+                    <span className="block text-xs font-crimson text-white/60 mt-1">
+                      {stat.label}
+                    </span>
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {}
+      <section
+        id="koleksi"
+        aria-labelledby="koleksi-heading"
+        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12"
+      >
+        {/* Layout dua kolom: aside filter + grid buku */}
+        <div className="flex flex-col lg:flex-row gap-8">
+          {/* ── <aside> Semantic HTML untuk sidebar filter ── */}
+          <aside
+            aria-label="Panel filter buku"
+            className="lg:w-64 flex-shrink-0"
+          >
+            <SearchFilter />
+          </aside>
+
+          {/* Konten utama: daftar buku */}
+          <div className="flex-1 min-w-0">
+            {/* Header section */}
+            <div className="flex items-center justify-between mb-6 flex-wrap gap-3">
+              <div>
+                <p className="section-label">Koleksi Buku</p>
+                <h2
+                  id="koleksi-heading"
+                  className="font-playfair font-bold text-2xl text-ink"
+                >
+                  Semua Buku
+                </h2>
+              </div>
+              <p className="font-crimson text-sm text-slate-500">
+                Menampilkan{" "}
+                <span className="font-semibold text-amber-600">
+                  {LOCAL_BOOKS.length}
+                </span>{" "}
+                buku
+              </p>
+            </div>
+
+            {/* ── Grid responsif — Tailwind CSS Grid ── */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+              {LOCAL_BOOKS.map((book, i) => (
+                <BookCard key={book.id} book={book} index={i} />
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════════════════
+          BUKU UNGGULAN — <section> featured strip
+          Tailwind: horizontal scroll snap
+      ══════════════════════════════════════════════ */}
+      <section
+        aria-labelledby="featured-heading"
+        className="bg-parchment-100 border-y border-parchment-200 py-10"
+      >
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <p className="section-label">Pilihan Editor</p>
+              <h2
+                id="featured-heading"
+                className="font-playfair font-bold text-2xl text-ink"
+              >
+                Buku Unggulan
+              </h2>
             </div>
           </div>
 
-          <figure className="rounded-3xl border border-white/10 bg-white/10 p-4 shadow-2xl transition duration-300 hover:-translate-y-1 hover:shadow-amber-500/20">
-            <img
-              src="https://images.unsplash.com/photo-1495446815901-a7297e633e8d?auto=format&fit=crop&w=900&q=80"
-              alt="Tumpukan buku di perpustakaan"
-              className="h-72 w-full rounded-2xl object-cover shadow-lg transition duration-300 hover:scale-[1.02]"
-            />
-            <figcaption className="mt-3 text-sm text-slate-300">
-              Tampilan hero menggunakan gambar, shadow, transition, dan efek
-              hover.
-            </figcaption>
-          </figure>
-        </div>
-      </section>
-
-      <section id="library" className="bg-slate-50 py-14">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="mb-8 max-w-3xl">
-            <p className="section-label">Katalog Buku</p>
-            <h2 className="mt-2 text-3xl font-bold text-slate-900">
-              Koleksi Buku Pilihan
-            </h2>
-            <p className="mt-3 text-sm leading-relaxed text-slate-600">
-              Bagian ini memakai layout grid responsif. Data masih statis karena
-              tahap ini belum menerapkan React Hooks dan API.
-            </p>
+          {/* Flex row dengan hover effects */}
+          <div
+            className="flex gap-5 overflow-x-auto pb-3
+                          snap-x snap-mandatory scroll-smooth"
+          >
+            {FEATURED.map((book, i) => (
+              <div
+                key={book.id}
+                className="snap-start flex-shrink-0 w-40 sm:w-48"
+              >
+                <BookCard book={book} index={i} />
+              </div>
+            ))}
           </div>
-
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            <article className="card">
-              <img
-                src="https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&fit=crop&w=700&q=80"
-                alt="Buku Atomic Habits"
-                className="mb-4 h-48 w-full rounded-xl object-cover shadow-sm transition duration-300 hover:scale-[1.02]"
-              />
-              <h3 className="text-lg font-bold text-slate-900">
-                Atomic Habits
-              </h3>
-              <p className="mt-1 text-sm text-slate-500">James Clear</p>
-              <p className="mt-3 text-sm leading-relaxed text-slate-600">
-                Buku tentang membangun kebiasaan kecil yang memberi dampak
-                besar.
-              </p>
-            </article>
-
-            <article className="card">
-              <img
-                src="https://images.unsplash.com/photo-1519682337058-a94d519337bc?auto=format&fit=crop&w=700&q=80"
-                alt="Buku The Psychology of Money"
-                className="mb-4 h-48 w-full rounded-xl object-cover shadow-sm transition duration-300 hover:scale-[1.02]"
-              />
-              <h3 className="text-lg font-bold text-slate-900">
-                The Psychology of Money
-              </h3>
-              <p className="mt-1 text-sm text-slate-500">Morgan Housel</p>
-              <p className="mt-3 text-sm leading-relaxed text-slate-600">
-                Buku yang membahas perilaku manusia dalam mengambil keputusan
-                finansial.
-              </p>
-            </article>
-
-            <article className="card">
-              <img
-                src="https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=700&q=80"
-                alt="Buku Clean Code"
-                className="mb-4 h-48 w-full rounded-xl object-cover shadow-sm transition duration-300 hover:scale-[1.02]"
-              />
-              <h3 className="text-lg font-bold text-slate-900">Clean Code</h3>
-              <p className="mt-1 text-sm text-slate-500">Robert C. Martin</p>
-              <p className="mt-3 text-sm leading-relaxed text-slate-600">
-                Buku populer tentang cara menulis kode yang rapi dan mudah
-                dirawat.
-              </p>
-            </article>
-          </div>
-        </div>
-      </section>
-
-      <section id="search" className="bg-white py-14">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <SearchFilter />
-        </div>
-      </section>
-
-      <section
-        id="about"
-        className="border-t border-slate-200 bg-slate-50 py-14"
-      >
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <article className="max-w-3xl">
-            <p className="section-label">Tentang Project</p>
-            <h2 className="mt-2 text-3xl font-bold text-slate-900">
-              Tahap Awal Project Folio
-            </h2>
-            <p className="mt-4 text-sm leading-relaxed text-slate-600">
-              Project ini baru menerapkan standar Semantic HTML dan Tailwind
-              CSS. Struktur utama sudah memakai header, main, footer, section,
-              article, figure, form, label, dan berbagai tipe input.
-            </p>
-          </article>
         </div>
       </section>
     </>
