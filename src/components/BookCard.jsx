@@ -7,36 +7,63 @@ export default function BookCard({ book, index = 0 }) {
     "from-rose-900 to-rose-700",
     "from-violet-900 to-violet-700",
   ];
-  const gradient = gradients[book.title.charCodeAt(0) % gradients.length];
 
+  const coverId = book.cover_i;
+  const coverUrl = coverId
+    ? `https://covers.openlibrary.org/b/id/${coverId}-M.jpg`
+    : null;
+
+  const title = book.title || "Judul tidak tersedia";
+  const authors = book.author_name?.join(", ") || "Penulis tidak diketahui";
+  const year = book.first_publish_year || "—";
+  const subjects = book.subject?.slice(0, 3).join(", ") || "—";
+
+  const gradient = gradients[title.charCodeAt(0) % gradients.length];
   return (
     <article
       className="book-card group"
       aria-label={`Buku: ${book.title} oleh ${book.author}`}
     >
       <figure className="relative aspect-[2/3] overflow-hidden bg-slate-100">
-        <img
-          src={book.cover}
-          alt={`Sampul buku ${book.title}`}
-          loading="lazy"
-          className="w-full h-full object-cover
-                     transition-transform duration-500 group-hover:scale-105"
-          onError={(e) => {
-            e.currentTarget.style.display = "none";
-          }}
-        />
+        <div className="bg-gray-100 h-52 flex items-center justify-center overflow-hidden">
+          {coverUrl ? (
+            <img
+              src={coverUrl}
+              alt={title}
+              className="h-full w-full object-cover"
+            />
+          ) : (
+            <div className="flex flex-col items-center text-gray-300">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="w-12 h-12 mb-2"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={1.5}
+                  d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25"
+                />
+              </svg>
+              <span className="text-sm">No Cover</span>
+            </div>
+          )}
+        </div>
 
         <div
           className={`absolute inset-0 bg-gradient-to-br ${gradient}
                          flex items-center justify-center p-4 -z-0`}
         >
           <p className="font-playfair text-white/80 text-center text-xs leading-relaxed">
-            {book.title}
+            {title}
           </p>
         </div>
 
         <figcaption className="sr-only">
-          {book.title} — {book.author}
+          {title} — {authors}
         </figcaption>
         <span
           aria-label={book.available ? "Tersedia" : "Sedang dipinjam"}
@@ -66,10 +93,10 @@ export default function BookCard({ book, index = 0 }) {
                        line-clamp-2 mb-1 text-base
                        group-hover:text-amber-700 transition-colors duration-200"
         >
-          {book.title}
+          {title}
         </h3>
         <p className="font-crimson text-sm text-slate-500 mb-3 line-clamp-1">
-          {book.author}
+          {authors}
         </p>
 
         <div className="flex items-center justify-between">
