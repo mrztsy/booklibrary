@@ -212,18 +212,6 @@ export default function App() {
     fetchData();
   }, []);
 
-  if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="flex flex-row gap-2">
-          <div className="w-4 h-4 rounded-full bg-accent animate-bounce [animation-delay:.7s]"></div>
-          <div className="w-4 h-4 rounded-full bg-primary animate-bounce [animation-delay:.3s]"></div>
-          <div className="w-4 h-4 rounded-full bg-accent animate-bounce [animation-delay:.7s]"></div>
-        </div>
-      </div>
-    );
-  }
-
   if (error && dataStore.length === 0) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-cream px-4">
@@ -248,9 +236,14 @@ export default function App() {
     <div className="min-h-screen flex flex-col bg-cream font-crimson">
       <Header />
       <main id="main-content" className="flex-1" role="main">
-        <HomePage books={dataStore} error={error} fetchData={fetchData} />
+        <HomePage
+          books={dataStore}
+          error={error}
+          fetchData={fetchData}
+          isLoading={isLoading}
+        />
 
-        <LibraryPage books={dataStore} />
+        <LibraryPage books={dataStore} isLoading={isLoading} />
 
         <AboutPage />
       </main>

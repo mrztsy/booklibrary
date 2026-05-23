@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import BookCard from "../components/BookCard";
 import BookModal from "../components/BookModal";
 import Icon from "../components/Icon";
+import LoadingSpinner from "../components/LoadingSpinner";
 
 const TOPICS = [
   { value: "Semua", label: "Semua", icon: "collection" },
@@ -18,11 +19,12 @@ const TOPICS = [
 ];
 
 // ✅ Terima prop books dari App
-export default function LibraryPage({ books = [] }) {
+export default function LibraryPage({ books = [], isLoading = false }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
   const [selectedTopic, setSelectedTopic] = useState("Semua");
   const [selectedBook, setSelectedBook] = useState(null);
+  const [showLoading, setShowLoading] = useState(isLoading);
 
   const activeKeyword = debouncedSearchTerm.trim().toLowerCase();
   const hasSearch = activeKeyword !== "";
@@ -41,6 +43,20 @@ export default function LibraryPage({ books = [] }) {
   useEffect(() => {
     setSelectedBook(null);
   }, [debouncedSearchTerm, selectedTopic]);
+
+  useEffect(() => {
+    let timerId;
+
+    if (isLoading) {
+      setShowLoading(true);
+    } else {
+      timerId = setTimeout(() => {
+        setShowLoading(false);
+      }, 900);
+    }
+
+    return () => clearTimeout(timerId);
+  }, [isLoading]);
 
   const filteredBooks = books.filter((book) => {
     const searchableText = [
@@ -94,12 +110,14 @@ export default function LibraryPage({ books = [] }) {
               className="flex items-center gap-2 text-sm font-crimson text-white/50
                             bg-white/5 border border-white/10 px-4 py-2 rounded-lg"
             >
+              {/* ✅ status aktif karena sudah fetch */}
               <span
-                className="w-2 h-2 rounded-full bg-accent"
+                className={`w-2 h-2 rounded-full bg-accent ${
+                  showLoading ? "animate-ping" : ""
+                }`}
                 aria-hidden="true"
               />
-              {/* ✅ status aktif karena sudah fetch */}
-              Fetch API aktif
+              {showLoading ? "Mengambil data..." : "Fetch API aktif"}
             </div>
           </div>
         </div>
@@ -228,7 +246,11 @@ export default function LibraryPage({ books = [] }) {
         </div>
 
         {/* ✅ render dari prop books, bukan PLACEHOLDER_BOOKS */}
-        {hasFilteredBooks ? (
+        {showLoading ? (
+          <div className="rounded-lg border border-borderSoft bg-white/80 shadow-book">
+            <LoadingSpinner message="Mengambil data dari Open Library API..." />
+          </div>
+        ) : hasFilteredBooks ? (
           <div className="mb-10 grid grid-cols-1 items-stretch gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {filteredBooks.map((book, i) => (
               <BookCard
