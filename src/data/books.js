@@ -46,6 +46,8 @@ export const FALLBACK_BOOKS = [
     available: true,
     featured: true,
     cover: "https://covers.openlibrary.org/b/id/8231856-L.jpg",
+    synopsis:
+      "Elizabeth Bennet hidup di tengah tekanan keluarga dan aturan sosial Inggris abad ke-19. Ketika ia bertemu Mr. Darcy, kesan buruk, kesalahpahaman, dan rasa bangga membuat hubungan mereka berliku sebelum keduanya belajar menilai orang lain dengan lebih adil.",
     tags: ["Classic", "Romance", "Fiction"],
   },
   {
@@ -60,6 +62,8 @@ export const FALLBACK_BOOKS = [
     available: true,
     featured: true,
     cover: "https://covers.openlibrary.org/b/id/8305841-L.jpg",
+    synopsis:
+      "Victor Frankenstein menciptakan makhluk hidup dari eksperimen ilmiah, lalu menolak ciptaannya sendiri. Penolakan itu melahirkan kesepian, kemarahan, dan tragedi yang mengejar Victor, sekaligus mempertanyakan tanggung jawab manusia atas ilmu yang ia gunakan.",
     tags: ["Science Fiction", "Classic", "Horror"],
   },
   {
@@ -74,6 +78,8 @@ export const FALLBACK_BOOKS = [
     available: false,
     featured: true,
     cover: "https://covers.openlibrary.org/b/id/7222246-L.jpg",
+    synopsis:
+      "Winston Smith hidup di bawah rezim yang mengawasi pikiran, bahasa, dan ingatan rakyatnya. Saat ia mulai mempertanyakan kebenaran yang dipaksakan negara, ia masuk ke dalam konflik berbahaya antara kebebasan pribadi dan kuasa totaliter.",
     tags: ["Dystopia", "Political Fiction", "Classic"],
   },
   {
@@ -88,6 +94,8 @@ export const FALLBACK_BOOKS = [
     available: true,
     featured: false,
     cover: "https://covers.openlibrary.org/b/id/6979861-L.jpg",
+    synopsis:
+      "Bilbo Baggins yang awalnya nyaman di rumahnya ikut dalam perjalanan para kurcaci merebut kembali harta dan tanah mereka dari naga Smaug. Di sepanjang jalan, Bilbo menghadapi makhluk berbahaya, teka-teki, dan menemukan keberanian yang tidak ia sangka ada.",
     tags: ["Fantasy", "Adventure", "Fiction"],
   },
   {
@@ -102,6 +110,8 @@ export const FALLBACK_BOOKS = [
     available: true,
     featured: false,
     cover: "https://covers.openlibrary.org/b/id/9255566-L.jpg",
+    synopsis:
+      "Seorang pilot yang jatuh di gurun bertemu pangeran kecil dari planet jauh. Melalui kisah perjalanannya, pangeran kecil memperlihatkan cara memandang cinta, persahabatan, kesepian, dan hal-hal penting yang sering dilupakan orang dewasa.",
     tags: ["Philosophy", "Children", "Classic"],
   },
 ];

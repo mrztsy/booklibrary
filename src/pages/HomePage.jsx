@@ -135,6 +135,10 @@ export default function HomePage({ books = [], error, fetchData }) {
                 <span className="mx-2 text-white/30">-</span>
                 <span>{heroBook.year}</span>
               </p>
+              <p className="mb-6 max-w-2xl text-sm leading-relaxed text-white/70 line-clamp-3 sm:text-base">
+                {heroBook.description ||
+                  "Deskripsi buku belum tersedia dari katalog Open Library."}
+              </p>
               <div className="mb-8 flex min-h-[2rem] flex-wrap gap-2">
                 {(heroBook.genres || heroBook.tags || [heroBook.genre])
                   .filter(Boolean)
