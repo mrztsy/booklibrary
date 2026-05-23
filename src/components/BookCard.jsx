@@ -5,19 +5,25 @@ export default function BookCard({ book, index = 0, onSelect }) {
     "from-accentHover to-primary",
     "from-primary to-accent",
   ];
-  const title = book.title || "Judul tidak tersedia";
-  const author = book.author || "Penulis tidak diketahui";
-  const rating = Number(book.rating || 0);
-  const gradient = gradients[title.charCodeAt(0) % gradients.length];
 
+  const coverUrl = book.cover;
+
+  console.log(book);
+
+  const title = book.title || "Judul tidak tersedia";
+  const authors = book.author || "Penulis tidak diketahui";
+  const year = book.first_publish_year || "—";
+  const subjects = book.subject?.slice(0, 3).join(", ") || "—";
+
+  const gradient = gradients[title.charCodeAt(0) % gradients.length];
   return (
     <article
       className="book-card group"
-      aria-label={`Buku: ${title} oleh ${author}`}
+      aria-label={`Buku: ${title} oleh ${authors}`}
     >
       <figure className="relative aspect-[2/3] overflow-hidden border-b border-borderSoft bg-cream">
         <img
-          src={book.cover}
+          src={coverUrl}
           alt={`Sampul buku ${title}`}
           loading="lazy"
           className="w-full h-full object-cover
@@ -27,17 +33,15 @@ export default function BookCard({ book, index = 0, onSelect }) {
           }}
         />
 
-        <div
-          className={`absolute inset-0 bg-gradient-to-br ${gradient}
-                         flex items-center justify-center p-4 -z-0`}
-        >
+        <div>
+          <img src={coverUrl} alt="" />
           <p className="font-playfair text-white/80 text-center text-xs leading-relaxed">
             {title}
           </p>
         </div>
 
         <figcaption className="sr-only">
-          {book.title} — {book.author}
+          {title} — {authors}
         </figcaption>
         <span
           aria-label={book.available ? "Tersedia" : "Sedang dipinjam"}
@@ -79,6 +83,7 @@ export default function BookCard({ book, index = 0, onSelect }) {
         >
           {title}
         </h3>
+<<<<<<< HEAD
         <p className="font-crimson text-sm text-textSecondary mb-3 line-clamp-1">
           {author}
         </p>
@@ -112,6 +117,12 @@ export default function BookCard({ book, index = 0, onSelect }) {
           </span>
         </div>
 
+=======
+        <p className="font-crimson text-sm text-slate-500 mb-3 line-clamp-1">
+          {authors}
+        </p>
+
+>>>>>>> 51b6953c5b4f80076e64f2385a7627a86e4c2916
         {book.tags && (
           <div className="flex flex-wrap gap-1 mt-3">
             {book.tags.slice(0, 2).map((tag) => (

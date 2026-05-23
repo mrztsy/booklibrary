@@ -34,15 +34,52 @@ export default function App() {
   const [dataStore, setDataStore] = useState([]);
   const [error, setError] = useState(null);
 
-  async function fetchData() {
+  async function fetchData(filters = {}) {
     setIsLoading(true);
     setError(null);
     try {
+      // Bangun query params dari filters
+      const params = new URLSearchParams();
+
+      // q: gabungkan title + author jika ada
+      const q =
+        [filters.q, filters.author].filter(Boolean).join(" ") || "general";
+      params.set("q", q);
+
+      // genre → subject
+      if (filters.genre && filters.genre !== "Semua") {
+        params.set("subject", filters.genre.toLowerCase());
+      }
+
+      // sort
+      const sortMap = {
+        "title-asc": "title",
+        "title-desc": "title", // ← tambah ini
+        "rating-desc": "rating",
+        "year-desc": "new",
+        "year-asc": "old", // ← tambah ini
+      };
+      if (sortMap[filters.sort]) params.set("sort", sortMap[filters.sort]);
+
+      params.set("limit", "30");
+      params.set("language", "eng");
+
       const response = await axios.get(
-        "https://openlibrary.org/search.json?q=programming&limit=10&language=eng",
+        `https://openlibrary.org/search.json?${params.toString()}`,
       );
 
-      setDataStore(response.data.docs.map(formatOpenLibraryBook));
+      let books = response.data.docs.map(formatOpenLibraryBook);
+
+      // Filter lokal (yearMin, minRating, available — tidak didukung API)
+      if (filters.yearMin > 1800)
+        books = books.filter(
+          (b) => b.year === "-" || b.year >= filters.yearMin,
+        );
+      if (filters.minRating > 0)
+        books = books.filter((b) => b.rating >= filters.minRating);
+      if (filters.available) books = books.filter((b) => b.available);
+
+      setDataStore(books);
     } catch (err) {
       setError("Gagal memuat produk. Coba lagi.");
       console.error(err);
@@ -87,7 +124,7 @@ export default function App() {
     <div className="min-h-screen flex flex-col bg-cream font-crimson">
       <Header />
       <main id="main-content" className="flex-1" role="main">
-        <HomePage books={dataStore} />
+        <HomePage books={dataStore} error={error} fetchData={fetchData} />
 
         <LibraryPage books={dataStore} />
 

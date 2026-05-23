@@ -21,8 +21,6 @@ export default function LibraryPage({ books = [] }) {
   const [selectedTopic, setSelectedTopic] = useState("fiction");
   const [selectedBook, setSelectedBook] = useState(null);
 
-  const selectedTopicLabel =
-    TOPICS.find((topic) => topic.value === selectedTopic)?.label || "Fiction";
   const activeKeyword = debouncedSearchTerm.trim().toLowerCase();
   const hasSearch = activeKeyword !== "";
 
@@ -157,9 +155,9 @@ export default function LibraryPage({ books = [] }) {
                   <span
                     className="inline-flex items-center gap-1.5 px-3 py-2 text-xs
                                    font-semibold font-crimson rounded-lg border cursor-pointer
-                                   border-borderSoft bg-white text-secondary
-                                   peer-checked:bg-primary peer-checked:text-white peer-checked:border-primary
-                                   hover:border-accent hover:text-accentHover transition-all duration-200"
+                                   border-slate-200 bg-white text-slate-600
+                                   peer-checked:bg-ink peer-checked:text-white peer-checked:border-ink
+                                   hover:border-amber-300 hover:text-amber-700 transition-all duration-200"
                   >
                     <Icon name={t.icon} className="w-3.5 h-3.5" />
                     {t.label}
@@ -195,8 +193,9 @@ export default function LibraryPage({ books = [] }) {
               id="results-heading"
               className="font-playfair font-semibold text-xl text-textMain"
             >
-              Topik: <span className="text-accentHover">{selectedTopicLabel}</span>
-              <span className="font-crimson font-normal text-base text-textSecondary ml-2">
+              Topik:{" "}
+              <span className="text-amber-700">{selectedTopicLabel}</span>
+              <span className="font-crimson font-normal text-base text-slate-400 ml-2">
                 · Halaman 1
               </span>
             </h2>
@@ -274,27 +273,27 @@ export default function LibraryPage({ books = [] }) {
         )}
 
         {hasFilteredBooks && (
-        <nav
-          aria-label="Paginasi hasil buku"
-          className="flex items-center justify-center gap-3 mt-10"
-        >
-          <button
-            type="button"
-            className="btn-secondary text-sm py-2 px-4"
-            disabled
+          <nav
+            aria-label="Paginasi hasil buku"
+            className="flex items-center justify-center gap-3 mt-10"
           >
-            ← Sebelumnya
-          </button>
-          <span
-            className="font-playfair font-bold text-textMain
-                           bg-white border border-borderSoft px-4 py-2 rounded-lg"
-          >
-            1
-          </span>
-          <button type="button" className="btn-secondary text-sm py-2 px-4">
-            Berikutnya →
-          </button>
-        </nav>
+            <button
+              type="button"
+              className="btn-secondary text-sm py-2 px-4"
+              disabled
+            >
+              ← Sebelumnya
+            </button>
+            <span
+              className="font-playfair font-bold text-ink
+                           bg-parchment-100 border border-parchment-200 px-4 py-2 rounded-lg"
+            >
+              1
+            </span>
+            <button type="button" className="btn-secondary text-sm py-2 px-4">
+              Berikutnya →
+            </button>
+          </nav>
         )}
       </section>
 

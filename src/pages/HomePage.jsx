@@ -4,7 +4,38 @@ import BookModal from "../components/BookModal";
 import SearchFilter from "../components/SearchFilter";
 import Icon from "../components/Icon";
 
-export default function HomePage({ books = [] }) {
+export default function HomePage({ books = [], error, fetchData }) {
+  const [filters, setFilters] = useState(null);
+
+  const filtered = filters
+    ? books
+        .filter((b) => {
+          if (
+            filters.q &&
+            !b.title.toLowerCase().includes(filters.q.toLowerCase())
+          )
+            return false;
+          if (
+            filters.author &&
+            !b.author.toLowerCase().includes(filters.author.toLowerCase())
+          )
+            return false;
+          if (filters.genre !== "Semua" && b.genre !== filters.genre)
+            return false;
+          if (b.year !== "-" && b.year < filters.yearMin) return false;
+          if (b.rating < filters.minRating) return false;
+          if (filters.available && !b.available) return false;
+          if (filters.featured && !b.featured) return false;
+          return true;
+        })
+        .sort((a, b) => {
+          if (filters.sort === "title-asc")
+            return a.title.localeCompare(b.title);
+          if (filters.sort === "rating-desc") return b.rating - a.rating;
+          if (filters.sort === "year-desc") return b.year - a.year;
+          return 0;
+        })
+    : books;
   const [selectedBook, setSelectedBook] = useState(null);
   const collectionBooks = books;
   const featuredBooks = collectionBooks.slice(0, 5);
@@ -177,10 +208,11 @@ export default function HomePage({ books = [] }) {
             aria-label="Panel filter buku"
             className="lg:w-64 flex-shrink-0"
           >
-            <SearchFilter />
+            <SearchFilter onFilter={setFilters} />
           </aside>
 
           {/* Konten utama: daftar buku */}
+<<<<<<< HEAD
           <div className="flex-1 min-w-0">
             {/* Header section */}
             <div className="flex items-center justify-between mb-6 flex-wrap gap-3">
@@ -201,19 +233,65 @@ export default function HomePage({ books = [] }) {
                 buku
               </p>
             </div>
+=======
+          {filtered.length > 0 ? (
+            <div className="flex-1 min-w-0">
+              {/* Header section */}
+              <div className="flex items-center justify-between mb-6 flex-wrap gap-3">
+                <div>
+                  <p className="section-label">Koleksi Buku</p>
+                  <h2
+                    id="koleksi-heading"
+                    className="font-playfair font-bold text-2xl text-ink"
+                  >
+                    Semua Buku
+                  </h2>
+                </div>
+                <p className="font-crimson text-sm text-slate-500">
+                  Menampilkan{" "}
+                  <span className="font-semibold text-amber-600">
+                    {filtered.length} {/* ← bukan collectionBooks.length */}
+                  </span>
+                  buku
+                </p>
+              </div>
+>>>>>>> 51b6953c5b4f80076e64f2385a7627a86e4c2916
 
-            {/* ── Grid responsif — Tailwind CSS Grid ── */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
-              {collectionBooks.map((book, i) => (
-                <BookCard
-                  key={book.key || book.id || i}
-                  book={book}
-                  index={i}
-                  onSelect={setSelectedBook}
-                />
-              ))}
+              <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+                {filtered.map(
+                  (
+                    book,
+                    i, // ← ganti ini
+                  ) => (
+                    <BookCard
+                      key={book.key || book.id || i}
+                      book={book}
+                      index={i}
+                      onSelect={setSelectedBook}
+                    />
+                  ),
+                )}
+              </div>
             </div>
-          </div>
+          ) : (
+            <>
+              <div className="min-h-fit max-w-screen w-full flex items-start justify-center bg-parchment-50 px-4">
+                <div className="max-w-screen rounded-lg border border-red-100 p-6 text-center shadow-book">
+                  <p className="font-playfair text-xl font-semibold text-ink mb-2">
+                    Maaf, Data buku tidak tersedia
+                  </p>
+                  <p className="font-crimson text-slate-500 mb-4">{error}</p>
+                  <button
+                    type="button"
+                    className="btn-primary"
+                    onClick={fetchData}
+                  >
+                    Coba Lagi
+                  </button>
+                </div>
+              </div>
+            </>
+          )}
         </div>
       </section>
 
