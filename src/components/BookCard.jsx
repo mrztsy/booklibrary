@@ -23,10 +23,10 @@ export default function BookCard({ book, onSelect }) {
 
   return (
     <article
-      className="book-card group"
+      className="book-card group flex h-full flex-col"
       aria-label={`Buku: ${title} oleh ${authors}`}
     >
-      <figure className="relative aspect-[2/3] overflow-hidden border-b border-borderSoft bg-cream">
+      <figure className="relative aspect-[2/3] shrink-0 overflow-hidden border-b border-borderSoft bg-cream">
         <div
           className={`absolute inset-0 bg-gradient-to-br ${gradient} p-5 flex items-center justify-center`}
           aria-hidden="true"
@@ -41,7 +41,7 @@ export default function BookCard({ book, onSelect }) {
             src={coverUrl}
             alt={`Sampul buku ${title}`}
             loading="lazy"
-            className="relative z-[1] w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+            className="relative z-[1] h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
             onError={(event) => {
               event.currentTarget.style.display = "none";
             }}
@@ -66,8 +66,8 @@ export default function BookCard({ book, onSelect }) {
         </span>
 
         <div
-          className="absolute inset-0 z-10 bg-primary/70 opacity-0 group-hover:opacity-100
-                     transition-opacity duration-300 flex items-center justify-center"
+          className="absolute inset-0 z-10 flex translate-y-2 items-center justify-center bg-primary/70
+                     opacity-0 transition-all duration-300 ease-out group-hover:translate-y-0 group-hover:opacity-100"
         >
           {onSelect ? (
             <button
@@ -83,22 +83,22 @@ export default function BookCard({ book, onSelect }) {
         </div>
       </figure>
 
-      <div className="p-4">
-        <p className="section-label mb-1">
+      <div className="flex flex-1 flex-col p-4">
+        <p className="section-label mb-1 min-h-[1rem] truncate">
           {uniqueGenres.slice(0, 2).join(" / ") || "General"}
         </p>
         <h3
-          className="font-playfair font-semibold text-textMain leading-snug
-                     line-clamp-2 mb-1 text-base
+          className="mb-1 min-h-[2.75rem] font-playfair text-base font-semibold leading-snug
+                     text-textMain line-clamp-2
                      group-hover:text-accentHover transition-colors duration-200"
         >
           {title}
         </h3>
-        <p className="font-crimson text-sm text-textSecondary mb-3 line-clamp-1">
+        <p className="mb-3 font-crimson text-sm text-textSecondary line-clamp-1">
           {authors}
         </p>
 
-        <div className="flex items-center justify-between">
+        <div className="mt-auto flex items-center justify-between">
           <div
             className="flex items-center gap-1"
             aria-label={rating ? `Rating ${rating}` : "Rating belum tersedia"}
@@ -126,7 +126,7 @@ export default function BookCard({ book, onSelect }) {
         </div>
 
         {uniqueGenres.length > 0 && (
-          <div className="flex flex-wrap gap-1 mt-3">
+          <div className="mt-3 flex min-h-[1.5rem] flex-wrap gap-1">
             {uniqueGenres.slice(0, 4).map((tag) => (
               <span
                 key={tag}
