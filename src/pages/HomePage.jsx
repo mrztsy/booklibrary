@@ -6,10 +6,12 @@ import Icon from "../components/Icon";
 import { GENRES } from "../data/books";
 
 export default function HomePage({ books = [], error, fetchData }) {
+  const ITEMS_PER_PAGE = 10;
   const [filters, setFilters] = useState(null);
   const [selectedBook, setSelectedBook] = useState(null);
   const [activeHeroIndex, setActiveHeroIndex] = useState(0);
   const [collectionView, setCollectionView] = useState("grid");
+  const [currentPageCollection, setCurrentPageCollection] = useState(1);
 
   const filtered = filters
     ? books
@@ -36,12 +38,22 @@ export default function HomePage({ books = [], error, fetchData }) {
           return true;
         })
         .sort((a, b) => {
-          if (filters.sort === "title-asc") return a.title.localeCompare(b.title);
+          if (filters.sort === "title-asc")
+            return a.title.localeCompare(b.title);
           if (filters.sort === "rating-desc") return b.rating - a.rating;
           if (filters.sort === "year-desc") return b.year - a.year;
           return 0;
         })
     : books;
+
+  // Pagination logic for collection
+  const totalPagesCollection = Math.ceil(filtered.length / ITEMS_PER_PAGE);
+  const startIndexCollection = (currentPageCollection - 1) * ITEMS_PER_PAGE;
+  const endIndexCollection = startIndexCollection + ITEMS_PER_PAGE;
+  const paginatedFiltered = filtered.slice(
+    startIndexCollection,
+    endIndexCollection,
+  );
 
   const markedFeaturedBooks = books.filter((book) => book.featured).slice(0, 5);
   const featuredBooks =
@@ -52,6 +64,7 @@ export default function HomePage({ books = [], error, fetchData }) {
 
   useEffect(() => {
     setActiveHeroIndex(0);
+    setCurrentPageCollection(1);
   }, [featuredBooks.length]);
 
   useEffect(() => {
@@ -274,8 +287,11 @@ export default function HomePage({ books = [], error, fetchData }) {
                   <p className="font-crimson text-sm text-textSecondary">
                     Menampilkan{" "}
                     <span className="font-semibold text-accentHover">
-                      {filtered.length}
+                      {startIndexCollection + 1}-
+                      {Math.min(endIndexCollection, filtered.length)}
                     </span>{" "}
+                    dari{" "}
+                    <span className="font-semibold">{filtered.length}</span>{" "}
                     buku
                   </p>
                   <div
@@ -307,7 +323,7 @@ export default function HomePage({ books = [], error, fetchData }) {
 
               {collectionView === "grid" ? (
                 <div className="grid grid-cols-1 items-stretch gap-6 sm:grid-cols-2 xl:grid-cols-3">
-                  {filtered.map((book, i) => (
+                  {paginatedFiltered.map((book, i) => (
                     <BookCard
                       key={book.key || book.id || i}
                       book={book}
@@ -318,7 +334,7 @@ export default function HomePage({ books = [], error, fetchData }) {
                 </div>
               ) : (
                 <div className="space-y-2.5">
-                  {filtered.map((book, i) => {
+                  {paginatedFiltered.map((book, i) => {
                     const bookGenres = [
                       book.genre,
                       ...(book.genres || []),
@@ -360,7 +376,9 @@ export default function HomePage({ books = [], error, fetchData }) {
                           </h3>
                           <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-textSecondary sm:text-sm">
                             <span className="line-clamp-1">{book.author}</span>
-                            <span className="hidden text-borderSoft sm:inline">/</span>
+                            <span className="hidden text-borderSoft sm:inline">
+                              /
+                            </span>
                             <span className="font-semibold text-accent">
                               ★ {book.rating || "-"}
                             </span>
@@ -412,6 +430,64 @@ export default function HomePage({ books = [], error, fetchData }) {
             </div>
           )}
         </div>
+
+        {filtered.length > 0 && (
+          <nav
+            aria-label="Paginasi koleksi buku"
+            className="flex items-center justify-center gap-3 mt-10"
+          >
+            <button
+              type="button"
+              className="btn-secondary text-sm py-2 px-4"
+              disabled={currentPageCollection === 1}
+              onClick={() => {
+                setCurrentPageCollection(currentPageCollection - 1);
+                document
+                  .getElementById("koleksi")
+                  ?.scrollIntoView({ behavior: "smooth" });
+              }}
+            >
+              ← Sebelumnya
+            </button>
+            <div className="flex items-center gap-2">
+              {Array.from(
+                { length: totalPagesCollection },
+                (_, i) => i + 1,
+              ).map((page) => (
+                <button
+                  key={page}
+                  type="button"
+                  className={`px-3 py-2 rounded-lg text-sm font-semibold transition-all ${
+                    page === currentPageCollection
+                      ? "bg-primary text-white"
+                      : "bg-white border border-borderSoft text-textSecondary hover:border-primary hover:text-primary"
+                  }`}
+                  onClick={() => {
+                    setCurrentPageCollection(page);
+                    document
+                      .getElementById("koleksi")
+                      ?.scrollIntoView({ behavior: "smooth" });
+                  }}
+                >
+                  {page}
+                </button>
+              ))}
+            </div>
+            <button
+              type="button"
+              className="btn-secondary text-sm py-2 px-4"
+              disabled={currentPageCollection === totalPagesCollection}
+              onClick={() => {
+                setCurrentPageCollection(currentPageCollection + 1);
+                document
+                  .getElementById("koleksi")
+                  ?.scrollIntoView({ behavior: "smooth" });
+              }}
+            >
+              Berikutnya →
+            </button>
+          </nav>
+        )}
       </section>
 
       <section

@@ -20,11 +20,13 @@ const TOPICS = [
 
 // ✅ Terima prop books dari App
 export default function LibraryPage({ books = [], isLoading = false }) {
+  const ITEMS_PER_PAGE = 10;
   const [searchTerm, setSearchTerm] = useState("");
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
   const [selectedTopic, setSelectedTopic] = useState("Semua");
   const [selectedBook, setSelectedBook] = useState(null);
   const [showLoading, setShowLoading] = useState(isLoading);
+  const [currentPage, setCurrentPage] = useState(1);
 
   const activeKeyword = debouncedSearchTerm.trim().toLowerCase();
   const hasSearch = activeKeyword !== "";
@@ -42,6 +44,7 @@ export default function LibraryPage({ books = [], isLoading = false }) {
 
   useEffect(() => {
     setSelectedBook(null);
+    setCurrentPage(1);
   }, [debouncedSearchTerm, selectedTopic]);
 
   useEffect(() => {
@@ -78,6 +81,12 @@ export default function LibraryPage({ books = [], isLoading = false }) {
     return matchesSearch && matchesTopic;
   });
   const hasFilteredBooks = filteredBooks.length > 0;
+
+  // Pagination logic
+  const totalPages = Math.ceil(filteredBooks.length / ITEMS_PER_PAGE);
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const endIndex = startIndex + ITEMS_PER_PAGE;
+  const paginatedBooks = filteredBooks.slice(startIndex, endIndex);
 
   const handleSearchSubmit = (event) => {
     event.preventDefault();
@@ -194,7 +203,10 @@ export default function LibraryPage({ books = [], isLoading = false }) {
             </div>
 
             <div className="flex flex-wrap gap-2 lg:justify-end">
-              <button type="submit" className="btn-primary min-h-11 whitespace-nowrap">
+              <button
+                type="submit"
+                className="btn-primary min-h-11 whitespace-nowrap"
+              >
                 <Icon name="search" className="w-4 h-4" strokeWidth={2} />
                 Cari
               </button>
@@ -226,7 +238,7 @@ export default function LibraryPage({ books = [], isLoading = false }) {
               Topik:{" "}
               <span className="text-amber-700">{selectedTopicLabel}</span>
               <span className="font-crimson font-normal text-base text-slate-400 ml-2">
-                · Halaman 1
+                · Halaman {currentPage}
               </span>
             </h2>
             {hasSearch && (
@@ -241,7 +253,8 @@ export default function LibraryPage({ books = [], isLoading = false }) {
           >
             <Icon name="collection" className="w-4 h-4 text-accent" />
             {/* ✅ pakai books.length bukan PLACEHOLDER_BOOKS */}
-            {filteredBooks.length} dari {books.length} buku
+            {startIndex + 1}-{Math.min(endIndex, filteredBooks.length)} dari{" "}
+            {filteredBooks.length} buku
           </div>
         </div>
 
@@ -252,7 +265,7 @@ export default function LibraryPage({ books = [], isLoading = false }) {
           </div>
         ) : hasFilteredBooks ? (
           <div className="mb-10 grid grid-cols-1 items-stretch gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {filteredBooks.map((book, i) => (
+            {paginatedBooks.map((book, i) => (
               <BookCard
                 key={book.key || book.id || i}
                 book={book}
@@ -314,17 +327,50 @@ export default function LibraryPage({ books = [], isLoading = false }) {
             <button
               type="button"
               className="btn-secondary text-sm py-2 px-4"
-              disabled
+              disabled={currentPage === 1}
+              onClick={() => {
+                setCurrentPage(currentPage - 1);
+                document
+                  .getElementById("katalog")
+                  ?.scrollIntoView({ behavior: "smooth" });
+              }}
             >
               ← Sebelumnya
             </button>
-            <span
-              className="font-playfair font-bold text-ink
-                           bg-parchment-100 border border-parchment-200 px-4 py-2 rounded-lg"
+            <div className="flex items-center gap-2">
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                (page) => (
+                  <button
+                    key={page}
+                    type="button"
+                    className={`px-3 py-2 rounded-lg text-sm font-semibold transition-all ${
+                      page === currentPage
+                        ? "bg-primary text-white"
+                        : "bg-white border border-borderSoft text-textSecondary hover:border-primary hover:text-primary"
+                    }`}
+                    onClick={() => {
+                      setCurrentPage(page);
+                      document
+                        .getElementById("katalog")
+                        ?.scrollIntoView({ behavior: "smooth" });
+                    }}
+                  >
+                    {page}
+                  </button>
+                ),
+              )}
+            </div>
+            <button
+              type="button"
+              className="btn-secondary text-sm py-2 px-4"
+              disabled={currentPage === totalPages}
+              onClick={() => {
+                setCurrentPage(currentPage + 1);
+                document
+                  .getElementById("katalog")
+                  ?.scrollIntoView({ behavior: "smooth" });
+              }}
             >
-              1
-            </span>
-            <button type="button" className="btn-secondary text-sm py-2 px-4">
               Berikutnya →
             </button>
           </nav>
