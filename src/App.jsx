@@ -59,9 +59,9 @@ export default function App() {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="flex flex-row gap-2">
-          <div className="w-4 h-4 rounded-full bg-blue-700 animate-bounce [animation-delay:.7s]"></div>
-          <div className="w-4 h-4 rounded-full bg-blue-700 animate-bounce [animation-delay:.3s]"></div>
-          <div className="w-4 h-4 rounded-full bg-blue-700 animate-bounce [animation-delay:.7s]"></div>
+          <div className="w-4 h-4 rounded-full bg-accent animate-bounce [animation-delay:.7s]"></div>
+          <div className="w-4 h-4 rounded-full bg-primary animate-bounce [animation-delay:.3s]"></div>
+          <div className="w-4 h-4 rounded-full bg-accent animate-bounce [animation-delay:.7s]"></div>
         </div>
       </div>
     );
@@ -69,12 +69,12 @@ export default function App() {
 
   if (error) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-parchment-50 px-4">
-        <div className="max-w-md rounded-lg border border-red-100 bg-white p-6 text-center shadow-book">
-          <p className="font-playfair text-xl font-semibold text-ink mb-2">
+      <div className="min-h-screen flex items-center justify-center bg-cream px-4">
+        <div className="max-w-md rounded-lg border border-borderSoft bg-white p-6 text-center shadow-book">
+          <p className="font-playfair text-xl font-semibold text-textMain mb-2">
             Data belum bisa dimuat
           </p>
-          <p className="font-crimson text-slate-500 mb-4">{error}</p>
+          <p className="font-crimson text-textSecondary mb-4">{error}</p>
           <button type="button" className="btn-primary" onClick={fetchData}>
             Coba Lagi
           </button>
@@ -84,7 +84,7 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-parchment-50 font-crimson">
+    <div className="min-h-screen flex flex-col bg-cream font-crimson">
       <Header />
       <main id="main-content" className="flex-1" role="main">
         <HomePage books={dataStore} />

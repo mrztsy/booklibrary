@@ -67,12 +67,12 @@ export default function LibraryPage({ books = [] }) {
       <section
         id="katalog"
         aria-labelledby="library-heading"
-        className="bg-gradient-to-br from-ink to-ink-700 text-white py-12"
+        className="border-y-4 border-accent/70 bg-gradient-to-br from-primary via-primary to-accentHover text-white py-12"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
             <div>
-              <p className="section-label text-amber-300 mb-2">
+              <p className="section-label text-accent mb-2">
                 Data Langsung dari API
               </p>
               <h1
@@ -82,7 +82,7 @@ export default function LibraryPage({ books = [] }) {
                 Perpustakaan Digital
               </h1>
               <p className="font-crimson text-white/60 mt-2 text-lg">
-                Sumber: <span className="text-amber-300">Open Library API</span>
+                Sumber: <span className="text-accent">Open Library API</span>
               </p>
             </div>
             <div
@@ -90,7 +90,7 @@ export default function LibraryPage({ books = [] }) {
                             bg-white/5 border border-white/10 px-4 py-2 rounded-lg"
             >
               <span
-                className="w-2 h-2 rounded-full bg-emerald-400"
+                className="w-2 h-2 rounded-full bg-accent"
                 aria-hidden="true"
               />
               {/* ✅ status aktif karena sudah fetch */}
@@ -103,7 +103,7 @@ export default function LibraryPage({ books = [] }) {
       {/* Form pencarian (UI only) */}
       <section
         aria-label="Form pencarian katalog API"
-        className="border-b border-slate-200 bg-white sticky top-[73px] z-30"
+        className="border-b border-borderSoft bg-white sticky top-[73px] z-30"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <form
@@ -115,7 +115,7 @@ export default function LibraryPage({ books = [] }) {
           >
             <div className="flex-1 relative">
               <svg
-                className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400"
+                className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-textSecondary"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -157,9 +157,9 @@ export default function LibraryPage({ books = [] }) {
                   <span
                     className="inline-flex items-center gap-1.5 px-3 py-2 text-xs
                                    font-semibold font-crimson rounded-lg border cursor-pointer
-                                   border-slate-200 bg-white text-slate-600
-                                   peer-checked:bg-ink peer-checked:text-white peer-checked:border-ink
-                                   hover:border-amber-300 hover:text-amber-700 transition-all duration-200"
+                                   border-borderSoft bg-white text-secondary
+                                   peer-checked:bg-primary peer-checked:text-white peer-checked:border-primary
+                                   hover:border-accent hover:text-accentHover transition-all duration-200"
                   >
                     <Icon name={t.icon} className="w-3.5 h-3.5" />
                     {t.label}
@@ -193,24 +193,24 @@ export default function LibraryPage({ books = [] }) {
             <p className="section-label">Hasil API</p>
             <h2
               id="results-heading"
-              className="font-playfair font-semibold text-xl text-ink"
+              className="font-playfair font-semibold text-xl text-textMain"
             >
-              Topik: <span className="text-amber-700">{selectedTopicLabel}</span>
-              <span className="font-crimson font-normal text-base text-slate-400 ml-2">
+              Topik: <span className="text-accentHover">{selectedTopicLabel}</span>
+              <span className="font-crimson font-normal text-base text-textSecondary ml-2">
                 · Halaman 1
               </span>
             </h2>
             {hasSearch && (
-              <p className="font-crimson text-sm text-slate-500 mt-1">
+              <p className="font-crimson text-sm text-textSecondary mt-1">
                 Hasil pencarian untuk "{debouncedSearchTerm}"
               </p>
             )}
           </div>
           <div
-            className="flex items-center gap-2 text-sm font-crimson text-slate-500
-                          bg-slate-50 border border-slate-200 px-3 py-1.5 rounded-lg"
+            className="flex items-center gap-2 text-sm font-crimson text-textSecondary
+                          bg-white border border-borderSoft px-3 py-1.5 rounded-lg"
           >
-            <Icon name="collection" className="w-4 h-4 text-amber-500" />
+            <Icon name="collection" className="w-4 h-4 text-accent" />
             {/* ✅ pakai books.length bukan PLACEHOLDER_BOOKS */}
             {filteredBooks.length} dari {books.length} buku
           </div>
@@ -229,11 +229,11 @@ export default function LibraryPage({ books = [] }) {
             ))}
           </div>
         ) : (
-          <div className="rounded-lg border border-slate-200 bg-white p-8 text-center mb-10">
-            <p className="font-playfair text-lg font-semibold text-ink">
+          <div className="rounded-lg border border-borderSoft bg-white p-8 text-center mb-10">
+            <p className="font-playfair text-lg font-semibold text-textMain">
               Buku tidak ditemukan
             </p>
-            <p className="font-crimson text-sm text-slate-500 mt-1">
+            <p className="font-crimson text-sm text-textSecondary mt-1">
               Coba ubah kata kunci atau pilih topik lain.
             </p>
           </div>
@@ -243,12 +243,12 @@ export default function LibraryPage({ books = [] }) {
         {filteredBooks.some((b) => b.rating) && (
           <section
             aria-labelledby="stats-heading"
-            className="bg-parchment-100 border border-parchment-200 rounded-lg p-6 mb-8"
+            className="bg-white border border-borderSoft rounded-lg p-6 mb-8"
           >
             <p className="section-label mb-1">Statistik</p>
             <h3
               id="stats-heading"
-              className="font-playfair font-semibold text-ink mb-5"
+              className="font-playfair font-semibold text-textMain mb-5"
             >
               Top 5 Rating Tertinggi
             </h3>
@@ -258,13 +258,13 @@ export default function LibraryPage({ books = [] }) {
                 .slice(0, 5)
                 .map((book, i) => (
                   <div key={book.key || i} className="flex items-center gap-3">
-                    <span className="w-5 text-xs font-bold text-slate-400 font-crimson">
+                    <span className="w-5 text-xs font-bold text-textSecondary font-crimson">
                       {i + 1}
                     </span>
-                    <span className="font-crimson text-sm text-slate-700 flex-1 truncate">
+                    <span className="font-crimson text-sm text-secondary flex-1 truncate">
                       {book.title}
                     </span>
-                    <span className="text-xs text-slate-400 font-crimson whitespace-nowrap">
+                    <span className="text-xs text-textSecondary font-crimson whitespace-nowrap">
                       ★ {book.rating}
                     </span>
                   </div>
@@ -286,8 +286,8 @@ export default function LibraryPage({ books = [] }) {
             ← Sebelumnya
           </button>
           <span
-            className="font-playfair font-bold text-ink
-                           bg-parchment-100 border border-parchment-200 px-4 py-2 rounded-lg"
+            className="font-playfair font-bold text-textMain
+                           bg-white border border-borderSoft px-4 py-2 rounded-lg"
           >
             1
           </span>

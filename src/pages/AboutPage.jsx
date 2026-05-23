@@ -58,11 +58,11 @@ export default function AboutPage() {
       <section className="grid grid-cols-1 lg:grid-cols-[1.05fr_0.95fr] gap-10 items-center mb-12">
         <div>
           <p className="section-label mb-3">Tentang Folio</p>
-          <h1 className="font-extrabold text-4xl lg:text-5xl text-ink mb-5 leading-tight">
+          <h1 className="font-extrabold text-4xl lg:text-5xl text-textMain mb-5 leading-tight">
             Perpustakaan digital yang sederhana untuk menemukan bacaan
             berikutnya.
           </h1>
-          <p className="text-lg text-slate-600 leading-relaxed max-w-2xl">
+          <p className="text-lg text-secondary leading-relaxed max-w-2xl">
             Folio Book Library membantu pengguna menelusuri koleksi buku dengan
             tampilan bersih, filter yang mudah dipakai, dan akses ke katalog
             klasik online. Aplikasi ini dirancang agar proses mencari, membaca
@@ -70,7 +70,7 @@ export default function AboutPage() {
           </p>
         </div>
 
-        <div className="bg-white border border-slate-200 rounded-lg shadow-book p-6">
+        <div className="bg-white border border-borderSoft rounded-lg shadow-book p-6">
           <div className="grid grid-cols-2 gap-4">
             {[
               { icon: "collection", value: "12+", label: "Buku lokal" },
@@ -80,14 +80,14 @@ export default function AboutPage() {
             ].map((item) => (
               <div
                 key={item.label}
-                className="rounded-lg bg-slate-50 border border-slate-200 p-4"
+                className="rounded-lg bg-cream border border-borderSoft p-4"
               >
                 <Icon
                   name={item.icon}
-                  className="w-5 h-5 text-amber-600 mb-3"
+                  className="w-5 h-5 text-accentHover mb-3"
                 />
-                <p className="text-2xl font-extrabold text-ink">{item.value}</p>
-                <p className="text-sm text-slate-500 mt-1">{item.label}</p>
+                <p className="text-2xl font-extrabold text-textMain">{item.value}</p>
+                <p className="text-sm text-textSecondary mt-1">{item.label}</p>
               </div>
             ))}
           </div>
@@ -98,15 +98,15 @@ export default function AboutPage() {
         {highlights.map((item) => (
           <div
             key={item.title}
-            className="bg-white border border-slate-200 rounded-lg p-5 shadow-book hover:border-amber-200 transition-colors duration-200"
+            className="bg-white border border-borderSoft rounded-lg p-5 shadow-book hover:border-accent transition-colors duration-200"
           >
-            <span className="w-9 h-9 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center mb-4">
+            <span className="w-9 h-9 rounded-lg bg-cream text-accentHover flex items-center justify-center mb-4">
               <Icon name={item.icon} className="w-4 h-4" />
             </span>
-            <h2 className="font-semibold text-lg text-ink mb-2">
+            <h2 className="font-semibold text-lg text-textMain mb-2">
               {item.title}
             </h2>
-            <p className="text-sm text-slate-500 leading-relaxed">
+            <p className="text-sm text-textSecondary leading-relaxed">
               {item.desc}
             </p>
           </div>
@@ -114,19 +114,19 @@ export default function AboutPage() {
       </section>
 
       <section className="grid grid-cols-1 lg:grid-cols-2 gap-5">
-        <div className="bg-white border border-slate-200 rounded-lg p-6 shadow-book">
+        <div className="bg-white border border-borderSoft rounded-lg p-6 shadow-book">
           <p className="section-label mb-3">Alur Penggunaan</p>
-          <h2 className="font-semibold text-2xl text-ink mb-5">
+          <h2 className="font-semibold text-2xl text-textMain mb-5">
             Cara memakai Folio
           </h2>
           <div className="space-y-4">
             {steps.map((step, index) => (
               <div key={step.text} className="flex gap-3">
-                <span className="mt-0.5 w-8 h-8 rounded-full bg-amber-50 text-amber-600 flex items-center justify-center flex-shrink-0">
+                <span className="mt-0.5 w-8 h-8 rounded-full bg-cream text-accentHover flex items-center justify-center flex-shrink-0">
                   <Icon name={step.icon} className="w-4 h-4" />
                 </span>
-                <p className="text-slate-600 leading-relaxed">
-                  <span className="font-semibold text-ink mr-1">
+                <p className="text-secondary leading-relaxed">
+                  <span className="font-semibold text-textMain mr-1">
                     {index + 1}.
                   </span>
                   {step.text}
@@ -136,12 +136,12 @@ export default function AboutPage() {
           </div>
         </div>
 
-        <div className="bg-white border border-slate-200 rounded-lg p-6 shadow-book">
+        <div className="bg-white border border-borderSoft rounded-lg p-6 shadow-book">
           <p className="section-label mb-3">Sumber Data</p>
-          <h2 className="font-semibold text-2xl text-ink mb-5">
+          <h2 className="font-semibold text-2xl text-textMain mb-5">
             Dari koleksi lokal dan katalog terbuka
           </h2>
-          <p className="text-slate-600 leading-relaxed mb-5">
+          <p className="text-secondary leading-relaxed mb-5">
             Folio menggabungkan data buku yang disiapkan di dalam aplikasi
             dengan katalog publik agar pengguna bisa melihat contoh koleksi
             terkurasi sekaligus menjelajahi buku klasik.
@@ -150,7 +150,7 @@ export default function AboutPage() {
             {dataSources.map((source) => (
               <span
                 key={source.label}
-                className="inline-flex items-center gap-2 rounded-full border border-amber-100 bg-amber-50 px-3 py-1.5 text-sm font-semibold text-amber-600"
+                className="inline-flex items-center gap-2 rounded-full border border-borderSoft bg-cream px-3 py-1.5 text-sm font-semibold text-accentHover"
               >
                 <Icon name={source.icon} className="w-3.5 h-3.5" />
                 {source.label}

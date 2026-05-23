@@ -16,14 +16,14 @@ export default function HomePage({ books = [] }) {
     return (
       <section
         id="beranda"
-        className="min-h-[60vh] flex items-center justify-center bg-parchment-50 px-4"
+        className="min-h-[60vh] flex items-center justify-center bg-cream px-4"
       >
-        <div className="max-w-md rounded-lg border border-slate-200 bg-white p-6 text-center shadow-book">
+        <div className="max-w-md rounded-lg border border-borderSoft bg-white p-6 text-center shadow-book">
           <p className="section-label mb-2">Koleksi Buku</p>
-          <h1 className="font-playfair text-2xl font-bold text-ink mb-2">
+          <h1 className="font-playfair text-2xl font-bold text-textMain mb-2">
             Data buku belum tersedia
           </h1>
-          <p className="font-crimson text-slate-500">
+          <p className="font-crimson text-textSecondary">
             Tunggu sebentar sampai data dari API selesai dimuat.
           </p>
         </div>
@@ -40,7 +40,7 @@ export default function HomePage({ books = [] }) {
       <section
         id="beranda"
         aria-labelledby="hero-heading"
-        className="relative overflow-hidden bg-ink text-white"
+        className="relative overflow-hidden border-b-4 border-accent bg-primary text-white"
       >
         {/* Background blur cover */}
         <div
@@ -51,28 +51,32 @@ export default function HomePage({ books = [] }) {
           aria-hidden="true"
         />
         <div
-          className="absolute inset-0 bg-gradient-to-r from-ink via-ink/85 to-ink/60"
+          className="absolute inset-0 bg-gradient-to-r from-primary via-primary/90 to-accentHover/65"
+          aria-hidden="true"
+        />
+        <div
+          className="absolute inset-x-0 bottom-0 h-px bg-white/20"
           aria-hidden="true"
         />
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 lg:py-20">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24">
           {/* Flexbox / Grid dua kolom */}
           <div className="grid grid-cols-1 lg:grid-cols-[1.2fr_0.8fr] gap-12 items-center">
             {/* Teks hero */}
             <div>
-              <p className="section-label mb-3 text-amber-300">
+              <p className="section-label mb-3 text-accent">
                 Buku Pilihan Minggu Ini
               </p>
               <h1
                 id="hero-heading"
                 className="font-playfair font-extrabold text-4xl lg:text-6xl
-                           text-white leading-tight mb-4 max-w-2xl"
+                           text-white leading-tight mb-5 max-w-2xl"
               >
                 {heroBook.title}
               </h1>
-              <p className="text-slate-200 text-lg mb-8">
+              <p className="max-w-xl border-l-2 border-accent pl-4 text-white/82 text-lg mb-8">
                 oleh{" "}
-                <span className="text-amber-200 font-semibold">
+                <span className="text-accent font-semibold">
                   {heroBook.author}
                 </span>
                 <span className="mx-2 text-white/30">·</span>
@@ -83,7 +87,7 @@ export default function HomePage({ books = [] }) {
                   <Icon name="eye" className="w-4 h-4" strokeWidth={2} />
                   Lihat Koleksi
                 </a>
-                <a href="#katalog" className="btn-secondary text-ink">
+                <a href="#katalog" className="btn-secondary text-primary">
                   <Icon name="cloud" className="w-4 h-4" />
                   Katalog API
                 </a>
@@ -97,13 +101,13 @@ export default function HomePage({ books = [] }) {
                   <img
                     src={heroBook.cover}
                     alt={`Sampul buku ${heroBook.title}`}
-                    className="w-full rounded-lg shadow-2xl border border-white/10
+                    className="w-full rounded-lg shadow-2xl border-4 border-white/15
                                hover:scale-105 transition-transform duration-500"
                   />
                 ) : (
                   <div
                     className="aspect-[2/3] w-full rounded-lg shadow-2xl border border-white/10
-                               bg-gradient-to-br from-amber-800 to-stone-700 p-5
+                               bg-gradient-to-br from-primary to-secondary p-5
                                flex items-center justify-center"
                   >
                     <p className="font-playfair text-white/80 text-center text-sm">
@@ -112,10 +116,10 @@ export default function HomePage({ books = [] }) {
                   </div>
                 )}
                 <figcaption
-                  className="absolute -bottom-4 -right-4 bg-white text-ink
+                  className="absolute -bottom-4 -right-4 bg-white text-textMain
                              px-3 py-1.5 rounded-lg shadow-book flex items-center gap-2"
                 >
-                  <Icon name="star" className="w-4 h-4 text-amber-500" />
+                  <Icon name="star" className="w-4 h-4 text-accent" />
                   <span className="font-playfair font-bold text-lg">
                     {heroBook.rating}
                   </span>
@@ -142,7 +146,7 @@ export default function HomePage({ books = [] }) {
                   key={stat.label}
                   className="flex items-center gap-3 px-4 py-4"
                 >
-                  <span className="w-9 h-9 rounded-lg bg-white/10 flex items-center justify-center text-amber-300">
+                  <span className="w-9 h-9 rounded-lg bg-white/10 flex items-center justify-center text-accent">
                     <Icon name={stat.icon} className="w-4 h-4" />
                   </span>
                   <span>
@@ -164,7 +168,7 @@ export default function HomePage({ books = [] }) {
       <section
         id="koleksi"
         aria-labelledby="koleksi-heading"
-        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12"
+        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14"
       >
         {/* Layout dua kolom: aside filter + grid buku */}
         <div className="flex flex-col lg:flex-row gap-8">
@@ -184,14 +188,14 @@ export default function HomePage({ books = [] }) {
                 <p className="section-label">Koleksi Buku</p>
                 <h2
                   id="koleksi-heading"
-                  className="font-playfair font-bold text-2xl text-ink"
+                  className="font-playfair font-bold text-2xl text-textMain"
                 >
                   Semua Buku
                 </h2>
               </div>
-              <p className="font-crimson text-sm text-slate-500">
+              <p className="font-crimson text-sm text-textSecondary">
                 Menampilkan{" "}
-                <span className="font-semibold text-amber-600">
+                <span className="font-semibold text-accentHover">
                   {collectionBooks.length}
                 </span>{" "}
                 buku
@@ -219,7 +223,7 @@ export default function HomePage({ books = [] }) {
       ══════════════════════════════════════════════ */}
       <section
         aria-labelledby="featured-heading"
-        className="bg-parchment-100 border-y border-parchment-200 py-10"
+        className="bg-white border-y border-borderSoft py-10"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between mb-6">
@@ -227,7 +231,7 @@ export default function HomePage({ books = [] }) {
               <p className="section-label">Pilihan Editor</p>
               <h2
                 id="featured-heading"
-                className="font-playfair font-bold text-2xl text-ink"
+                className="font-playfair font-bold text-2xl text-textMain"
               >
                 Buku Unggulan
               </h2>
