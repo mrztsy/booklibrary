@@ -7,8 +7,10 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        playfair: ['"Playfair Display"', 'Georgia', 'serif'],
-        crimson:  ['"Crimson Pro"', 'Georgia', 'serif'],
+        playfair: ['"Poppins"', 'Inter', 'system-ui', 'sans-serif'],
+        crimson: ['"Inter"', 'system-ui', 'sans-serif'],
+        display: ['"Poppins"', 'Inter', 'system-ui', 'sans-serif'],
+        sans: ['"Inter"', 'system-ui', 'sans-serif'],
       },
       colors: {
         cream: '#F6F1E8',

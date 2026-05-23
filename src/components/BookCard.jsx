@@ -13,6 +13,12 @@ export default function BookCard({ book, onSelect }) {
   const rating = Number(book.rating) || 0;
   const coverUrl = book.cover;
   const tags = book.tags || book.subject?.slice(0, 3) || [];
+  const displayGenres = [
+    book.genre,
+    ...(book.genres || []),
+    ...tags,
+  ].filter(Boolean);
+  const uniqueGenres = [...new Set(displayGenres)];
   const gradient = gradients[title.charCodeAt(0) % gradients.length];
 
   return (
@@ -78,7 +84,9 @@ export default function BookCard({ book, onSelect }) {
       </figure>
 
       <div className="p-4">
-        <p className="section-label mb-1">{book.genre || "General"}</p>
+        <p className="section-label mb-1">
+          {uniqueGenres.slice(0, 2).join(" / ") || "General"}
+        </p>
         <h3
           className="font-playfair font-semibold text-textMain leading-snug
                      line-clamp-2 mb-1 text-base
@@ -117,9 +125,9 @@ export default function BookCard({ book, onSelect }) {
           </span>
         </div>
 
-        {tags.length > 0 && (
+        {uniqueGenres.length > 0 && (
           <div className="flex flex-wrap gap-1 mt-3">
-            {tags.slice(0, 2).map((tag) => (
+            {uniqueGenres.slice(0, 4).map((tag) => (
               <span
                 key={tag}
                 className="text-[10px] font-crimson bg-cream

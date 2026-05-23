@@ -4,21 +4,24 @@ import BookModal from "../components/BookModal";
 import Icon from "../components/Icon";
 
 const TOPICS = [
-  { value: "fiction", label: "Fiction", icon: "bookOpen" },
-  { value: "adventure", label: "Adventure", icon: "compass" },
-  { value: "mystery", label: "Mystery", icon: "eye" },
-  { value: "romance", label: "Romance", icon: "heart" },
-  { value: "philosophy", label: "Philosophy", icon: "scroll" },
-  { value: "science", label: "Science", icon: "flask" },
-  { value: "history", label: "History", icon: "globe" },
-  { value: "poetry", label: "Poetry", icon: "pen" },
+  { value: "Semua", label: "Semua", icon: "collection" },
+  { value: "Fiction", label: "Fiction", icon: "bookOpen" },
+  { value: "Fantasy", label: "Fantasy", icon: "star" },
+  { value: "Adventure", label: "Adventure", icon: "compass" },
+  { value: "Mystery", label: "Mystery", icon: "eye" },
+  { value: "Romance", label: "Romance", icon: "heart" },
+  { value: "Science", label: "Science", icon: "flask" },
+  { value: "Chemistry", label: "Chemistry", icon: "flask" },
+  { value: "Physics", label: "Physics", icon: "flask" },
+  { value: "History", label: "History", icon: "globe" },
+  { value: "Poetry", label: "Poetry", icon: "pen" },
 ];
 
 // ✅ Terima prop books dari App
 export default function LibraryPage({ books = [] }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
-  const [selectedTopic, setSelectedTopic] = useState("fiction");
+  const [selectedTopic, setSelectedTopic] = useState("Semua");
   const [selectedBook, setSelectedBook] = useState(null);
 
   const activeKeyword = debouncedSearchTerm.trim().toLowerCase();
@@ -52,7 +55,7 @@ export default function LibraryPage({ books = [] }) {
     const matchesSearch =
       activeKeyword === "" || searchableText.includes(activeKeyword);
     const matchesTopic =
-      selectedTopic === "fiction" ||
+      selectedTopic === "Semua" ||
       searchableText.includes(selectedTopic.toLowerCase());
 
     return matchesSearch && matchesTopic;

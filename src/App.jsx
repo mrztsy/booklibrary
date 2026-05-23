@@ -7,10 +7,124 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { FALLBACK_BOOKS } from "./data/books";
 
+const toText = (value) => {
+  if (Array.isArray(value)) return value.join(" ");
+  return value || "";
+};
+
+const GENRE_RULES = [
+  { genre: "Chemistry", words: ["chemistry", "chemical", "molecule"] },
+  {
+    genre: "Physics",
+    words: [
+      "physics",
+      "relativity",
+      "quantum",
+      "mechanics",
+      "einstein",
+      "thermodynamics",
+      "astronomy",
+    ],
+  },
+  {
+    genre: "Mathematics",
+    words: ["mathematics", "math", "algebra", "geometry", "calculus"],
+  },
+  {
+    genre: "Science Fiction",
+    words: ["science fiction", "sci-fi", "space fiction"],
+  },
+  { genre: "Science", words: ["science", "biology", "botany", "zoology"] },
+  { genre: "Fantasy", words: ["fantasy", "magic", "myth"] },
+  { genre: "Adventure", words: ["adventure", "journey", "exploration"] },
+  { genre: "Mystery", words: ["mystery", "detective", "crime", "suspense"] },
+  { genre: "Romance", words: ["romance", "love", "courtship"] },
+  { genre: "History", words: ["history", "historical", "civilization"] },
+  { genre: "Biography", words: ["biography", "autobiography", "memoir"] },
+  { genre: "Religion", words: ["religion", "christian", "islam", "bible"] },
+  { genre: "Art", words: ["art", "painting", "music", "design"] },
+  { genre: "Business", words: ["business", "economics", "finance"] },
+  { genre: "Poetry", words: ["poetry", "poem", "poems"] },
+  { genre: "Children", words: ["children", "juvenile", "picture book"] },
+  { genre: "Horror", words: ["horror", "ghost", "supernatural"] },
+  { genre: "Dystopia", words: ["dystopia", "dystopian"] },
+  { genre: "Philosophy", words: ["philosophy", "ethics", "logic"] },
+  { genre: "Classic", words: ["classic", "literature"] },
+  { genre: "Nonfiction", words: ["essay", "education", "reference"] },
+];
+
+const RELATED_GENRES = {
+  Chemistry: ["Science"],
+  Physics: ["Science"],
+  Mathematics: ["Science"],
+  Biography: ["Nonfiction"],
+  History: ["Nonfiction"],
+  Business: ["Nonfiction"],
+  Art: ["Nonfiction"],
+  Religion: ["Nonfiction"],
+  Philosophy: ["Nonfiction"],
+  Dystopia: ["Fiction"],
+  Fantasy: ["Fiction"],
+  Mystery: ["Fiction"],
+  Romance: ["Fiction"],
+  Horror: ["Fiction"],
+  Adventure: ["Fiction"],
+  "Science Fiction": ["Fiction", "Science"],
+};
+
+const buildSearchText = (book) =>
+  [
+    book.title,
+    book.subtitle,
+    toText(book.author_name),
+    toText(book.subject),
+    toText(book.subject_facet),
+    toText(book.person),
+    toText(book.place),
+    toText(book.time),
+    book.type,
+  ]
+    .filter(Boolean)
+    .join(" ")
+    .toLowerCase();
+
+const getBookGenres = (book) => {
+  const searchableText = buildSearchText(book);
+
+  const matchedGenres = GENRE_RULES.filter((rule) =>
+    rule.words.some((word) => searchableText.includes(word)),
+  ).map((rule) => rule.genre);
+
+  const primaryGenres = matchedGenres.length > 0 ? matchedGenres : ["Fiction"];
+  const relatedGenres = primaryGenres.flatMap(
+    (genre) => RELATED_GENRES[genre] || [],
+  );
+
+  return [...new Set([...primaryGenres, ...relatedGenres])].slice(0, 4);
+};
+
+const formatSubjectTags = (book, genres) => {
+  const genreSet = new Set(genres.map((genre) => genre.toLowerCase()));
+  const rawTags = [...(book.subject || []), ...(book.subject_facet || [])];
+
+  return rawTags
+    .map((tag) => tag?.trim())
+    .filter(Boolean)
+    .filter((tag) => !genreSet.has(tag.toLowerCase()))
+    .filter((tag) => tag.length <= 24)
+    .slice(0, 2);
+};
+
+const formatTags = (book, genres) => {
+  const subjectTags = formatSubjectTags(book, genres);
+  return [...new Set([...genres, ...subjectTags])].slice(0, 4);
+};
+
 const formatOpenLibraryBook = (book, index) => {
   const title = book.title || "Judul tidak tersedia";
   const author = book.author_name?.join(", ") || "Penulis tidak diketahui";
-  const genre = book.subject?.[0] || book.subject_facet?.[0] || "General";
+  const genres = getBookGenres(book);
+  const genre = genres[0];
   const cover = book.cover_i
     ? `https://covers.openlibrary.org/b/id/${book.cover_i}-L.jpg`
     : "";
@@ -21,12 +135,13 @@ const formatOpenLibraryBook = (book, index) => {
     title,
     author,
     genre,
+    genres,
     year: book.first_publish_year || "-",
     rating: Number((3.8 + (index % 10) / 10).toFixed(1)),
     pages: book.number_of_pages_median || book.edition_count || "-",
     available: index % 3 !== 0,
     cover,
-    tags: book.subject?.slice(0, 3) || [genre],
+    tags: formatTags(book, genres),
   };
 };
 

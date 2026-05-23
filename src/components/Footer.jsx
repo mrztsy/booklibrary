@@ -1,4 +1,5 @@
 import Icon from './Icon'
+import { GENRES } from '../data/books'
 
 export default function Footer() {
   const navItems = [
@@ -8,14 +9,27 @@ export default function Footer() {
     { label: 'Tentang',      href: '#tentang',  icon: 'info' },
   ]
 
-  const genres = [
-    { label: 'Fiction',   icon: 'bookOpen' },
-    { label: 'Fantasy',   icon: 'star' },
-    { label: 'Sci-Fi',    icon: 'flask' },
-    { label: 'Distopia',  icon: 'globe' },
-    { label: 'Romance',   icon: 'heart' },
-    { label: 'Filsafat',  icon: 'info' },
-  ]
+  const genreIcons = {
+    Fiction: 'bookOpen',
+    Fantasy: 'star',
+    Adventure: 'compass',
+    Mystery: 'eye',
+    Romance: 'heart',
+    Science: 'flask',
+    Chemistry: 'flask',
+    Physics: 'flask',
+    Mathematics: 'info',
+    'Science Fiction': 'flask',
+    History: 'globe',
+    Biography: 'users',
+    Religion: 'scroll',
+    Art: 'pen',
+    Business: 'collection',
+    Philosophy: 'scroll',
+    Poetry: 'pen',
+  }
+
+  const genres = GENRES.filter(item => item !== 'Semua').slice(0, 6)
 
   return (
 
@@ -63,14 +77,14 @@ export default function Footer() {
             </h4>
             <ul className="space-y-2 text-sm">
               {genres.map(item => (
-                <li key={item.label}>
+                <li key={item}>
                   <a
                     href="#koleksi"
                     className="inline-flex items-center gap-2
                                hover:text-accent transition-colors duration-200"
                   >
-                    <Icon name={item.icon} className="w-3.5 h-3.5" />
-                    {item.label}
+                    <Icon name={genreIcons[item] || 'tag'} className="w-3.5 h-3.5" />
+                    {item}
                   </a>
                 </li>
               ))}
