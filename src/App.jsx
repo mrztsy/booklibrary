@@ -5,6 +5,7 @@ import LibraryPage from "./pages/LibraryPage";
 import AboutPage from "./pages/AboutPage";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { FALLBACK_BOOKS } from "./data/books";
 
 const formatOpenLibraryBook = (book, index) => {
   const title = book.title || "Judul tidak tersedia";
@@ -81,7 +82,10 @@ export default function App() {
 
       setDataStore(books);
     } catch (err) {
-      setError("Gagal memuat produk. Coba lagi.");
+      setDataStore((currentBooks) =>
+        currentBooks.length > 0 ? currentBooks : FALLBACK_BOOKS,
+      );
+      setError("API Open Library belum bisa diakses, menampilkan data contoh.");
       console.error(err);
     } finally {
       setIsLoading(false);
@@ -104,7 +108,7 @@ export default function App() {
     );
   }
 
-  if (error) {
+  if (error && dataStore.length === 0) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-cream px-4">
         <div className="max-w-md rounded-lg border border-borderSoft bg-white p-6 text-center shadow-book">
@@ -112,7 +116,11 @@ export default function App() {
             Data belum bisa dimuat
           </p>
           <p className="font-crimson text-textSecondary mb-4">{error}</p>
-          <button type="button" className="btn-primary" onClick={fetchData}>
+          <button
+            type="button"
+            className="btn-primary"
+            onClick={() => fetchData()}
+          >
             Coba Lagi
           </button>
         </div>

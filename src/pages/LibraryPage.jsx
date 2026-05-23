@@ -23,6 +23,9 @@ export default function LibraryPage({ books = [] }) {
 
   const activeKeyword = debouncedSearchTerm.trim().toLowerCase();
   const hasSearch = activeKeyword !== "";
+  const selectedTopicLabel =
+    TOPICS.find((topic) => topic.value === selectedTopic)?.label ||
+    selectedTopic;
 
   useEffect(() => {
     const timerId = setTimeout(() => {

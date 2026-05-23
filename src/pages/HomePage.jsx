@@ -212,28 +212,6 @@ export default function HomePage({ books = [], error, fetchData }) {
           </aside>
 
           {/* Konten utama: daftar buku */}
-<<<<<<< HEAD
-          <div className="flex-1 min-w-0">
-            {/* Header section */}
-            <div className="flex items-center justify-between mb-6 flex-wrap gap-3">
-              <div>
-                <p className="section-label">Koleksi Buku</p>
-                <h2
-                  id="koleksi-heading"
-                  className="font-playfair font-bold text-2xl text-textMain"
-                >
-                  Semua Buku
-                </h2>
-              </div>
-              <p className="font-crimson text-sm text-textSecondary">
-                Menampilkan{" "}
-                <span className="font-semibold text-accentHover">
-                  {collectionBooks.length}
-                </span>{" "}
-                buku
-              </p>
-            </div>
-=======
           {filtered.length > 0 ? (
             <div className="flex-1 min-w-0">
               {/* Header section */}
@@ -242,20 +220,19 @@ export default function HomePage({ books = [], error, fetchData }) {
                   <p className="section-label">Koleksi Buku</p>
                   <h2
                     id="koleksi-heading"
-                    className="font-playfair font-bold text-2xl text-ink"
+                    className="font-playfair font-bold text-2xl text-textMain"
                   >
                     Semua Buku
                   </h2>
                 </div>
-                <p className="font-crimson text-sm text-slate-500">
+                <p className="font-crimson text-sm text-textSecondary">
                   Menampilkan{" "}
-                  <span className="font-semibold text-amber-600">
+                  <span className="font-semibold text-accentHover">
                     {filtered.length} {/* ← bukan collectionBooks.length */}
                   </span>
                   buku
                 </p>
               </div>
->>>>>>> 51b6953c5b4f80076e64f2385a7627a86e4c2916
 
               <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
                 {filtered.map(
@@ -284,7 +261,7 @@ export default function HomePage({ books = [], error, fetchData }) {
                   <button
                     type="button"
                     className="btn-primary"
-                    onClick={fetchData}
+                    onClick={() => fetchData()}
                   >
                     Coba Lagi
                   </button>

@@ -1,4 +1,4 @@
-export default function BookCard({ book, index = 0, onSelect }) {
+export default function BookCard({ book, onSelect }) {
   const gradients = [
     "from-primary to-secondary",
     "from-textMain to-primary",
@@ -6,46 +6,49 @@ export default function BookCard({ book, index = 0, onSelect }) {
     "from-primary to-accent",
   ];
 
-  const coverUrl = book.cover;
-
-  console.log(book);
-
   const title = book.title || "Judul tidak tersedia";
-  const authors = book.author || "Penulis tidak diketahui";
-  const year = book.first_publish_year || "—";
-  const subjects = book.subject?.slice(0, 3).join(", ") || "—";
-
+  const authors =
+    book.author || book.author_name?.join(", ") || "Penulis tidak diketahui";
+  const year = book.year || book.first_publish_year || "-";
+  const rating = Number(book.rating) || 0;
+  const coverUrl = book.cover;
+  const tags = book.tags || book.subject?.slice(0, 3) || [];
   const gradient = gradients[title.charCodeAt(0) % gradients.length];
+
   return (
     <article
       className="book-card group"
       aria-label={`Buku: ${title} oleh ${authors}`}
     >
       <figure className="relative aspect-[2/3] overflow-hidden border-b border-borderSoft bg-cream">
-        <img
-          src={coverUrl}
-          alt={`Sampul buku ${title}`}
-          loading="lazy"
-          className="w-full h-full object-cover
-                     transition-transform duration-500 group-hover:scale-105"
-          onError={(e) => {
-            e.currentTarget.style.display = "none";
-          }}
-        />
-
-        <div>
-          <img src={coverUrl} alt="" />
-          <p className="font-playfair text-white/80 text-center text-xs leading-relaxed">
+        <div
+          className={`absolute inset-0 bg-gradient-to-br ${gradient} p-5 flex items-center justify-center`}
+          aria-hidden="true"
+        >
+          <p className="font-playfair text-white/85 text-center text-sm leading-relaxed">
             {title}
           </p>
         </div>
 
+        {coverUrl && (
+          <img
+            src={coverUrl}
+            alt={`Sampul buku ${title}`}
+            loading="lazy"
+            className="relative z-[1] w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+            onError={(event) => {
+              event.currentTarget.style.display = "none";
+            }}
+          />
+        )}
+
         <figcaption className="sr-only">
-          {title} — {authors}
+          {title} - {authors}
         </figcaption>
+
         <span
           aria-label={book.available ? "Tersedia" : "Sedang dipinjam"}
-          className={`absolute top-2 right-2 text-xs font-semibold font-crimson
+          className={`absolute top-2 right-2 z-20 text-xs font-semibold font-crimson
                       px-2 py-0.5 rounded-full
             ${
               book.available
@@ -57,8 +60,8 @@ export default function BookCard({ book, index = 0, onSelect }) {
         </span>
 
         <div
-          className="absolute inset-0 bg-primary/70 opacity-0 group-hover:opacity-100
-                        transition-opacity duration-300 flex items-center justify-center z-10"
+          className="absolute inset-0 z-10 bg-primary/70 opacity-0 group-hover:opacity-100
+                     transition-opacity duration-300 flex items-center justify-center"
         >
           {onSelect ? (
             <button
@@ -75,32 +78,29 @@ export default function BookCard({ book, index = 0, onSelect }) {
       </figure>
 
       <div className="p-4">
-        <p className="section-label mb-1">{book.genre}</p>
+        <p className="section-label mb-1">{book.genre || "General"}</p>
         <h3
           className="font-playfair font-semibold text-textMain leading-snug
-                       line-clamp-2 mb-1 text-base
-                       group-hover:text-accentHover transition-colors duration-200"
+                     line-clamp-2 mb-1 text-base
+                     group-hover:text-accentHover transition-colors duration-200"
         >
           {title}
         </h3>
-<<<<<<< HEAD
         <p className="font-crimson text-sm text-textSecondary mb-3 line-clamp-1">
-          {author}
+          {authors}
         </p>
 
         <div className="flex items-center justify-between">
           <div
             className="flex items-center gap-1"
-            aria-label={`Rating ${rating}`}
+            aria-label={rating ? `Rating ${rating}` : "Rating belum tersedia"}
           >
             {[1, 2, 3, 4, 5].map((star) => (
               <svg
                 key={star}
                 aria-hidden="true"
                 className={`w-3 h-3 ${
-                  star <= Math.round(rating)
-                    ? "text-accent"
-                    : "text-borderSoft"
+                  star <= Math.round(rating) ? "text-accent" : "text-borderSoft"
                 }`}
                 fill="currentColor"
                 viewBox="0 0 20 20"
@@ -113,19 +113,13 @@ export default function BookCard({ book, index = 0, onSelect }) {
             </span>
           </div>
           <span className="text-xs text-textSecondary font-crimson">
-            {book.year}
+            {year}
           </span>
         </div>
 
-=======
-        <p className="font-crimson text-sm text-slate-500 mb-3 line-clamp-1">
-          {authors}
-        </p>
-
->>>>>>> 51b6953c5b4f80076e64f2385a7627a86e4c2916
-        {book.tags && (
+        {tags.length > 0 && (
           <div className="flex flex-wrap gap-1 mt-3">
-            {book.tags.slice(0, 2).map((tag) => (
+            {tags.slice(0, 2).map((tag) => (
               <span
                 key={tag}
                 className="text-[10px] font-crimson bg-cream
