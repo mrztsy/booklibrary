@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import BookCard from "../components/BookCard";
+import BookCardSkeleton from "../components/BookCardSkeleton";
 import BookModal from "../components/BookModal";
 import Icon from "../components/Icon";
-import LoadingSpinner from "../components/LoadingSpinner";
 
 const TOPICS = [
   { value: "Semua", label: "Semua", icon: "collection" },
@@ -268,8 +268,17 @@ export default function LibraryPage({
 
         {/* ✅ render dari prop books, bukan PLACEHOLDER_BOOKS */}
         {showLoading ? (
-          <div className="rounded-lg border border-borderSoft bg-white/80 shadow-book">
-            <LoadingSpinner message="Mengambil data dari Open Library API..." />
+          <div
+            className="mb-10 grid grid-cols-1 items-stretch gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+            role="status"
+            aria-live="polite"
+          >
+            {Array.from({ length: 8 }, (_, index) => (
+              <BookCardSkeleton key={index} />
+            ))}
+            <span className="sr-only">
+              Mengambil data dari Open Library API...
+            </span>
           </div>
         ) : hasFilteredBooks ? (
           <div className="mb-10 grid grid-cols-1 items-stretch gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">

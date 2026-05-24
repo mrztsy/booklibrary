@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import BookCard from "../components/BookCard";
+import BookCardSkeleton from "../components/BookCardSkeleton";
 import BookModal from "../components/BookModal";
 import SearchFilter from "../components/SearchFilter";
 import Icon from "../components/Icon";
@@ -11,6 +12,7 @@ export default function HomePage({
   books = [],
   error,
   fetchData,
+  isLoading = false,
   favoriteBooks = [],
   favoriteIds = new Set(),
   onToggleFavorite,
@@ -87,6 +89,57 @@ export default function HomePage({
 
     return () => clearInterval(timerId);
   }, [featuredBooks.length]);
+
+  if (!heroBook && isLoading) {
+    return (
+      <>
+        <section
+          id="beranda"
+          aria-label="Memuat beranda"
+          className="relative min-h-[calc(100vh-76px)] overflow-hidden border-b border-accent/60 bg-primary text-white"
+        >
+          <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(10,26,24,0.9),rgba(10,26,24,0.62),rgba(20,18,16,0.35))]" />
+          <div className="relative mx-auto flex min-h-[calc(100vh-140px)] max-w-7xl items-center px-4 py-14 sm:px-6 lg:px-8 lg:py-20">
+            <div className="grid w-full grid-cols-1 items-center gap-10 lg:grid-cols-[minmax(0,1.1fr)_minmax(280px,0.9fr)] lg:gap-14">
+              <div className="max-w-3xl animate-pulse">
+                <div className="mb-4 h-4 w-44 rounded-full bg-accent/50" />
+                <div className="mb-3 h-12 max-w-xl rounded-full bg-white/20 sm:h-14" />
+                <div className="mb-6 h-12 max-w-lg rounded-full bg-white/15 sm:h-14" />
+                <div className="mb-4 h-5 max-w-md rounded-full bg-white/15" />
+                <div className="mb-8 h-4 max-w-2xl rounded-full bg-white/10" />
+                <div className="flex gap-3">
+                  <div className="h-11 w-32 rounded-lg bg-accent/60" />
+                  <div className="h-11 w-32 rounded-lg bg-white/20" />
+                </div>
+              </div>
+
+              <div className="flex justify-center lg:justify-end">
+                <div className="aspect-[2/3] w-44 animate-pulse rounded-lg border border-white/15 bg-white/20 shadow-2xl sm:w-52 lg:w-64" />
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section
+          id="koleksi"
+          aria-label="Memuat koleksi buku"
+          className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8"
+        >
+          <div className="mb-6">
+            <p className="section-label">Koleksi Buku</p>
+            <h2 className="font-playfair text-2xl font-bold text-textMain">
+              Memuat Buku
+            </h2>
+          </div>
+          <div className="grid grid-cols-1 items-stretch gap-6 sm:grid-cols-2 xl:grid-cols-3">
+            {Array.from({ length: 6 }, (_, index) => (
+              <BookCardSkeleton key={index} />
+            ))}
+          </div>
+        </section>
+      </>
+    );
+  }
 
   if (!heroBook) {
     return (
@@ -302,7 +355,37 @@ export default function HomePage({
             />
           </aside>
 
-          {filtered.length > 0 ? (
+          {isLoading ? (
+            <div className="min-w-0 flex-1" role="status" aria-live="polite">
+              <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
+                <div>
+                  <p className="section-label">Koleksi Buku</p>
+                  <h2
+                    id="koleksi-heading"
+                    className="font-playfair text-2xl font-bold text-textMain"
+                  >
+                    Memuat Buku
+                  </h2>
+                </div>
+              </div>
+
+              {collectionView === "grid" ? (
+                <div className="grid grid-cols-1 items-stretch gap-6 sm:grid-cols-2 xl:grid-cols-3">
+                  {Array.from({ length: 6 }, (_, index) => (
+                    <BookCardSkeleton key={index} />
+                  ))}
+                </div>
+              ) : (
+                <div className="space-y-2.5">
+                  {Array.from({ length: 6 }, (_, index) => (
+                    <BookCardSkeleton key={index} variant="list" />
+                  ))}
+                </div>
+              )}
+
+              <span className="sr-only">Mengambil data buku...</span>
+            </div>
+          ) : filtered.length > 0 ? (
             <div className="min-w-0 flex-1">
               <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
                 <div>
