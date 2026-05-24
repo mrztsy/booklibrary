@@ -1,12 +1,13 @@
 import { useState } from 'react'
 import Icon from './Icon'
 
-export default function Header() {
+export default function Header({ favoriteCount = 0 }) {
   const [menuOpen, setMenuOpen] = useState(false)
 
   const navLinks = [
     { href: '#beranda',    label: 'Beranda',         icon: 'home' },
     { href: '#katalog',    label: 'Katalog API',      icon: 'cloud' },
+    { href: '#favorit',    label: 'Favorit',          icon: 'heart' },
     { href: '#tentang',    label: 'Tentang',          icon: 'info' },
   ]
 
@@ -47,20 +48,31 @@ export default function Header() {
               >
                 <Icon name={link.icon} className="w-4 h-4" />
                 {link.label}
+                {link.href === '#favorit' && (
+                  <span
+                    className="ml-0.5 inline-flex min-w-5 items-center justify-center rounded-full bg-accent px-1.5 py-0.5 text-[10px] font-bold text-white"
+                    aria-label={`${favoriteCount} buku favorit`}
+                  >
+                    {favoriteCount}
+                  </span>
+                )}
               </a>
             ))}
           </nav>
 
           <div className="flex items-center gap-3">
             <a
-              href="#katalog"
+              href="#favorit"
               className="hidden sm:flex items-center gap-2 border border-white/15 bg-white/10
                          px-3 py-2 text-sm font-semibold font-crimson text-white/80 rounded-lg
                          hover:border-accent hover:bg-white hover:text-primary
                          transition-all duration-200 shadow-sm"
             >
-              <Icon name="search" className="w-3.5 h-3.5" strokeWidth={2} />
-              Cari Buku
+              <Icon name="heart" className="w-3.5 h-3.5" strokeWidth={2} />
+              <span>Favorit</span>
+              <span className="inline-flex min-w-5 items-center justify-center rounded-full bg-accent px-1.5 py-0.5 text-[10px] font-bold text-white">
+                {favoriteCount}
+              </span>
             </a>
 
             {/* Hamburger — md:hidden, toggle menuOpen */}
@@ -110,7 +122,14 @@ export default function Header() {
                          hover:bg-white/10 hover:text-accent transition-colors duration-200"
             >
               <Icon name={link.icon} className="w-4 h-4" />
-              {link.label}
+              <span className="inline-flex items-center gap-1">
+                {link.label}
+                {link.href === '#favorit' && (
+                  <span className="inline-flex min-w-4 items-center justify-center rounded-full bg-accent px-1 text-[10px] font-bold text-white">
+                    {favoriteCount}
+                  </span>
+                )}
+              </span>
             </a>
           ))}
         </div>

@@ -7,8 +7,12 @@ const normalizeOpenLibraryDescription = (description) => {
   return "";
 };
 
-export default function BookModal({ book, onClose = () => {} }) {
-  const [isSaved, setIsSaved] = useState(false);
+export default function BookModal({
+  book,
+  onClose = () => {},
+  isFavorite = false,
+  onToggleFavorite,
+}) {
   const [isBorrowed, setIsBorrowed] = useState(false);
   const [synopsis, setSynopsis] = useState("");
   const [isSynopsisLoading, setIsSynopsisLoading] = useState(false);
@@ -154,9 +158,9 @@ export default function BookModal({ book, onClose = () => {} }) {
               <button
                 type="button"
                 className="btn-secondary text-sm py-2.5"
-                onClick={() => setIsSaved((current) => !current)}
+                onClick={() => onToggleFavorite?.(book)}
               >
-                {isSaved ? "Tersimpan" : "Simpan"}
+                {isFavorite ? "Hapus dari Favorit" : "Simpan ke Favorit"}
               </button>
             </div>
           </div>

@@ -18,8 +18,15 @@ const TOPICS = [
   { value: "Poetry", label: "Poetry", icon: "pen" },
 ];
 
+const getBookId = (book) => book?.key || book?.id || book?.workKey || book?.title;
+
 // ✅ Terima prop books dari App
-export default function LibraryPage({ books = [], isLoading = false }) {
+export default function LibraryPage({
+  books = [],
+  isLoading = false,
+  favoriteIds = new Set(),
+  onToggleFavorite,
+}) {
   const ITEMS_PER_PAGE = 10;
   const [searchTerm, setSearchTerm] = useState("");
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
@@ -33,6 +40,7 @@ export default function LibraryPage({ books = [], isLoading = false }) {
   const selectedTopicLabel =
     TOPICS.find((topic) => topic.value === selectedTopic)?.label ||
     selectedTopic;
+  const isBookFavorite = (book) => favoriteIds.has(getBookId(book));
 
   useEffect(() => {
     const timerId = setTimeout(() => {
@@ -271,6 +279,8 @@ export default function LibraryPage({ books = [], isLoading = false }) {
                 book={book}
                 index={i}
                 onSelect={setSelectedBook}
+                isFavorite={isBookFavorite(book)}
+                onToggleFavorite={onToggleFavorite}
               />
             ))}
           </div>
@@ -381,6 +391,8 @@ export default function LibraryPage({ books = [], isLoading = false }) {
         key={selectedBook?.key || selectedBook?.id || "empty-book-modal"}
         book={selectedBook}
         onClose={() => setSelectedBook(null)}
+        isFavorite={isBookFavorite(selectedBook)}
+        onToggleFavorite={onToggleFavorite}
       />
     </>
   );

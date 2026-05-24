@@ -219,10 +219,50 @@ const formatOpenLibraryBook = (book, index) => {
   };
 };
 
+const FAVORITES_STORAGE_KEY = "folio-favorite-books";
+
+const getBookId = (book) => book?.key || book?.id || book?.workKey || book?.title;
+
 export default function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [dataStore, setDataStore] = useState([]);
   const [error, setError] = useState(null);
+  const [favoriteBooks, setFavoriteBooks] = useState(() => {
+    try {
+      const savedFavorites = localStorage.getItem(FAVORITES_STORAGE_KEY);
+      return savedFavorites ? JSON.parse(savedFavorites) : [];
+    } catch {
+      return [];
+    }
+  });
+
+  const favoriteIds = new Set(favoriteBooks.map(getBookId).filter(Boolean));
+
+  const toggleFavorite = (book) => {
+    const bookId = getBookId(book);
+    if (!bookId) return;
+
+    setFavoriteBooks((currentFavorites) => {
+      const alreadySaved = currentFavorites.some(
+        (favoriteBook) => getBookId(favoriteBook) === bookId,
+      );
+
+      if (alreadySaved) {
+        return currentFavorites.filter(
+          (favoriteBook) => getBookId(favoriteBook) !== bookId,
+        );
+      }
+
+      return [book, ...currentFavorites];
+    });
+  };
+
+  useEffect(() => {
+    localStorage.setItem(
+      FAVORITES_STORAGE_KEY,
+      JSON.stringify(favoriteBooks),
+    );
+  }, [favoriteBooks]);
 
   async function fetchData(filters = {}) {
     setIsLoading(true);
@@ -307,16 +347,24 @@ export default function App() {
 
   return (
     <div className="min-h-screen flex flex-col bg-cream font-crimson">
-      <Header />
+      <Header favoriteCount={favoriteBooks.length} />
       <main id="main-content" className="flex-1" role="main">
         <HomePage
           books={dataStore}
           error={error}
           fetchData={fetchData}
           isLoading={isLoading}
+          favoriteBooks={favoriteBooks}
+          favoriteIds={favoriteIds}
+          onToggleFavorite={toggleFavorite}
         />
 
-        <LibraryPage books={dataStore} isLoading={isLoading} />
+        <LibraryPage
+          books={dataStore}
+          isLoading={isLoading}
+          favoriteIds={favoriteIds}
+          onToggleFavorite={toggleFavorite}
+        />
 
         <AboutPage />
       </main>

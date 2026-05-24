@@ -5,7 +5,16 @@ import SearchFilter from "../components/SearchFilter";
 import Icon from "../components/Icon";
 import { GENRES } from "../data/books";
 
-export default function HomePage({ books = [], error, fetchData }) {
+const getBookId = (book) => book?.key || book?.id || book?.workKey || book?.title;
+
+export default function HomePage({
+  books = [],
+  error,
+  fetchData,
+  favoriteBooks = [],
+  favoriteIds = new Set(),
+  onToggleFavorite,
+}) {
   const ITEMS_PER_PAGE = 10;
   const [filters, setFilters] = useState(null);
   const [selectedBook, setSelectedBook] = useState(null);
@@ -61,6 +70,8 @@ export default function HomePage({ books = [], error, fetchData }) {
   const heroBook = featuredBooks[activeHeroIndex] || featuredBooks[0];
   const totalAuthors = new Set(books.map((book) => book.author)).size;
   const totalGenres = GENRES.filter((genre) => genre !== "Semua").length;
+  const favoriteCount = favoriteBooks.length;
+  const isBookFavorite = (book) => favoriteIds.has(getBookId(book));
 
   useEffect(() => {
     setActiveHeroIndex(0);
@@ -174,6 +185,21 @@ export default function HomePage({ books = [], error, fetchData }) {
                   <Icon name="cloud" className="w-4 h-4" />
                   Katalog API
                 </a>
+                <button
+                  type="button"
+                  className={`inline-flex items-center justify-center gap-2 rounded-lg border px-5 py-2.5 font-crimson font-semibold transition-all duration-300 ${
+                    isBookFavorite(heroBook)
+                      ? "border-accent bg-accent text-white hover:bg-accentHover"
+                      : "border-white/20 bg-white/10 text-white hover:border-accent hover:bg-white hover:text-primary"
+                  }`}
+                  aria-pressed={isBookFavorite(heroBook)}
+                  onClick={() => onToggleFavorite?.(heroBook)}
+                >
+                  <Icon name="heart" className="h-4 w-4" strokeWidth={2} />
+                  {isBookFavorite(heroBook)
+                    ? "Hapus dari Favorit"
+                    : "Simpan ke Favorit"}
+                </button>
               </div>
               {featuredBooks.length > 1 && (
                 <div
@@ -268,7 +294,12 @@ export default function HomePage({ books = [], error, fetchData }) {
       >
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-[16rem_minmax(0,1fr)]">
           <aside aria-label="Panel filter buku" className="lg:self-start">
-            <SearchFilter onFilter={setFilters} />
+            <SearchFilter
+              onFilter={(values) => {
+                setFilters(values);
+                fetchData(values);
+              }}
+            />
           </aside>
 
           {filtered.length > 0 ? (
@@ -329,6 +360,8 @@ export default function HomePage({ books = [], error, fetchData }) {
                       book={book}
                       index={i}
                       onSelect={setSelectedBook}
+                      isFavorite={isBookFavorite(book)}
+                      onToggleFavorite={onToggleFavorite}
                     />
                   ))}
                 </div>
@@ -398,13 +431,28 @@ export default function HomePage({ books = [], error, fetchData }) {
                         </div>
 
                         <div className="col-span-2 flex justify-end sm:col-span-1 sm:self-center">
-                          <button
-                            type="button"
-                            className="btn-primary px-3 py-1.5 text-xs sm:text-sm"
-                            onClick={() => setSelectedBook(book)}
-                          >
-                            Lihat Detail
-                          </button>
+                          <div className="flex flex-wrap justify-end gap-2">
+                            <button
+                              type="button"
+                              className={`inline-flex items-center justify-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-semibold transition-all sm:text-sm ${
+                                isBookFavorite(book)
+                                  ? "border-accent bg-accent text-white hover:bg-accentHover"
+                                  : "border-borderSoft bg-white text-secondary hover:border-accent hover:text-accentHover"
+                              }`}
+                              aria-pressed={isBookFavorite(book)}
+                              onClick={() => onToggleFavorite?.(book)}
+                            >
+                              <Icon name="heart" className="h-3.5 w-3.5" />
+                              {isBookFavorite(book) ? "Hapus" : "Favorit"}
+                            </button>
+                            <button
+                              type="button"
+                              className="btn-primary px-3 py-1.5 text-xs sm:text-sm"
+                              onClick={() => setSelectedBook(book)}
+                            >
+                              Lihat Detail
+                            </button>
+                          </div>
                         </div>
                       </article>
                     );
@@ -513,17 +561,76 @@ export default function HomePage({ books = [], error, fetchData }) {
                 key={book.key || book.id || i}
                 className="snap-start flex-shrink-0 w-40 sm:w-48"
               >
-                <BookCard book={book} index={i} onSelect={setSelectedBook} />
+                <BookCard
+                  book={book}
+                  index={i}
+                  onSelect={setSelectedBook}
+                  isFavorite={isBookFavorite(book)}
+                  onToggleFavorite={onToggleFavorite}
+                />
               </div>
             ))}
           </div>
         </div>
       </section>
 
+      <section
+        id="favorit"
+        aria-labelledby="favorite-heading"
+        className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8"
+      >
+        <div className="mb-6 flex flex-wrap items-end justify-between gap-3">
+          <div>
+            <p className="section-label">Rak Pribadi</p>
+            <h2
+              id="favorite-heading"
+              className="font-playfair text-2xl font-bold text-textMain"
+            >
+              Buku Favorit
+            </h2>
+          </div>
+          <div className="inline-flex items-center gap-2 rounded-lg border border-borderSoft bg-white px-3 py-1.5 text-sm font-semibold text-textSecondary shadow-book">
+            <Icon name="heart" className="h-4 w-4 text-accent" />
+            {favoriteCount} buku
+          </div>
+        </div>
+
+        {favoriteBooks.length > 0 ? (
+          <div className="grid grid-cols-1 items-stretch gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            {favoriteBooks.map((book, i) => (
+              <BookCard
+                key={book.key || book.id || i}
+                book={book}
+                index={i}
+                onSelect={setSelectedBook}
+                isFavorite={isBookFavorite(book)}
+                onToggleFavorite={onToggleFavorite}
+              />
+            ))}
+          </div>
+        ) : (
+          <div className="rounded-lg border border-borderSoft bg-white p-8 text-center shadow-book">
+            <Icon name="heart" className="mx-auto mb-3 h-8 w-8 text-accent" />
+            <p className="font-playfair text-lg font-semibold text-textMain">
+              Belum ada buku favorit
+            </p>
+            <p className="mx-auto mt-1 max-w-md text-sm text-textSecondary">
+              Simpan buku dari koleksi atau katalog API untuk membuat rak
+              favorit pribadi.
+            </p>
+            <a href="#koleksi" className="btn-primary mt-5">
+              Jelajahi Buku
+            </a>
+          </div>
+        )}
+      </section>
+
       <BookModal
         key={selectedBook?.key || selectedBook?.id || "home-book-modal"}
         book={selectedBook}
         onClose={() => setSelectedBook(null)}
+        isFavorite={isBookFavorite(selectedBook)}
+        onToggleFavorite={onToggleFavorite}
       />
     </>
   );

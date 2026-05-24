@@ -1,4 +1,11 @@
-export default function BookCard({ book, onSelect }) {
+import Icon from "./Icon";
+
+export default function BookCard({
+  book,
+  onSelect,
+  isFavorite = false,
+  onToggleFavorite,
+}) {
   const gradients = [
     "from-primary to-secondary",
     "from-textMain to-primary",
@@ -65,6 +72,33 @@ export default function BookCard({ book, onSelect }) {
           {book.available ? "Tersedia" : "Dipinjam"}
         </span>
 
+        {onToggleFavorite && (
+          <button
+            type="button"
+            className={`absolute left-2 top-2 z-20 inline-flex h-9 w-9 items-center justify-center rounded-full border transition-all duration-200 ${
+              isFavorite
+                ? "border-accent bg-accent text-white"
+                : "border-white/40 bg-primary/70 text-white hover:border-accent hover:bg-accent"
+            }`}
+            aria-label={
+              isFavorite
+                ? `Hapus ${title} dari favorit`
+                : `Simpan ${title} ke favorit`
+            }
+            aria-pressed={isFavorite}
+            onClick={(event) => {
+              event.stopPropagation();
+              onToggleFavorite(book);
+            }}
+          >
+            <Icon
+              name="heart"
+              className="h-4 w-4"
+              strokeWidth={isFavorite ? 2.4 : 2}
+            />
+          </button>
+        )}
+
         <div
           className="absolute inset-0 z-10 flex translate-y-2 items-center justify-center bg-primary/70
                      opacity-0 transition-all duration-300 ease-out group-hover:translate-y-0 group-hover:opacity-100"
@@ -124,6 +158,22 @@ export default function BookCard({ book, onSelect }) {
             {year}
           </span>
         </div>
+
+        {onToggleFavorite && (
+          <button
+            type="button"
+            className={`mt-3 inline-flex min-h-9 items-center justify-center gap-2 rounded-lg border px-3 py-2 text-xs font-semibold transition-all duration-200 ${
+              isFavorite
+                ? "border-accent bg-accent text-white hover:bg-accentHover"
+                : "border-borderSoft bg-white text-secondary hover:border-accent hover:text-accentHover"
+            }`}
+            aria-pressed={isFavorite}
+            onClick={() => onToggleFavorite(book)}
+          >
+            <Icon name="heart" className="h-3.5 w-3.5" strokeWidth={2} />
+            {isFavorite ? "Hapus dari Favorit" : "Simpan ke Favorit"}
+          </button>
+        )}
 
         {uniqueGenres.length > 0 && (
           <div className="mt-3 flex min-h-[1.5rem] flex-wrap gap-1">
