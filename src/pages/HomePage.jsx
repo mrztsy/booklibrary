@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import BookCard from "../components/BookCard";
 import BookCardSkeleton from "../components/BookCardSkeleton";
 import BookModal from "../components/BookModal";
@@ -8,8 +8,62 @@ import { GENRES } from "../data/books";
 
 const getBookId = (book) => book?.key || book?.id || book?.workKey || book?.title;
 
+const getNumericYear = (book) => {
+  const year = Number(book?.year || book?.first_publish_year);
+  return Number.isFinite(year) ? year : 0;
+};
+
+const getRecommendationGenres = (book) =>
+  [book?.genre, ...(book?.genres || []), ...(book?.tags || [])].filter(Boolean);
+
+const getRecommendedBooks = (books, limit = 5) => {
+  if (books.length === 0) return [];
+
+  const genreCounts = books.reduce((counts, book) => {
+    getRecommendationGenres(book).forEach((genre) => {
+      counts.set(genre, (counts.get(genre) || 0) + 1);
+    });
+    return counts;
+  }, new Map());
+
+  const years = books.map(getNumericYear).filter(Boolean);
+  const newestYear = years.length > 0 ? Math.max(...years) : 0;
+  const oldestYear = years.length > 0 ? Math.min(...years) : newestYear;
+  const yearRange = Math.max(newestYear - oldestYear, 1);
+  const maxGenreCount = Math.max(...genreCounts.values(), 1);
+
+  return [...books]
+    .map((book, index) => {
+      const rating = Number(book.rating) || 0;
+      const year = getNumericYear(book);
+      const genres = getRecommendationGenres(book);
+      const genrePopularity =
+        genres.length > 0
+          ? Math.max(...genres.map((genre) => genreCounts.get(genre) || 0))
+          : 0;
+
+      const score =
+        (rating / 5) * 40 +
+        (year ? ((year - oldestYear) / yearRange) * 25 : 0) +
+        (genrePopularity / maxGenreCount) * 20 +
+        (book.available ? 15 : 0);
+
+      return { book, index, score, rating, year };
+    })
+    .sort((a, b) => {
+      if (b.score !== a.score) return b.score - a.score;
+      if (b.rating !== a.rating) return b.rating - a.rating;
+      if (b.year !== a.year) return b.year - a.year;
+      if (a.book.available !== b.book.available) return a.book.available ? -1 : 1;
+      return a.index - b.index;
+    })
+    .slice(0, limit)
+    .map(({ book }) => book);
+};
+
 export default function HomePage({
   books = [],
+  featuredSourceBooks = books,
   error,
   fetchData,
   isLoading = false,
@@ -66,10 +120,12 @@ export default function HomePage({
     endIndexCollection,
   );
 
-  const markedFeaturedBooks = books.filter((book) => book.featured).slice(0, 5);
-  const featuredBooks =
-    markedFeaturedBooks.length > 0 ? markedFeaturedBooks : books.slice(0, 5);
+  const featuredBooks = useMemo(
+    () => getRecommendedBooks(featuredSourceBooks),
+    [featuredSourceBooks],
+  );
   const heroBook = featuredBooks[activeHeroIndex] || featuredBooks[0];
+  const editorBook = heroBook;
   const totalAuthors = new Set(books.map((book) => book.author)).size;
   const totalGenres = GENRES.filter((genre) => genre !== "Semua").length;
   const isBookFavorite = (book) => favoriteIds.has(getBookId(book));
@@ -333,6 +389,152 @@ export default function HomePage({
                     </span>
                   </span>
                 </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section
+        aria-labelledby="featured-heading"
+        className="border-b border-borderSoft bg-white py-12"
+      >
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="mb-6">
+            <p className="section-label">Pilihan Editor</p>
+            <h2
+              id="featured-heading"
+              className="font-playfair text-2xl font-bold text-textMain"
+            >
+              Buku Unggulan
+            </h2>
+          </div>
+
+          <div className="grid gap-5 lg:grid-cols-[minmax(0,1.45fr)_minmax(300px,0.85fr)]">
+            <article className="book-card grid gap-5 p-4 sm:grid-cols-[12rem_minmax(0,1fr)] lg:p-5">
+              <div className="relative overflow-hidden rounded-lg bg-cream">
+                {editorBook.cover ? (
+                  <img
+                    src={editorBook.cover}
+                    alt={`Sampul buku ${editorBook.title}`}
+                    className="aspect-[2/3] h-full w-full object-cover"
+                    loading="lazy"
+                  />
+                ) : (
+                  <div className="flex aspect-[2/3] h-full w-full items-center justify-center bg-gradient-to-br from-primary to-secondary p-5 text-center text-sm font-semibold text-white/80">
+                    {editorBook.title}
+                  </div>
+                )}
+                <span className="absolute left-3 top-3 rounded-full bg-accent px-3 py-1 text-xs font-bold text-white shadow-book">
+                  Paling Direkomendasikan
+                </span>
+              </div>
+
+              <div className="flex min-w-0 flex-col">
+                <div className="mb-3 flex flex-wrap gap-2">
+                  {(editorBook.genres || editorBook.tags || [editorBook.genre])
+                    .filter(Boolean)
+                    .slice(0, 3)
+                    .map((genre) => (
+                      <span
+                        key={genre}
+                        className="rounded-full border border-borderSoft bg-cream px-3 py-1 text-xs font-semibold text-secondary"
+                      >
+                        {genre}
+                      </span>
+                    ))}
+                </div>
+
+                <h3 className="font-playfair text-2xl font-bold leading-tight text-textMain">
+                  {editorBook.title}
+                </h3>
+                <p className="mt-1 text-sm font-semibold text-textSecondary">
+                  {editorBook.author || "Penulis tidak diketahui"}
+                </p>
+
+                <div className="mt-4 flex flex-wrap items-center gap-3 text-sm text-textSecondary">
+                  <span className="inline-flex items-center gap-1 font-semibold text-accentHover">
+                    <Icon name="star" className="h-4 w-4 text-accent" />
+                    {editorBook.rating || "-"}
+                  </span>
+                  <span className="h-1 w-1 rounded-full bg-borderSoft" />
+                  <span>{editorBook.year || "-"}</span>
+                  <span className="h-1 w-1 rounded-full bg-borderSoft" />
+                  <span>{editorBook.genre || "General"}</span>
+                </div>
+
+                <p className="mt-4 line-clamp-3 text-sm leading-relaxed text-textSecondary">
+                  {editorBook.synopsis ||
+                    editorBook.description ||
+                    "Deskripsi pendek buku belum tersedia dari katalog Open Library."}
+                </p>
+
+                <div className="mt-auto pt-5">
+                  <button
+                    type="button"
+                    className="btn-primary"
+                    onClick={() => setSelectedBook(editorBook)}
+                  >
+                    <Icon name="eye" className="h-4 w-4" strokeWidth={2} />
+                    Lihat Detail
+                  </button>
+                </div>
+              </div>
+            </article>
+
+            <div className="space-y-3">
+              {featuredBooks.map((book, index) => (
+                <button
+                  key={book.key || book.id || index}
+                  type="button"
+                  className={`book-card grid w-full grid-cols-[4.5rem_minmax(0,1fr)] gap-3 p-2.5 text-left transition-all ${
+                    index === activeHeroIndex
+                      ? "border-accent"
+                      : "hover:border-accent"
+                  }`}
+                  aria-label={`Tampilkan buku unggulan ${book.title}`}
+                  aria-pressed={index === activeHeroIndex}
+                  onClick={() => setActiveHeroIndex(index)}
+                >
+                  <div className="h-24 overflow-hidden rounded-md bg-cream">
+                    {book.cover ? (
+                      <img
+                        src={book.cover}
+                        alt={`Sampul buku ${book.title}`}
+                        className="h-full w-full object-cover"
+                        loading="lazy"
+                      />
+                    ) : (
+                      <span className="flex h-full items-center justify-center p-2 text-center text-[10px] font-semibold text-textSecondary">
+                        {book.title}
+                      </span>
+                    )}
+                  </div>
+
+                  <div className="min-w-0 self-center">
+                    <h3 className="font-playfair text-sm font-bold leading-snug text-textMain line-clamp-2">
+                      {book.title}
+                    </h3>
+                    <p className="mt-1 text-xs text-textSecondary line-clamp-1">
+                      {book.author || "Penulis tidak diketahui"}
+                    </p>
+                    <div className="mt-2 flex flex-wrap items-center gap-2 text-xs text-textSecondary">
+                      <span className="inline-flex items-center gap-1 font-semibold text-accentHover">
+                        <Icon name="star" className="h-3.5 w-3.5 text-accent" />
+                        {book.rating || "-"}
+                      </span>
+                      <span
+                        className={`rounded-full px-2 py-0.5 font-semibold ${
+                          book.available
+                            ? "bg-cream text-primary"
+                            : "bg-accentHover text-white"
+                        }`}
+                      >
+                        {book.available ? "Tersedia" : "Dipinjam"}
+                      </span>
+                    </div>
+                  </div>
+                </button>
               ))}
             </div>
           </div>
@@ -619,42 +821,6 @@ export default function HomePage({
             </button>
           </nav>
         )}
-      </section>
-
-      <section
-        aria-labelledby="featured-heading"
-        className="border-y border-borderSoft bg-white py-10"
-      >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between mb-6">
-            <div>
-              <p className="section-label">Pilihan Editor</p>
-              <h2
-                id="featured-heading"
-                className="font-playfair font-bold text-2xl text-textMain"
-              >
-                Buku Unggulan
-              </h2>
-            </div>
-          </div>
-
-          <div className="flex gap-5 overflow-x-auto pb-3 pr-2 snap-x snap-mandatory scroll-smooth">
-            {featuredBooks.map((book, i) => (
-              <div
-                key={book.key || book.id || i}
-                className="snap-start flex-shrink-0 w-40 sm:w-48"
-              >
-                <BookCard
-                  book={book}
-                  index={i}
-                  onSelect={setSelectedBook}
-                  isFavorite={isBookFavorite(book)}
-                  onToggleFavorite={onToggleFavorite}
-                />
-              </div>
-            ))}
-          </div>
-        </div>
       </section>
 
       <BookModal

@@ -238,6 +238,7 @@ export default function App() {
   const [activeRoute, setActiveRoute] = useState(() => getRouteFromHash());
   const [isLoading, setIsLoading] = useState(true);
   const [dataStore, setDataStore] = useState([]);
+  const [recommendationStore, setRecommendationStore] = useState([]);
   const [error, setError] = useState(null);
   const [toasts, setToasts] = useState([]);
   const [isDarkMode, setIsDarkMode] = useState(() => {
@@ -349,7 +350,10 @@ export default function App() {
     );
   }, [favoriteBooks]);
 
-  async function fetchData(filters = {}) {
+  async function fetchData(rawFilters = {}) {
+    const filters = rawFilters || {};
+    const isDefaultFetch = Object.keys(filters).length === 0;
+
     setIsLoading(true);
     setError(null);
     try {
@@ -395,10 +399,17 @@ export default function App() {
       if (filters.available) books = books.filter((b) => b.available);
 
       setDataStore(books);
+      if (isDefaultFetch || recommendationStore.length === 0) {
+        setRecommendationStore(books);
+      }
     } catch (err) {
-      setDataStore((currentBooks) =>
-        currentBooks.length > 0 ? currentBooks : FALLBACK_BOOKS,
-      );
+      setDataStore((currentBooks) => {
+        const nextBooks = currentBooks.length > 0 ? currentBooks : FALLBACK_BOOKS;
+        if (recommendationStore.length === 0) {
+          setRecommendationStore(nextBooks);
+        }
+        return nextBooks;
+      });
       setError("API Open Library belum bisa diakses, menampilkan data contoh.");
       console.error(err);
     } finally {
@@ -442,6 +453,9 @@ export default function App() {
         {activePage === "home" && (
           <HomePage
             books={dataStore}
+            featuredSourceBooks={
+              recommendationStore.length > 0 ? recommendationStore : dataStore
+            }
             error={error}
             fetchData={fetchData}
             isLoading={isLoading}
