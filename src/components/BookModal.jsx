@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import Icon from "./Icon";
 
 const normalizeOpenLibraryDescription = (description) => {
   if (!description) return "";
@@ -16,6 +17,7 @@ export default function BookModal({
   const [isBorrowed, setIsBorrowed] = useState(false);
   const [synopsis, setSynopsis] = useState("");
   const [isSynopsisLoading, setIsSynopsisLoading] = useState(false);
+  const activeBookId = book?.key || book?.id || book?.workKey || book?.title;
 
   useEffect(() => {
     if (!book) return undefined;
@@ -53,13 +55,48 @@ export default function BookModal({
     return () => controller.abort();
   }, [book]);
 
+  useEffect(() => {
+    setIsBorrowed(false);
+  }, [activeBookId]);
+
+  useEffect(() => {
+    if (!book) return undefined;
+
+    const handleKeyDown = (event) => {
+      if (event.key === "Escape") onClose();
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [book, onClose]);
+
   if (!book) return null;
 
   const title = book.title || "Judul tidak tersedia";
   const author = book.author || "Penulis tidak diketahui";
   const genres = [book.genre, ...(book.genres || [])].filter(Boolean);
   const uniqueGenres = [...new Set(genres)];
-  const isAvailable = book.available && !isBorrowed;
+  const isBorrowable = book.available !== false;
+  const isAvailable = isBorrowable && !isBorrowed;
+  const statusLabel = isAvailable ? "Tersedia" : "Dipinjam";
+  const borrowButtonLabel = !isBorrowable
+    ? "Sedang Dipinjam"
+    : isBorrowed
+      ? "Kembalikan Buku"
+      : "Pinjam Buku";
+  const bookInfo = [
+    { label: "Penulis", value: author },
+    { label: "Tahun Terbit", value: book.year || "-" },
+    { label: "Jumlah Halaman", value: book.pages ? `${book.pages} hal` : "-" },
+    {
+      label: "Genre",
+      value: uniqueGenres.length > 0 ? uniqueGenres.join(", ") : "General",
+    },
+    { label: "Rating", value: book.rating ? `${book.rating} / 5.0` : "-" },
+  ];
 
   return (
     <div
@@ -96,47 +133,54 @@ export default function BookModal({
           </div>
 
           <div className="flex-1 p-6" style={{ backgroundColor: "#F6F1E8" }}>
-            <div className="flex items-start justify-between gap-4 mb-2">
-              <p className="section-label">
-                {uniqueGenres.slice(0, 2).join(" / ") || "General"}
-              </p>
+            <div className="mb-3 flex items-start justify-between gap-4">
+              <div className="flex flex-wrap items-center gap-2">
+                <p className="section-label">
+                  {uniqueGenres.slice(0, 2).join(" / ") || "General"}
+                </p>
+                <span
+                  className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold ${
+                    isAvailable
+                      ? "bg-primary text-white"
+                      : "bg-accentHover text-white"
+                  }`}
+                >
+                  {statusLabel}
+                </span>
+              </div>
               <button
                 type="button"
-                className="text-textSecondary hover:text-textMain transition-colors"
+                className="inline-flex items-center gap-1.5 rounded-lg border border-borderSoft bg-white px-3 py-1.5 text-sm font-semibold text-textSecondary transition-colors hover:border-accent hover:text-accentHover"
                 aria-label="Tutup detail buku"
                 onClick={onClose}
               >
-                x
+                <Icon name="close" className="h-4 w-4" strokeWidth={2} />
+                Tutup
               </button>
             </div>
 
             <h2 className="font-playfair font-bold text-2xl text-textMain leading-tight mb-1">
               {title}
             </h2>
-            <p className="font-crimson text-textSecondary mb-4">
-              oleh <span className="font-semibold text-textMain">{author}</span>
-            </p>
 
-            <div className="grid grid-cols-2 gap-3 mb-5">
-              {[
-                { label: "Tahun", value: book.year },
-                { label: "Halaman", value: `${book.pages} hal` },
-                { label: "Status", value: isAvailable ? "Tersedia" : "Dipinjam" },
-                { label: "Rating", value: `${book.rating} / 5.0` },
-              ].map(({ label, value }) => (
-                <div
-                  key={label}
-                  className="bg-white rounded-lg px-3 py-2 border"
-                  style={{ borderColor: "#D8CFC0" }}
-                >
-                  <p className="text-xs text-textSecondary font-crimson">
-                    {label}
-                  </p>
-                  <p className="font-playfair font-semibold text-textMain text-sm">
-                    {value}
-                  </p>
-                </div>
-              ))}
+            <div className="mb-5 mt-4">
+              <p className="section-label mb-2">Informasi Buku</p>
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                {bookInfo.map(({ label, value }) => (
+                  <div
+                    key={label}
+                    className="bg-white rounded-lg px-3 py-2 border"
+                    style={{ borderColor: "#D8CFC0" }}
+                  >
+                    <p className="text-xs text-textSecondary font-crimson">
+                      {label}
+                    </p>
+                    <p className="font-playfair font-semibold text-textMain text-sm">
+                      {value}
+                    </p>
+                  </div>
+                ))}
+              </div>
             </div>
 
             <div className="mb-5 rounded-lg border border-borderSoft bg-white px-4 py-3">
@@ -146,21 +190,22 @@ export default function BookModal({
               </p>
             </div>
 
-            <div className="flex gap-3">
+            <div className="flex flex-wrap gap-3">
               <button
                 type="button"
                 className="btn-primary text-sm py-2.5"
-                disabled={!isAvailable}
-                onClick={() => setIsBorrowed(true)}
+                disabled={!isBorrowable && !isBorrowed}
+                onClick={() => setIsBorrowed((current) => !current)}
               >
-                {isBorrowed ? "Sudah Dipinjam" : "Pinjam Buku"}
+                {borrowButtonLabel}
               </button>
               <button
                 type="button"
                 className="btn-secondary text-sm py-2.5"
                 onClick={() => onToggleFavorite?.(book)}
               >
-                {isFavorite ? "Hapus dari Favorit" : "Simpan ke Favorit"}
+                <Icon name="heart" className="h-4 w-4" strokeWidth={2} />
+                {isFavorite ? "Hapus Favorit" : "Simpan Favorit"}
               </button>
             </div>
           </div>
