@@ -2,7 +2,7 @@ export default function BookCardSkeleton({ variant = "grid" }) {
   if (variant === "list") {
     return (
       <article
-        className="book-card grid animate-pulse grid-cols-[4rem_minmax(0,1fr)] gap-3 p-2.5 sm:grid-cols-[4.5rem_minmax(0,1fr)_auto] sm:items-center"
+        className="book-card mx-auto grid w-full max-w-sm animate-pulse grid-cols-[4rem_minmax(0,1fr)] gap-3 p-2.5 sm:max-w-none sm:grid-cols-[4.5rem_minmax(0,1fr)_auto] sm:items-center"
         aria-hidden="true"
       >
         <div className="h-24 rounded-md bg-borderSoft/70 sm:h-28" />
@@ -26,7 +26,10 @@ export default function BookCardSkeleton({ variant = "grid" }) {
   }
 
   return (
-    <article className="book-card flex h-full animate-pulse flex-col" aria-hidden="true">
+    <article
+      className="book-card mx-auto flex h-full w-full max-w-sm animate-pulse flex-col sm:max-w-none"
+      aria-hidden="true"
+    >
       <div className="relative aspect-[2/3] shrink-0 overflow-hidden border-b border-borderSoft bg-cream">
         <div className="absolute inset-0 bg-gradient-to-br from-borderSoft/80 via-cream to-borderSoft/60" />
         <div className="absolute left-2 top-2 h-9 w-9 rounded-full bg-white/50" />

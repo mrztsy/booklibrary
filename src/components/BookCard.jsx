@@ -30,7 +30,7 @@ export default function BookCard({
 
   return (
     <article
-      className="book-card group flex h-full flex-col"
+      className="book-card group mx-auto flex h-full w-full max-w-sm flex-col sm:max-w-none"
       aria-label={`Buku: ${title} oleh ${authors}`}
     >
       <figure className="relative aspect-[2/3] shrink-0 overflow-hidden border-b border-borderSoft bg-cream">
@@ -117,7 +117,7 @@ export default function BookCard({
         </div>
       </figure>
 
-      <div className="flex flex-1 flex-col p-4">
+      <div className="flex flex-1 flex-col p-3.5 sm:p-4">
         <p className="section-label mb-1 min-h-[1rem] truncate">
           {uniqueGenres.slice(0, 2).join(" / ") || "General"}
         </p>
@@ -132,7 +132,7 @@ export default function BookCard({
           {authors}
         </p>
 
-        <div className="mt-auto flex items-center justify-between">
+        <div className="mt-auto flex flex-wrap items-center justify-between gap-2">
           <div
             className="flex items-center gap-1"
             aria-label={rating ? `Rating ${rating}` : "Rating belum tersedia"}
@@ -162,7 +162,7 @@ export default function BookCard({
         {onToggleFavorite && (
           <button
             type="button"
-            className={`mt-3 inline-flex min-h-9 items-center justify-center gap-2 rounded-lg border px-3 py-2 text-xs font-semibold transition-all duration-200 ${
+            className={`mt-3 inline-flex min-h-9 w-full items-center justify-center gap-2 rounded-lg border px-3 py-2 text-xs font-semibold transition-all duration-200 ${
               isFavorite
                 ? "border-accent bg-accent text-white hover:bg-accentHover"
                 : "border-borderSoft bg-white text-secondary hover:border-accent hover:text-accentHover"

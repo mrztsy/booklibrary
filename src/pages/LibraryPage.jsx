@@ -294,7 +294,7 @@ export default function LibraryPage({
         {/* ✅ render dari prop books, bukan PLACEHOLDER_BOOKS */}
         {showLoading ? (
           <div
-            className="mb-10 grid grid-cols-1 items-stretch gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+            className="mb-10 grid grid-cols-[repeat(auto-fit,minmax(min(100%,13.5rem),1fr))] items-stretch gap-5 lg:gap-6"
             role="status"
             aria-live="polite"
           >
@@ -306,7 +306,7 @@ export default function LibraryPage({
             </span>
           </div>
         ) : hasFilteredBooks ? (
-          <div className="mb-10 grid grid-cols-1 items-stretch gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          <div className="mb-10 grid grid-cols-[repeat(auto-fit,minmax(min(100%,13.5rem),1fr))] items-stretch gap-5 lg:gap-6">
             {paginatedBooks.map((book, i) => (
               <BookCard
                 key={book.key || book.id || i}

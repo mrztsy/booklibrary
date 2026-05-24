@@ -38,7 +38,7 @@ export default function FavoritesPage({
         </div>
 
         {favoriteBooks.length > 0 ? (
-          <div className="grid grid-cols-1 items-stretch gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          <div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,13.5rem),1fr))] items-stretch gap-5 lg:gap-6">
             {favoriteBooks.map((book, index) => (
               <BookCard
                 key={book.key || book.id || index}

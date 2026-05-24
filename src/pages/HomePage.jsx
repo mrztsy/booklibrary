@@ -222,7 +222,7 @@ export default function HomePage({
               Memuat Buku
             </h2>
           </div>
-          <div className="grid grid-cols-1 items-stretch gap-6 sm:grid-cols-2 xl:grid-cols-3">
+          <div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,14rem),1fr))] items-stretch gap-5 lg:gap-6">
             {Array.from({ length: 6 }, (_, index) => (
               <BookCardSkeleton key={index} />
             ))}
@@ -399,7 +399,7 @@ export default function HomePage({
 
         <div className="relative border-t border-white/10 bg-white/[0.06] backdrop-blur-sm">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid grid-cols-3 divide-x divide-white/10">
+            <div className="grid grid-cols-1 gap-3 py-4 sm:grid-cols-3">
               {[
                 {
                   icon: "collection",
@@ -411,16 +411,16 @@ export default function HomePage({
               ].map((stat) => (
                 <div
                   key={stat.label}
-                  className="flex items-center gap-3 px-4 py-4"
+                  className="flex items-center gap-3 rounded-lg border border-white/10 bg-white/10 px-4 py-3 shadow-sm sm:py-4"
                 >
-                  <span className="w-9 h-9 rounded-lg bg-white/10 flex items-center justify-center text-accent">
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-white/10 text-accent sm:h-11 sm:w-11">
                     <Icon name={stat.icon} className="w-4 h-4" />
                   </span>
-                  <span>
-                    <span className="block text-2xl font-extrabold font-playfair text-white leading-none">
+                  <span className="min-w-0">
+                    <span className="block font-playfair text-2xl font-extrabold leading-none text-white sm:text-3xl">
                       {stat.value}
                     </span>
-                    <span className="block text-xs font-crimson text-white/60 mt-1">
+                    <span className="mt-1 block truncate font-crimson text-xs text-white/60 sm:text-sm">
                       {stat.label}
                     </span>
                   </span>
@@ -610,7 +610,7 @@ export default function HomePage({
               </div>
 
               {collectionView === "grid" ? (
-                <div className="grid grid-cols-1 items-stretch gap-6 sm:grid-cols-2 xl:grid-cols-3">
+                <div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,14rem),1fr))] items-stretch gap-5 lg:gap-6">
                   {Array.from({ length: 6 }, (_, index) => (
                     <BookCardSkeleton key={index} />
                   ))}
@@ -676,7 +676,7 @@ export default function HomePage({
               </div>
 
               {collectionView === "grid" ? (
-                <div className="grid grid-cols-1 items-stretch gap-6 sm:grid-cols-2 xl:grid-cols-3">
+                <div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,14rem),1fr))] items-stretch gap-5 lg:gap-6">
                   {paginatedFiltered.map((book, i) => (
                     <BookCard
                       key={book.key || book.id || i}
@@ -701,11 +701,11 @@ export default function HomePage({
                     return (
                       <article
                         key={book.key || book.id || i}
-                        className="book-card group grid grid-cols-[4rem_minmax(0,1fr)] gap-3 p-2.5 sm:grid-cols-[4.5rem_minmax(0,1fr)_auto] sm:items-center"
+                        className="book-card group grid grid-cols-[4.5rem_minmax(0,1fr)] gap-3 p-3 sm:grid-cols-[5rem_minmax(0,1fr)_auto] sm:items-center"
                       >
                         <button
                           type="button"
-                          className="relative h-24 overflow-hidden rounded-md bg-cream sm:h-28"
+                          className="relative h-28 overflow-hidden rounded-md bg-cream sm:h-32"
                           onClick={() => setSelectedBook(book)}
                         >
                           {book.cover ? (
@@ -754,10 +754,10 @@ export default function HomePage({
                         </div>
 
                         <div className="col-span-2 flex justify-end sm:col-span-1 sm:self-center">
-                          <div className="flex flex-wrap justify-end gap-2">
+                          <div className="grid w-full grid-cols-2 gap-2 sm:flex sm:w-auto sm:flex-wrap sm:justify-end">
                             <button
                               type="button"
-                              className={`inline-flex items-center justify-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-semibold transition-all sm:text-sm ${
+                              className={`inline-flex min-h-9 items-center justify-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-semibold transition-all sm:text-sm ${
                                 isBookFavorite(book)
                                   ? "border-accent bg-accent text-white hover:bg-accentHover"
                                   : "border-borderSoft bg-white text-secondary hover:border-accent hover:text-accentHover"
@@ -770,7 +770,7 @@ export default function HomePage({
                             </button>
                             <button
                               type="button"
-                              className="btn-primary px-3 py-1.5 text-xs sm:text-sm"
+                              className="btn-primary min-h-9 px-3 py-1.5 text-xs sm:text-sm"
                               onClick={() => setSelectedBook(book)}
                             >
                               Lihat Detail
