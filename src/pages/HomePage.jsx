@@ -77,6 +77,8 @@ export default function HomePage({
   const [activeHeroIndex, setActiveHeroIndex] = useState(0);
   const [collectionView, setCollectionView] = useState("grid");
   const [currentPageCollection, setCurrentPageCollection] = useState(1);
+  const [filterResetSignal, setFilterResetSignal] = useState(0);
+  const [filterExternalValues, setFilterExternalValues] = useState(null);
 
   const filtered = filters
     ? books
@@ -129,6 +131,40 @@ export default function HomePage({
   const totalAuthors = new Set(books.map((book) => book.author)).size;
   const totalGenres = GENRES.filter((genre) => genre !== "Semua").length;
   const isBookFavorite = (book) => favoriteIds.has(getBookId(book));
+
+  const resetCollectionFilters = () => {
+    setFilters(null);
+    setFilterExternalValues(null);
+    setFilterResetSignal((current) => current + 1);
+    fetchData(null);
+    onToast?.(
+      "Filter direset",
+      "Koleksi buku kembali ke tampilan awal.",
+      "info",
+    );
+  };
+
+  const searchPopularBooks = () => {
+    const popularFilters = {
+      q: "popular",
+      author: "",
+      genre: "Semua",
+      yearMin: 1800,
+      minRating: 0,
+      available: false,
+      featured: false,
+      sort: "rating-desc",
+    };
+
+    setFilters(popularFilters);
+    setFilterExternalValues({ ...popularFilters });
+    fetchData(popularFilters);
+    onToast?.(
+      "Mencari buku populer",
+      "Kami memuat rekomendasi populer dari katalog.",
+      "info",
+    );
+  };
 
   useEffect(() => {
     setActiveHeroIndex(0);
@@ -554,6 +590,8 @@ export default function HomePage({
                 fetchData(values);
               }}
               onToast={onToast}
+              resetSignal={filterResetSignal}
+              externalValues={filterExternalValues}
             />
           </aside>
 
@@ -746,19 +784,33 @@ export default function HomePage({
               )}
             </div>
           ) : (
-            <div className="min-h-fit max-w-screen w-full flex items-start justify-center bg-parchment-50 px-4">
-              <div className="max-w-screen rounded-lg border border-red-100 p-6 text-center shadow-book">
-                <p className="font-playfair text-xl font-semibold text-ink mb-2">
-                  Maaf, Data buku tidak tersedia
+            <div className="min-w-0 flex-1">
+              <div className="rounded-lg border border-borderSoft bg-white p-8 text-center shadow-book">
+                <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-lg bg-cream text-accentHover">
+                  <Icon name="search" className="h-7 w-7" strokeWidth={2} />
+                </div>
+                <p className="font-playfair text-xl font-semibold text-textMain mb-2">
+                  Buku tidak ditemukan
                 </p>
-                <p className="font-crimson text-slate-500 mb-4">{error}</p>
-                <button
-                  type="button"
-                  className="btn-primary"
-                  onClick={() => fetchData()}
-                >
-                  Coba Lagi
-                </button>
+                <p className="mx-auto max-w-md font-crimson text-sm text-textSecondary mb-5">
+                  Coba gunakan kata kunci lain, ubah genre, atau reset filter.
+                </p>
+                <div className="flex flex-wrap justify-center gap-3">
+                  <button
+                    type="button"
+                    className="btn-secondary"
+                    onClick={resetCollectionFilters}
+                  >
+                    Reset Filter
+                  </button>
+                  <button
+                    type="button"
+                    className="btn-primary"
+                    onClick={searchPopularBooks}
+                  >
+                    Cari Buku Populer
+                  </button>
+                </div>
               </div>
             </div>
           )}

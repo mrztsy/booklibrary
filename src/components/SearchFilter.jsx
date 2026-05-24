@@ -1,7 +1,12 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { GENRES, SORT_OPTIONS } from "../data/books";
 
-export default function SearchFilter({ onFilter, onToast }) {
+export default function SearchFilter({
+  onFilter,
+  onToast,
+  resetSignal = 0,
+  externalValues,
+}) {
   const defaults = {
     q: "",
     author: "",
@@ -16,6 +21,14 @@ export default function SearchFilter({ onFilter, onToast }) {
   const [values, setValues] = useState(defaults);
   const set = (key, val) =>
     setValues((current) => ({ ...current, [key]: val }));
+
+  useEffect(() => {
+    if (resetSignal > 0) setValues(defaults);
+  }, [resetSignal]);
+
+  useEffect(() => {
+    if (externalValues) setValues({ ...defaults, ...externalValues });
+  }, [externalValues]);
 
   const handleSubmit = (event) => {
     event.preventDefault();

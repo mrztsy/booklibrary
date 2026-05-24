@@ -101,6 +101,30 @@ export default function LibraryPage({
     event.preventDefault();
   };
 
+  const resetLibraryFilters = () => {
+    setSearchTerm("");
+    setDebouncedSearchTerm("");
+    setSelectedTopic("Semua");
+    setCurrentPage(1);
+    onToast?.(
+      "Pencarian direset",
+      "Katalog API kembali menampilkan semua hasil.",
+      "info",
+    );
+  };
+
+  const searchPopularBooks = () => {
+    setSearchTerm("popular");
+    setDebouncedSearchTerm("popular");
+    setSelectedTopic("Semua");
+    setCurrentPage(1);
+    onToast?.(
+      "Mencari buku populer",
+      "Katalog menampilkan hasil dengan kata kunci populer.",
+      "info",
+    );
+  };
+
   return (
     <>
       <section
@@ -223,14 +247,7 @@ export default function LibraryPage({
                 <button
                   type="button"
                   className="btn-secondary min-h-11 whitespace-nowrap"
-                  onClick={() => {
-                    setSearchTerm("");
-                    onToast?.(
-                      "Pencarian direset",
-                      "Katalog API kembali menampilkan semua hasil.",
-                      "info",
-                    );
-                  }}
+                  onClick={resetLibraryFilters}
                 >
                   Reset
                 </button>
@@ -302,13 +319,32 @@ export default function LibraryPage({
             ))}
           </div>
         ) : (
-          <div className="rounded-lg border border-borderSoft bg-white p-8 text-center mb-10">
-            <p className="font-playfair text-lg font-semibold text-textMain">
+          <div className="rounded-lg border border-borderSoft bg-white p-8 text-center mb-10 shadow-book">
+            <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-lg bg-cream text-accentHover">
+              <Icon name="search" className="h-7 w-7" strokeWidth={2} />
+            </div>
+            <p className="font-playfair text-xl font-semibold text-textMain">
               Buku tidak ditemukan
             </p>
-            <p className="font-crimson text-sm text-textSecondary mt-1">
-              Coba ubah kata kunci atau pilih topik lain.
+            <p className="mx-auto mt-2 max-w-md font-crimson text-sm text-textSecondary">
+              Coba gunakan kata kunci lain, ubah genre, atau reset filter.
             </p>
+            <div className="mt-5 flex flex-wrap justify-center gap-3">
+              <button
+                type="button"
+                className="btn-secondary"
+                onClick={resetLibraryFilters}
+              >
+                Reset Filter
+              </button>
+              <button
+                type="button"
+                className="btn-primary"
+                onClick={searchPopularBooks}
+              >
+                Cari Buku Populer
+              </button>
+            </div>
           </div>
         )}
 
