@@ -13,7 +13,6 @@ export default function HomePage({
   error,
   fetchData,
   isLoading = false,
-  favoriteBooks = [],
   favoriteIds = new Set(),
   onToggleFavorite,
   onToast,
@@ -73,7 +72,6 @@ export default function HomePage({
   const heroBook = featuredBooks[activeHeroIndex] || featuredBooks[0];
   const totalAuthors = new Set(books.map((book) => book.author)).size;
   const totalGenres = GENRES.filter((genre) => genre !== "Semua").length;
-  const favoriteCount = favoriteBooks.length;
   const isBookFavorite = (book) => favoriteIds.has(getBookId(book));
 
   useEffect(() => {
@@ -231,11 +229,11 @@ export default function HomePage({
                   ))}
               </div>
               <div className="flex flex-wrap gap-3">
-                <a href="#koleksi" className="btn-primary">
+                <a href="#/koleksi" className="btn-primary">
                   <Icon name="eye" className="w-4 h-4" strokeWidth={2} />
                   Lihat Koleksi
                 </a>
-                <a href="#katalog" className="btn-secondary text-primary">
+                <a href="#/katalog" className="btn-secondary text-primary">
                   <Icon name="cloud" className="w-4 h-4" />
                   Katalog API
                 </a>
@@ -657,57 +655,6 @@ export default function HomePage({
             ))}
           </div>
         </div>
-      </section>
-
-      <section
-        id="favorit"
-        aria-labelledby="favorite-heading"
-        className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8"
-      >
-        <div className="mb-6 flex flex-wrap items-end justify-between gap-3">
-          <div>
-            <p className="section-label">Rak Pribadi</p>
-            <h2
-              id="favorite-heading"
-              className="font-playfair text-2xl font-bold text-textMain"
-            >
-              Buku Favorit
-            </h2>
-          </div>
-          <div className="inline-flex items-center gap-2 rounded-lg border border-borderSoft bg-white px-3 py-1.5 text-sm font-semibold text-textSecondary shadow-book">
-            <Icon name="heart" className="h-4 w-4 text-accent" />
-            {favoriteCount} buku
-          </div>
-        </div>
-
-        {favoriteBooks.length > 0 ? (
-          <div className="grid grid-cols-1 items-stretch gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {favoriteBooks.map((book, i) => (
-              <BookCard
-                key={book.key || book.id || i}
-                book={book}
-                index={i}
-                onSelect={setSelectedBook}
-                isFavorite={isBookFavorite(book)}
-                onToggleFavorite={onToggleFavorite}
-              />
-            ))}
-          </div>
-        ) : (
-          <div className="rounded-lg border border-borderSoft bg-white p-8 text-center shadow-book">
-            <Icon name="heart" className="mx-auto mb-3 h-8 w-8 text-accent" />
-            <p className="font-playfair text-lg font-semibold text-textMain">
-              Belum ada buku favorit
-            </p>
-            <p className="mx-auto mt-1 max-w-md text-sm text-textSecondary">
-              Simpan buku dari koleksi atau katalog API untuk membuat rak
-              favorit pribadi.
-            </p>
-            <a href="#koleksi" className="btn-primary mt-5">
-              Jelajahi Buku
-            </a>
-          </div>
-        )}
       </section>
 
       <BookModal

@@ -1,12 +1,13 @@
 import Icon from "./Icon";
 import { GENRES } from "../data/books";
 
-export default function Footer({ onToast }) {
+export default function Footer({ onToast, activePage = "home" }) {
   const navItems = [
-    { label: "Beranda", href: "#beranda", icon: "home" },
-    { label: "Koleksi Buku", href: "#koleksi", icon: "collection" },
-    { label: "Katalog API", href: "#katalog", icon: "cloud" },
-    { label: "Tentang", href: "#tentang", icon: "info" },
+    { label: "Beranda", href: "#/", page: "home", icon: "home" },
+    { label: "Koleksi Buku", href: "#/koleksi", page: "home", icon: "collection" },
+    { label: "Katalog API", href: "#/katalog", page: "katalog", icon: "cloud" },
+    { label: "Favorit", href: "#/favorit", page: "favorit", icon: "heart" },
+    { label: "Tentang", href: "#/tentang", page: "tentang", icon: "info" },
   ];
 
   const genreIcons = {
@@ -63,8 +64,10 @@ export default function Footer({ onToast }) {
                 <li key={item.label}>
                   <a
                     href={item.href}
-                    className="inline-flex items-center gap-2
-                               hover:text-accent transition-colors duration-200"
+                    aria-current={activePage === item.page ? "page" : undefined}
+                    className={`inline-flex items-center gap-2 transition-colors duration-200 hover:text-accent ${
+                      activePage === item.page ? "text-accent" : ""
+                    }`}
                   >
                     <Icon name={item.icon} className="w-3.5 h-3.5" />
                     {item.label}
@@ -82,7 +85,7 @@ export default function Footer({ onToast }) {
               {genres.map((item) => (
                 <li key={item}>
                   <a
-                    href="#koleksi"
+                    href="#/koleksi"
                     className="inline-flex items-center gap-2
                                hover:text-accent transition-colors duration-200"
                   >

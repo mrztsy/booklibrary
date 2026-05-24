@@ -2,6 +2,7 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import HomePage from "./pages/HomePage";
 import LibraryPage from "./pages/LibraryPage";
+import FavoritesPage from "./pages/FavoritesPage";
 import AboutPage from "./pages/AboutPage";
 import ToastContainer from "./components/ToastContainer";
 import { useEffect, useState } from "react";
@@ -223,9 +224,18 @@ const formatOpenLibraryBook = (book, index) => {
 const FAVORITES_STORAGE_KEY = "folio-favorite-books";
 const THEME_STORAGE_KEY = "folio-theme";
 
+const ROUTES = new Set(["home", "katalog", "favorit", "tentang", "koleksi"]);
+
 const getBookId = (book) => book?.key || book?.id || book?.workKey || book?.title;
 
+const getRouteFromHash = () => {
+  const rawHash = window.location.hash.replace(/^#\/?/, "");
+  const route = rawHash.split("/")[0] || "home";
+  return ROUTES.has(route) ? route : "home";
+};
+
 export default function App() {
+  const [activeRoute, setActiveRoute] = useState(() => getRouteFromHash());
   const [isLoading, setIsLoading] = useState(true);
   const [dataStore, setDataStore] = useState([]);
   const [error, setError] = useState(null);
@@ -249,6 +259,7 @@ export default function App() {
   });
 
   const favoriteIds = new Set(favoriteBooks.map(getBookId).filter(Boolean));
+  const activePage = activeRoute === "koleksi" ? "home" : activeRoute;
 
   const showToast = (title, message = "", type = "success") => {
     const id = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
@@ -308,6 +319,28 @@ export default function App() {
     document.documentElement.classList.toggle("dark", isDarkMode);
     localStorage.setItem(THEME_STORAGE_KEY, isDarkMode ? "dark" : "light");
   }, [isDarkMode]);
+
+  useEffect(() => {
+    const handleRouteChange = () => {
+      setActiveRoute(getRouteFromHash());
+    };
+
+    window.addEventListener("hashchange", handleRouteChange);
+    handleRouteChange();
+
+    return () => window.removeEventListener("hashchange", handleRouteChange);
+  }, []);
+
+  useEffect(() => {
+    const targetId = activeRoute === "koleksi" ? "koleksi" : null;
+    window.setTimeout(() => {
+      if (targetId) {
+        document.getElementById(targetId)?.scrollIntoView({ behavior: "smooth" });
+      } else {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+    }, 0);
+  }, [activeRoute]);
 
   useEffect(() => {
     localStorage.setItem(
@@ -403,31 +436,44 @@ export default function App() {
         favoriteCount={favoriteBooks.length}
         isDarkMode={isDarkMode}
         onToggleTheme={toggleTheme}
+        activePage={activePage}
       />
       <main id="main-content" className="flex-1" role="main">
-        <HomePage
-          books={dataStore}
-          error={error}
-          fetchData={fetchData}
-          isLoading={isLoading}
-          favoriteBooks={favoriteBooks}
-          favoriteIds={favoriteIds}
-          onToggleFavorite={toggleFavorite}
-          onToast={showToast}
-        />
+        {activePage === "home" && (
+          <HomePage
+            books={dataStore}
+            error={error}
+            fetchData={fetchData}
+            isLoading={isLoading}
+            favoriteIds={favoriteIds}
+            onToggleFavorite={toggleFavorite}
+            onToast={showToast}
+          />
+        )}
 
-        <LibraryPage
-          books={dataStore}
-          isLoading={isLoading}
-          favoriteIds={favoriteIds}
-          onToggleFavorite={toggleFavorite}
-          onToast={showToast}
-        />
+        {activePage === "katalog" && (
+          <LibraryPage
+            books={dataStore}
+            isLoading={isLoading}
+            favoriteIds={favoriteIds}
+            onToggleFavorite={toggleFavorite}
+            onToast={showToast}
+          />
+        )}
 
-        <AboutPage />
+        {activePage === "favorit" && (
+          <FavoritesPage
+            favoriteBooks={favoriteBooks}
+            favoriteIds={favoriteIds}
+            onToggleFavorite={toggleFavorite}
+            onToast={showToast}
+          />
+        )}
+
+        {activePage === "tentang" && <AboutPage />}
       </main>
 
-      <Footer onToast={showToast} />
+      <Footer onToast={showToast} activePage={activePage} />
       <ToastContainer toasts={toasts} onDismiss={dismissToast} />
     </div>
   );

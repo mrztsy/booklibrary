@@ -5,14 +5,15 @@ export default function Header({
   favoriteCount = 0,
   isDarkMode = false,
   onToggleTheme,
+  activePage = "home",
 }) {
   const [menuOpen, setMenuOpen] = useState(false)
 
   const navLinks = [
-    { href: '#beranda',    label: 'Beranda',         icon: 'home' },
-    { href: '#katalog',    label: 'Katalog API',      icon: 'cloud' },
-    { href: '#favorit',    label: 'Favorit',          icon: 'heart' },
-    { href: '#tentang',    label: 'Tentang',          icon: 'info' },
+    { href: '#/',          page: 'home',    label: 'Beranda',         icon: 'home' },
+    { href: '#/katalog',   page: 'katalog', label: 'Katalog API',      icon: 'cloud' },
+    { href: '#/favorit',   page: 'favorit', label: 'Favorit',          icon: 'heart' },
+    { href: '#/tentang',   page: 'tentang', label: 'Tentang',          icon: 'info' },
   ]
 
   const handleNavClick = () => setMenuOpen(false)
@@ -24,7 +25,7 @@ export default function Header({
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 gap-4">
 
-          <a href="#beranda" className="flex items-center gap-3 group">
+          <a href="#/" className="flex items-center gap-3 group">
             <div className="w-10 h-10 bg-accent rounded-lg flex items-center justify-center
                             shadow-book group-hover:bg-accentHover transition-colors duration-200">
               <Icon name="bookOpen" className="w-5 h-5 text-white" />
@@ -45,14 +46,19 @@ export default function Header({
               <a
                 key={link.href}
                 href={link.href}
-                className="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold
+                aria-current={activePage === link.page ? 'page' : undefined}
+                className={`inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold
                            font-crimson rounded-md text-white/75
                            hover:bg-white hover:text-primary hover:shadow-sm
-                           transition-all duration-200"
+                           transition-all duration-200 ${
+                             activePage === link.page
+                               ? 'nav-link-active bg-white text-primary shadow-sm'
+                               : ''
+                           }`}
               >
                 <Icon name={link.icon} className="w-4 h-4" />
                 {link.label}
-                {link.href === '#favorit' && (
+                {link.page === 'favorit' && (
                   <span
                     className="ml-0.5 inline-flex min-w-5 items-center justify-center rounded-full bg-accent px-1.5 py-0.5 text-[10px] font-bold text-white"
                     aria-label={`${favoriteCount} buku favorit`}
@@ -82,7 +88,7 @@ export default function Header({
             </button>
 
             <a
-              href="#favorit"
+              href="#/favorit"
               className="hidden sm:flex items-center gap-2 border border-white/15 bg-white/10
                          px-3 py-2 text-sm font-semibold font-crimson text-white/80 rounded-lg
                          hover:border-accent hover:bg-white hover:text-primary
@@ -137,14 +143,19 @@ export default function Header({
               key={link.href}
               href={link.href}
               onClick={handleNavClick}
-              className="flex-1 flex flex-col items-center gap-1 py-2 text-xs font-semibold
+              aria-current={activePage === link.page ? 'page' : undefined}
+              className={`flex-1 flex flex-col items-center gap-1 py-2 text-xs font-semibold
                          font-crimson text-white/70 rounded-lg
-                         hover:bg-white/10 hover:text-accent transition-colors duration-200"
+                         hover:bg-white/10 hover:text-accent transition-colors duration-200 ${
+                           activePage === link.page
+                             ? 'bg-white/10 text-accent'
+                             : ''
+                         }`}
             >
               <Icon name={link.icon} className="w-4 h-4" />
               <span className="inline-flex items-center gap-1">
                 {link.label}
-                {link.href === '#favorit' && (
+                {link.page === 'favorit' && (
                   <span className="inline-flex min-w-4 items-center justify-center rounded-full bg-accent px-1 text-[10px] font-bold text-white">
                     {favoriteCount}
                   </span>

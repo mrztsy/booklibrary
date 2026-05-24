@@ -226,6 +226,25 @@ html.dark .bg-white\/60 {
   background-color: rgba(255, 255, 255, 0.18) !important;
 }
 
+.nav-link-active {
+  background-color: #F8F6F0 !important;
+  color: #18332F !important;
+}
+
+.nav-link-active svg {
+  color: #18332F !important;
+}
+
+html.dark .nav-link-active {
+  background-color: #F8F6F0 !important;
+  color: #18332F !important;
+}
+
+html.dark .nav-link-active svg,
+html.dark .nav-link-active .text-primary {
+  color: #18332F !important;
+}
+
 ::-webkit-scrollbar        { width: 6px; }
 ::-webkit-scrollbar-track  { background: #F6F1E8; }
 ::-webkit-scrollbar-thumb  { background: #B8892D; border-radius: 3px; }
