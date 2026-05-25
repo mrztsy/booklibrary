@@ -115,9 +115,7 @@ export default function LibraryPage({
     const hasSort = sortValue !== "default";
 
     if (!hasKeyword && !hasAuthor && !hasTopic && !hasSort) {
-      const message = "Masukkan judul, penulis, pilih genre, atau urutkan dulu.";
-      setSearchMessage(message);
-      onToast?.("Pencarian masih kosong", message, "info");
+      resetLibraryFilters();
       return;
     }
 

@@ -53,9 +53,14 @@ export default function SearchFilter({
     const isDefaultFilter = isDefaultValues(values);
 
     if (isDefaultFilter) {
-      const message = "Masukkan judul, penulis, atau pilih genre dulu.";
-      setFilterMessage(message);
-      onToast?.("Filter masih kosong", message, "info");
+      setFilterMessage("");
+      onChange?.(null);
+      onFilter(null);
+      onToast?.(
+        "Menampilkan buku default",
+        "Koleksi kembali ke daftar awal.",
+        "info",
+      );
       return;
     }
 
