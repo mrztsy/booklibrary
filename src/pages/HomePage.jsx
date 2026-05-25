@@ -590,7 +590,7 @@ export default function HomePage({
           <aside aria-label="Panel filter buku" className="lg:self-start">
             <SearchFilter
               onChange={(values) => {
-                if (!values) setFilters(null);
+                setFilters(values);
               }}
               onFilter={(values) => {
                 setFilters(values);

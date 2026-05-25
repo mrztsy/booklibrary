@@ -33,9 +33,7 @@ export default function LibraryPage({
 }) {
   const ITEMS_PER_PAGE = 10;
   const [searchTerm, setSearchTerm] = useState("");
-  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
   const [authorTerm, setAuthorTerm] = useState("");
-  const [submittedAuthorTerm, setSubmittedAuthorTerm] = useState("");
   const [selectedTopic, setSelectedTopic] = useState("Semua");
   const [submittedTopic, setSubmittedTopic] = useState("Semua");
   const [sortValue, setSortValue] = useState("default");
@@ -45,9 +43,12 @@ export default function LibraryPage({
   const [viewMode, setViewMode] = useState("grid");
   const [searchMessage, setSearchMessage] = useState("");
 
-  const activeKeyword = debouncedSearchTerm.trim().toLowerCase();
-  const activeAuthor = submittedAuthorTerm.trim().toLowerCase();
-  const hasSearch = activeKeyword !== "";
+  const activeKeyword = searchTerm.trim().toLowerCase();
+  const activeAuthor = authorTerm.trim().toLowerCase();
+  const searchSummary = [searchTerm.trim(), authorTerm.trim()]
+    .filter(Boolean)
+    .join(" / ");
+  const hasSearch = searchSummary !== "";
   const selectedTopicLabel =
     TOPICS.find((topic) => topic.value === submittedTopic)?.label ||
     submittedTopic;
@@ -121,8 +122,6 @@ export default function LibraryPage({
     }
 
     setSearchMessage("");
-    setDebouncedSearchTerm(searchTerm);
-    setSubmittedAuthorTerm(authorTerm);
     setSubmittedTopic(selectedTopic);
     fetchData?.({
       q: searchTerm.trim(),
@@ -138,9 +137,7 @@ export default function LibraryPage({
 
   const resetLibraryFilters = () => {
     setSearchTerm("");
-    setDebouncedSearchTerm("");
     setAuthorTerm("");
-    setSubmittedAuthorTerm("");
     setSelectedTopic("Semua");
     setSubmittedTopic("Semua");
     setSortValue("default");
@@ -156,9 +153,7 @@ export default function LibraryPage({
 
   const searchPopularBooks = () => {
     setSearchTerm("popular");
-    setDebouncedSearchTerm("popular");
     setAuthorTerm("");
-    setSubmittedAuthorTerm("");
     setSelectedTopic("Semua");
     setSubmittedTopic("Semua");
     setSortValue("rating-desc");
@@ -398,7 +393,7 @@ export default function LibraryPage({
             </h2>
             {hasSearch && (
               <p className="font-crimson text-sm text-textSecondary mt-1">
-                Hasil pencarian untuk "{debouncedSearchTerm}"
+                Hasil pencarian untuk "{searchSummary}"
               </p>
             )}
           </div>
