@@ -1,5 +1,7 @@
 import { useState } from "react";
 import Icon from "./Icon";
+import LogoutConfirmModal from "./LogoutConfirmModal";
+import UserAvatar from "./UserAvatar";
 import aksaraHubLogo from "../assets/AksaraHub Logo.png";
 
 export default function Header({
@@ -11,6 +13,8 @@ export default function Header({
   onLogout,
 }) {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [logoutModalOpen, setLogoutModalOpen] = useState(false);
+  const [accountMenuOpen, setAccountMenuOpen] = useState(false);
 
   const navLinks = [
     { href: "#/", page: "home", label: "Beranda", icon: "home" },
@@ -19,7 +23,20 @@ export default function Header({
     { href: "#/tentang", page: "tentang", label: "Tentang", icon: "info" },
   ];
 
-  const handleNavClick = () => setMenuOpen(false);
+  const handleNavClick = () => {
+    setMenuOpen(false);
+    setAccountMenuOpen(false);
+  };
+  const openLogoutModal = () => {
+    setAccountMenuOpen(false);
+    setLogoutModalOpen(true);
+  };
+  const closeLogoutModal = () => setLogoutModalOpen(false);
+  const confirmLogout = () => {
+    onLogout?.();
+    closeLogoutModal();
+    handleNavClick();
+  };
 
   return (
     <header className="sticky top-0 z-40 border-b border-accent/30 bg-primary/95 backdrop-blur-sm shadow-book">
@@ -91,16 +108,40 @@ export default function Header({
             </button>
 
             {currentUser ? (
-              <div className="hidden sm:flex items-center gap-2 rounded-lg border border-white/15 bg-white/10 px-3 py-2 text-sm font-semibold text-white/80 shadow-sm">
-                <Icon name="users" className="h-3.5 w-3.5" />
-                <span className="max-w-24 truncate">{currentUser.name}</span>
+              <div className="relative hidden sm:block">
                 <button
                   type="button"
-                  className="ml-1 text-xs text-white/60 transition-colors hover:text-accent"
-                  onClick={onLogout}
+                  className="flex items-center gap-2 rounded-lg border border-white/15 bg-white/10 px-3 py-1.5 text-sm font-semibold text-white/80 shadow-sm transition-all duration-200 hover:border-accent hover:bg-white hover:text-primary"
+                  aria-expanded={accountMenuOpen}
+                  aria-controls="account-menu"
+                  onClick={() => setAccountMenuOpen((prev) => !prev)}
                 >
-                  Keluar
+                  <UserAvatar user={currentUser} size="sm" />
+                  <span className="max-w-24 truncate">{currentUser.name}</span>
                 </button>
+
+                {accountMenuOpen && (
+                  <div
+                    id="account-menu"
+                    className="absolute right-0 top-full z-50 mt-2 w-56 rounded-lg border border-borderSoft bg-white p-2 text-textMain shadow-book"
+                  >
+                    <div className="border-b border-borderSoft px-3 py-2">
+                      <p className="truncate text-sm font-bold">
+                        {currentUser.name}
+                      </p>
+                      <p className="truncate text-xs text-textSecondary">
+                        {currentUser.email}
+                      </p>
+                    </div>
+                    <button
+                      type="button"
+                      className="mt-2 flex w-full items-center justify-center rounded-lg px-3 py-2 text-sm font-semibold text-accentHover transition-colors hover:bg-cream"
+                      onClick={openLogoutModal}
+                    >
+                      Keluar
+                    </button>
+                  </div>
+                )}
               </div>
             ) : (
               <a
@@ -146,7 +187,7 @@ export default function Header({
         id="mobile-nav"
         aria-label="Navigasi mobile"
         className={`md:hidden border-t border-white/10 bg-primary transition-all duration-300 overflow-hidden ${
-          menuOpen ? "max-h-56 opacity-100" : "max-h-0 opacity-0"
+          menuOpen ? "max-h-80 opacity-100" : "max-h-0 opacity-0"
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 py-2 grid grid-cols-5 gap-1">
@@ -175,14 +216,13 @@ export default function Header({
           {currentUser ? (
             <button
               type="button"
-              onClick={() => {
-                onLogout?.();
-                handleNavClick();
-              }}
+              aria-expanded={accountMenuOpen}
+              aria-controls="mobile-account-menu"
+              onClick={() => setAccountMenuOpen((prev) => !prev)}
               className="flex flex-col items-center gap-1 py-2 text-xs font-semibold font-crimson text-white/70 rounded-lg hover:bg-white/10 hover:text-accent transition-colors duration-200"
             >
-              <Icon name="users" className="w-4 h-4" />
-              <span>Keluar</span>
+              <UserAvatar user={currentUser} size="xs" />
+              <span>Akun</span>
             </button>
           ) : (
             <a
@@ -198,7 +238,33 @@ export default function Header({
             </a>
           )}
         </div>
+        {currentUser && accountMenuOpen && (
+          <div
+            id="mobile-account-menu"
+            className="mx-4 mb-3 rounded-lg border border-white/10 bg-white/10 p-2"
+          >
+            <div className="px-3 py-2 text-white/80">
+              <p className="truncate text-sm font-bold">{currentUser.name}</p>
+              <p className="truncate text-xs text-white/55">
+                {currentUser.email}
+              </p>
+            </div>
+            <button
+              type="button"
+              className="mt-1 w-full rounded-lg bg-white px-3 py-2 text-sm font-semibold text-accentHover transition-colors hover:bg-cream"
+              onClick={openLogoutModal}
+            >
+              Keluar
+            </button>
+          </div>
+        )}
       </nav>
+      <LogoutConfirmModal
+        open={logoutModalOpen}
+        userName={currentUser?.name}
+        onClose={closeLogoutModal}
+        onConfirm={confirmLogout}
+      />
     </header>
   );
 }

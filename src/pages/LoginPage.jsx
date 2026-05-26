@@ -1,5 +1,7 @@
 import { useState } from "react";
 import Icon from "../components/Icon";
+import LogoutConfirmModal from "../components/LogoutConfirmModal";
+import UserAvatar from "../components/UserAvatar";
 import aksaraHubLogo from "../assets/AksaraHub Logo.png";
 
 export default function LoginPage({
@@ -15,6 +17,7 @@ export default function LoginPage({
     password: "",
   });
   const [message, setMessage] = useState("");
+  const [logoutModalOpen, setLogoutModalOpen] = useState(false);
 
   const handleChange = (key, value) => {
     setValues((currentValues) => ({ ...currentValues, [key]: value }));
@@ -35,6 +38,12 @@ export default function LoginPage({
     onLogin?.({ name, email });
     onToast?.("Login berhasil", `Selamat datang, ${name}.`, "success");
     window.location.hash = redirectTo === "favorit" ? "#/favorit" : "#/";
+  };
+
+  const handleConfirmLogout = () => {
+    onLogout?.();
+    onToast?.("Logout berhasil", "Sesi akun sudah keluar.", "info");
+    setLogoutModalOpen(false);
   };
 
   return (
@@ -63,12 +72,17 @@ export default function LoginPage({
           {currentUser ? (
             <div>
               <p className="section-label mb-2">Sudah Login</p>
-              <h2 className="font-playfair text-2xl font-bold text-textMain">
-                {currentUser.name}
-              </h2>
-              <p className="mt-1 text-sm text-textSecondary">
-                {currentUser.email}
-              </p>
+              <div className="flex items-center gap-3">
+                <UserAvatar user={currentUser} size="lg" />
+                <div className="min-w-0">
+                  <h2 className="font-playfair text-2xl font-bold text-textMain">
+                    {currentUser.name}
+                  </h2>
+                  <p className="mt-1 truncate text-sm text-textSecondary">
+                    {currentUser.email}
+                  </p>
+                </div>
+              </div>
               <div className="mt-6 flex flex-wrap gap-3">
                 <a href="#/" className="btn-primary">
                   <Icon name="home" className="h-4 w-4" />
@@ -77,10 +91,7 @@ export default function LoginPage({
                 <button
                   type="button"
                   className="btn-secondary"
-                  onClick={() => {
-                    onLogout?.();
-                    onToast?.("Logout berhasil", "Sesi akun sudah keluar.", "info");
-                  }}
+                  onClick={() => setLogoutModalOpen(true)}
                 >
                   Keluar
                 </button>
@@ -161,6 +172,12 @@ export default function LoginPage({
           )}
         </div>
       </div>
+      <LogoutConfirmModal
+        open={logoutModalOpen}
+        userName={currentUser?.name}
+        onClose={() => setLogoutModalOpen(false)}
+        onConfirm={handleConfirmLogout}
+      />
     </section>
   );
 }
