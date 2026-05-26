@@ -1,6 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
 import BookCard from "../components/BookCard";
-import BookCardSkeleton from "../components/BookCardSkeleton";
+import BookCardSkeleton, {
+  FeaturedBooksSkeleton,
+  PaginationSkeleton,
+  ResultsToolbarSkeleton,
+} from "../components/BookCardSkeleton";
 import BookModal from "../components/BookModal";
 import SearchFilter from "../components/SearchFilter";
 import Icon from "../components/Icon";
@@ -214,22 +218,20 @@ export default function HomePage({
           </div>
         </section>
 
+        <FeaturedBooksSkeleton />
+
         <section
           id="koleksi"
           aria-label="Memuat koleksi buku"
           className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8"
         >
-          <div className="mb-6">
-            <p className="section-label">Koleksi Buku</p>
-            <h2 className="font-playfair text-2xl font-bold text-textMain">
-              Memuat Buku
-            </h2>
-          </div>
+          <ResultsToolbarSkeleton viewMode="grid" />
           <div className="book-grid">
             {Array.from({ length: 6 }, (_, index) => (
               <BookCardSkeleton key={index} />
             ))}
           </div>
+          <PaginationSkeleton />
         </section>
       </>
     );
@@ -604,17 +606,7 @@ export default function HomePage({
 
           {isLoading ? (
             <div className="min-w-0 flex-1" role="status" aria-live="polite">
-              <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
-                <div>
-                  <p className="section-label">Koleksi Buku</p>
-                  <h2
-                    id="koleksi-heading"
-                    className="font-playfair text-2xl font-bold text-textMain"
-                  >
-                    Memuat Buku
-                  </h2>
-                </div>
-              </div>
+              <ResultsToolbarSkeleton viewMode={collectionView} />
 
               {collectionView === "grid" ? (
                 <div className="book-grid">
@@ -630,6 +622,7 @@ export default function HomePage({
                 </div>
               )}
 
+              <PaginationSkeleton />
               <span className="sr-only">Mengambil data buku...</span>
             </div>
           ) : filtered.length > 0 ? (

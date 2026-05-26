@@ -289,6 +289,38 @@
     color: #7A2E2E;
   }
 
+  .skeleton-surface {
+    position: relative;
+    overflow: hidden;
+    background-color: #EFE7DA;
+  }
+
+  .skeleton-surface::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    transform: translateX(-100%);
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 253, 248, 0.72),
+      transparent
+    );
+    animation: skeleton-shimmer 1.35s ease-in-out infinite;
+  }
+
+  .skeleton-line {
+    @apply skeleton-surface rounded-full;
+  }
+
+  .skeleton-chip {
+    @apply skeleton-surface h-5 rounded-full;
+  }
+
+  .skeleton-button {
+    @apply skeleton-surface rounded-lg;
+  }
+
   .book-list-description {
     display: none;
     -webkit-box-orient: vertical;
@@ -447,6 +479,19 @@ html.dark .top-rating-score {
   color: #E7C06B;
 }
 
+html.dark .skeleton-surface {
+  background-color: #2A3934;
+}
+
+html.dark .skeleton-surface::after {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(245, 239, 228, 0.12),
+    transparent
+  );
+}
+
 html.dark .shadow-book {
   box-shadow: 0 2px 10px -2px rgba(0, 0, 0, 0.35),
     0 1px 4px -1px rgba(0, 0, 0, 0.24);
@@ -579,6 +624,12 @@ h6,
     animation-iteration-count: 1 !important;
     scroll-behavior: auto !important;
     transition-duration: 0.01ms !important;
+  }
+}
+
+@keyframes skeleton-shimmer {
+  to {
+    transform: translateX(100%);
   }
 }
 

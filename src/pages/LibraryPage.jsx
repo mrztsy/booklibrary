@@ -1,6 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
 import BookCard from "../components/BookCard";
-import BookCardSkeleton from "../components/BookCardSkeleton";
+import BookCardSkeleton, {
+  PaginationSkeleton,
+  ResultsToolbarSkeleton,
+  StatsPanelSkeleton,
+} from "../components/BookCardSkeleton";
 import BookModal from "../components/BookModal";
 import Icon from "../components/Icon";
 import { SORT_OPTIONS } from "../data/books";
@@ -428,59 +432,63 @@ export default function LibraryPage({
         aria-labelledby="results-heading"
         className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10"
       >
-        <div className="flex items-center justify-between mb-6 flex-wrap gap-3">
-          <div>
-            <p className="section-label">Hasil API</p>
-            <h2
-              id="results-heading"
-              className="font-playfair font-semibold text-xl text-textMain"
-            >
-              Topik:{" "}
-              <span className="text-amber-700">{selectedTopicLabel}</span>
-              <span className="font-crimson font-normal text-base text-slate-400 ml-2">
-                / Halaman {currentPage}
-              </span>
-            </h2>
-            {hasSearch && (
-              <p className="font-crimson text-sm text-textSecondary mt-1">
-                Hasil pencarian untuk "{searchSummary}"
-              </p>
-            )}
-          </div>
-          <div
-            className="flex items-center gap-2 text-sm font-crimson text-textSecondary
-                          bg-white border border-borderSoft px-3 py-1.5 rounded-lg"
-          >
-            <Icon name="collection" className="w-4 h-4 text-accent" />
-            {/* Pakai books.length bukan PLACEHOLDER_BOOKS */}
-            {startIndex + 1}-{Math.min(endIndex, filteredBooks.length)} dari{" "}
-            {filteredBooks.length} buku
-          </div>
-          <div
-            className="inline-flex rounded-lg border border-borderSoft bg-white p-1 shadow-book"
-            aria-label="Ubah mode tampilan katalog"
-          >
-            {[
-              { value: "grid", label: "Grid View", icon: "collection" },
-              { value: "list", label: "List View", icon: "bookOpen" },
-            ].map((view) => (
-              <button
-                key={view.value}
-                type="button"
-                className={`inline-flex min-h-9 items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-semibold transition-all duration-300 ${
-                  viewMode === view.value
-                    ? "bg-primary text-white"
-                    : "text-textSecondary hover:bg-cream hover:text-accentHover"
-                }`}
-                aria-pressed={viewMode === view.value}
-                onClick={() => setViewMode(view.value)}
+        {showLoading ? (
+          <ResultsToolbarSkeleton viewMode={viewMode} />
+        ) : (
+          <div className="flex items-center justify-between mb-6 flex-wrap gap-3">
+            <div>
+              <p className="section-label">Hasil API</p>
+              <h2
+                id="results-heading"
+                className="font-playfair font-semibold text-xl text-textMain"
               >
-                <Icon name={view.icon} className="h-3.5 w-3.5" />
-                {view.label}
-              </button>
-            ))}
+                Topik:{" "}
+                <span className="text-amber-700">{selectedTopicLabel}</span>
+                <span className="font-crimson font-normal text-base text-slate-400 ml-2">
+                  / Halaman {currentPage}
+                </span>
+              </h2>
+              {hasSearch && (
+                <p className="font-crimson text-sm text-textSecondary mt-1">
+                  Hasil pencarian untuk "{searchSummary}"
+                </p>
+              )}
+            </div>
+            <div
+              className="flex items-center gap-2 text-sm font-crimson text-textSecondary
+                            bg-white border border-borderSoft px-3 py-1.5 rounded-lg"
+            >
+              <Icon name="collection" className="w-4 h-4 text-accent" />
+              {/* Pakai books.length bukan PLACEHOLDER_BOOKS */}
+              {startIndex + 1}-{Math.min(endIndex, filteredBooks.length)} dari{" "}
+              {filteredBooks.length} buku
+            </div>
+            <div
+              className="inline-flex rounded-lg border border-borderSoft bg-white p-1 shadow-book"
+              aria-label="Ubah mode tampilan katalog"
+            >
+              {[
+                { value: "grid", label: "Grid View", icon: "collection" },
+                { value: "list", label: "List View", icon: "bookOpen" },
+              ].map((view) => (
+                <button
+                  key={view.value}
+                  type="button"
+                  className={`inline-flex min-h-9 items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-semibold transition-all duration-300 ${
+                    viewMode === view.value
+                      ? "bg-primary text-white"
+                      : "text-textSecondary hover:bg-cream hover:text-accentHover"
+                  }`}
+                  aria-pressed={viewMode === view.value}
+                  onClick={() => setViewMode(view.value)}
+                >
+                  <Icon name={view.icon} className="h-3.5 w-3.5" />
+                  {view.label}
+                </button>
+              ))}
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Render dari prop books, bukan PLACEHOLDER_BOOKS */}
         {showLoading ? (
@@ -498,6 +506,8 @@ export default function LibraryPage({
                 ))}
               </div>
             )}
+            <StatsPanelSkeleton />
+            <PaginationSkeleton />
             <span className="sr-only">
               Mengambil data dari Open Library API...
             </span>
@@ -652,7 +662,7 @@ export default function LibraryPage({
         )}
 
         {/* Statistik katalog */}
-        {hasFilteredBooks && (
+        {!showLoading && hasFilteredBooks && (
           <section
             aria-labelledby="stats-heading"
             className="mb-8 overflow-hidden rounded-lg border border-borderSoft bg-white shadow-book"
@@ -740,7 +750,7 @@ export default function LibraryPage({
           </section>
         )}
 
-        {hasFilteredBooks && (
+        {!showLoading && hasFilteredBooks && (
           <nav
             aria-label="Paginasi hasil buku"
             className="flex items-center justify-center gap-3 mt-10"

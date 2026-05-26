@@ -1,5 +1,9 @@
 import { useEffect, useState } from "react";
 import Icon from "./Icon";
+import {
+  BookModalSkeleton,
+  ModalSynopsisSkeleton,
+} from "./BookCardSkeleton";
 
 const normalizeOpenLibraryDescription = (description) => {
   if (!description) return "";
@@ -75,6 +79,7 @@ export default function BookModal({
   }, [book, onClose]);
 
   if (!book) return null;
+  if (book.isLoading) return <BookModalSkeleton onClose={onClose} />;
 
   const title = book.title || "Judul tidak tersedia";
   const author = book.author || "Penulis tidak diketahui";
@@ -198,9 +203,13 @@ export default function BookModal({
 
             <div className="mb-5 rounded-lg border border-borderSoft bg-white px-4 py-3">
               <p className="section-label mb-1">Sinopsis</p>
-              <p className="text-sm leading-relaxed text-textSecondary">
-                {isSynopsisLoading ? "Mengambil sinopsis buku..." : synopsis}
-              </p>
+              {isSynopsisLoading ? (
+                <ModalSynopsisSkeleton />
+              ) : (
+                <p className="text-sm leading-relaxed text-textSecondary">
+                  {synopsis}
+                </p>
+              )}
             </div>
 
             <div className="flex flex-wrap gap-3">
