@@ -4,6 +4,7 @@
 
 @layer base {
   body {
+<<<<<<< HEAD
     @apply font-crimson antialiased;
     background:
       linear-gradient(180deg, rgba(246, 241, 232, 0.96), rgba(239, 231, 218, 0.96)),
@@ -14,10 +15,19 @@
   }
   h1, h2, h3, h4, h5 {
     @apply font-playfair;
+=======
+    @apply font-crimson bg-parchment-50 text-ink antialiased;
+    font-size: 1rem;
+  }
+
+  h1, h2, h3, h4 {
+    @apply font-playfair tracking-tight;
+>>>>>>> 33164533e4836ab043cef1baa93aaf3f007fcc38
   }
 }
 
 @layer components {
+<<<<<<< HEAD
 
   .btn-primary {
     @apply inline-flex items-center justify-center gap-2
@@ -603,3 +613,100 @@ h6,
     transform: translateY(0) scale(1);
   }
 }
+=======
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 bg-amber-500 text-ink font-semibold
+           px-5 py-2.5 rounded-lg cursor-pointer
+           transition-all duration-200 ease-out
+           hover:bg-amber-600 hover:text-white hover:shadow-book-hover hover:-translate-y-0.5
+           active:translate-y-0 active:shadow-none;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 border border-slate-200 bg-white text-ink font-semibold
+           px-5 py-2.5 rounded-lg cursor-pointer
+           transition-all duration-200 ease-out
+           hover:border-amber-200 hover:bg-amber-50 hover:text-amber-600;
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center gap-2 text-ink
+           px-4 py-2 rounded-lg cursor-pointer transition-all duration-200
+           hover:bg-slate-100 hover:text-amber-600;
+  }
+
+  .input-field {
+    @apply w-full bg-white border border-slate-200 text-ink
+           px-4 py-2.5 rounded-lg outline-none
+           transition-all duration-200
+           focus:border-amber-500 focus:ring-4 focus:ring-amber-100
+           placeholder:text-slate-400;
+  }
+
+  .select-field {
+    @apply w-full bg-white border border-slate-200 text-ink
+           px-4 py-2.5 rounded-lg outline-none cursor-pointer
+           transition-all duration-200
+           focus:border-amber-500 focus:ring-4 focus:ring-amber-100
+           appearance-none;
+  }
+
+  .book-card {
+    @apply bg-white rounded-lg overflow-hidden border border-slate-200 shadow-book
+           transition-all duration-200 ease-out cursor-pointer
+           hover:border-amber-200 hover:shadow-book-hover hover:-translate-y-1;
+  }
+
+  .section-label {
+    @apply text-xs font-semibold tracking-[0.14em] uppercase text-amber-600;
+  }
+
+  .divider {
+    @apply w-10 h-0.5 bg-amber-500 my-3;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #F8F5F0; }
+::-webkit-scrollbar-thumb { background: #475569; border-radius: 3px; }
+
+/* Modal backdrop */
+.modal-backdrop {
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+/* Book cover skeleton */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.skeleton {
+  background: linear-gradient(90deg, #e2e8f0 25%, #ffffff 50%, #e2e8f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+/* Stagger animation for cards */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.fade-in-up {
+  animation: fadeInUp 0.4s ease-out forwards;
+  opacity: 0;
+}
+.stagger-1 { animation-delay: 0.05s; }
+.stagger-2 { animation-delay: 0.10s; }
+.stagger-3 { animation-delay: 0.15s; }
+.stagger-4 { animation-delay: 0.20s; }
+.stagger-5 { animation-delay: 0.25s; }
+.stagger-6 { animation-delay: 0.30s; }
+.stagger-7 { animation-delay: 0.35s; }
+.stagger-8 { animation-delay: 0.40s; }
+.stagger-9 { animation-delay: 0.45s; }
+.stagger-10 { animation-delay: 0.50s; }
+.stagger-11 { animation-delay: 0.55s; }
+.stagger-12 { animation-delay: 0.60s; }
+>>>>>>> 33164533e4836ab043cef1baa93aaf3f007fcc38

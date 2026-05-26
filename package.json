@@ -1,5 +1,9 @@
 {
+<<<<<<< HEAD
   "name": "book-library-semantic",
+=======
+  "name": "book-library-app",
+>>>>>>> 33164533e4836ab043cef1baa93aaf3f007fcc38
   "version": "1.0.0",
   "type": "module",
   "scripts": {
@@ -8,7 +12,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
+<<<<<<< HEAD
     "axios": "^1.16.1",
+=======
+    "axios": "^1.6.2",
+>>>>>>> 33164533e4836ab043cef1baa93aaf3f007fcc38
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
