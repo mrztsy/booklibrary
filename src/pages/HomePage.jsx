@@ -561,7 +561,7 @@ export default function HomePage({
                     <div className="mt-2 flex flex-wrap items-center gap-2 text-xs text-textSecondary">
                       <span className="inline-flex items-center gap-1 font-semibold text-accentHover">
                         <Icon name="star" className="h-3.5 w-3.5 text-accent" />
-                        {book.rating || "-"}
+                        * {book.rating || "-"}
                       </span>
                       <span
                         className={`rounded-full px-2 py-0.5 font-semibold ${
@@ -749,7 +749,7 @@ export default function HomePage({
                               /
                             </span>
                             <span className="font-semibold text-accent">
-                              â˜… {book.rating || "-"}
+                              * {book.rating || "-"}
                             </span>
                             <span className="text-borderSoft">/</span>
                             <span>{book.year || "-"}</span>
@@ -856,7 +856,7 @@ export default function HomePage({
                   ?.scrollIntoView({ behavior: "smooth" });
               }}
             >
-              â† Sebelumnya
+              Sebelumnya
             </button>
             <div className="flex items-center gap-2">
               {Array.from(
@@ -893,7 +893,7 @@ export default function HomePage({
                   ?.scrollIntoView({ behavior: "smooth" });
               }}
             >
-              Berikutnya â†’
+              Berikutnya
             </button>
           </nav>
         )}

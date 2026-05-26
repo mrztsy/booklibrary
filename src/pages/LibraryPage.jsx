@@ -22,7 +22,7 @@ const TOPICS = [
 const getBookId = (book) =>
   book?.key || book?.id || book?.workKey || book?.title;
 
-// âœ… Terima prop books dari App
+// Terima prop books dari App
 export default function LibraryPage({
   books = [],
   isLoading = false,
@@ -253,7 +253,7 @@ export default function LibraryPage({
               className="flex items-center gap-2 text-sm font-crimson text-white/50
                             bg-white/5 border border-white/10 px-4 py-2 rounded-lg"
             >
-              {/* âœ… status aktif karena sudah fetch */}
+              {/* Status aktif karena sudah fetch */}
               <span
                 className={`w-2 h-2 rounded-full bg-accent ${
                   showLoading ? "animate-ping" : ""
@@ -438,7 +438,7 @@ export default function LibraryPage({
               Topik:{" "}
               <span className="text-amber-700">{selectedTopicLabel}</span>
               <span className="font-crimson font-normal text-base text-slate-400 ml-2">
-                Â· Halaman {currentPage}
+                / Halaman {currentPage}
               </span>
             </h2>
             {hasSearch && (
@@ -452,7 +452,7 @@ export default function LibraryPage({
                           bg-white border border-borderSoft px-3 py-1.5 rounded-lg"
           >
             <Icon name="collection" className="w-4 h-4 text-accent" />
-            {/* âœ… pakai books.length bukan PLACEHOLDER_BOOKS */}
+            {/* Pakai books.length bukan PLACEHOLDER_BOOKS */}
             {startIndex + 1}-{Math.min(endIndex, filteredBooks.length)} dari{" "}
             {filteredBooks.length} buku
           </div>
@@ -482,7 +482,7 @@ export default function LibraryPage({
           </div>
         </div>
 
-        {/* âœ… render dari prop books, bukan PLACEHOLDER_BOOKS */}
+        {/* Render dari prop books, bukan PLACEHOLDER_BOOKS */}
         {showLoading ? (
           <div className="mb-10" role="status" aria-live="polite">
             {viewMode === "grid" ? (
@@ -570,7 +570,7 @@ export default function LibraryPage({
                             name="star"
                             className="h-3.5 w-3.5 text-accent"
                           />
-                          {book.rating || "-"}
+                          * {book.rating || "-"}
                         </span>
                       </div>
                       <p className="book-list-description mt-2 text-sm leading-relaxed text-textSecondary">
@@ -651,7 +651,7 @@ export default function LibraryPage({
           </div>
         )}
 
-        {/* Statistik rating â€” hanya muncul jika books punya field rating */}
+        {/* Statistik katalog */}
         {hasFilteredBooks && (
           <section
             aria-labelledby="stats-heading"
@@ -725,7 +725,7 @@ export default function LibraryPage({
                       {book.rating}
                     </span>
                     <span className="sr-only">
-                      â˜… {book.rating}
+                      Rating {book.rating}
                     </span>
                   </div>
                 ))}
@@ -756,7 +756,7 @@ export default function LibraryPage({
                   ?.scrollIntoView({ behavior: "smooth" });
               }}
             >
-              â† Sebelumnya
+              Sebelumnya
             </button>
             <div className="flex items-center gap-2">
               {Array.from({ length: totalPages }, (_, i) => i + 1).map(
@@ -792,7 +792,7 @@ export default function LibraryPage({
                   ?.scrollIntoView({ behavior: "smooth" });
               }}
             >
-              Berikutnya â†’
+              Berikutnya
             </button>
           </nav>
         )}
