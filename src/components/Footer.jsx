@@ -1,53 +1,59 @@
-import Icon from './Icon'
-import { GENRES } from '../data/books'
+import Icon from "./Icon";
+import { GENRES } from "../data/books";
+import aksaraHubLogo from "../assets/AksaraHub Logo.png";
 
-export default function Footer() {
+export default function Footer({ onToast, activePage = "home" }) {
   const navItems = [
-    { label: 'Beranda',      href: '#beranda',  icon: 'home' },
-    { label: 'Koleksi Buku', href: '#koleksi',  icon: 'collection' },
-    { label: 'Katalog API',  href: '#katalog',  icon: 'cloud' },
-    { label: 'Tentang',      href: '#tentang',  icon: 'info' },
-  ]
+    { label: "Beranda", href: "#/", page: "home", icon: "home" },
+    { label: "Koleksi Buku", href: "#/koleksi", page: "home", icon: "collection" },
+    { label: "Katalog API", href: "#/katalog", page: "katalog", icon: "cloud" },
+    { label: "Favorit", href: "#/favorit", page: "favorit", icon: "heart" },
+    { label: "Tentang", href: "#/tentang", page: "tentang", icon: "info" },
+  ];
 
   const genreIcons = {
-    Fiction: 'bookOpen',
-    Fantasy: 'star',
-    Adventure: 'compass',
-    Mystery: 'eye',
-    Romance: 'heart',
-    Science: 'flask',
-    Chemistry: 'flask',
-    Physics: 'flask',
-    Mathematics: 'info',
-    'Science Fiction': 'flask',
-    History: 'globe',
-    Biography: 'users',
-    Religion: 'scroll',
-    Art: 'pen',
-    Business: 'collection',
-    Philosophy: 'scroll',
-    Poetry: 'pen',
-  }
+    Fiction: "bookOpen",
+    Fantasy: "star",
+    Adventure: "compass",
+    Mystery: "eye",
+    Romance: "heart",
+    Science: "flask",
+    Chemistry: "flask",
+    Physics: "flask",
+    Mathematics: "info",
+    "Science Fiction": "flask",
+    History: "globe",
+    Biography: "users",
+    Religion: "scroll",
+    Art: "pen",
+    Business: "collection",
+    Philosophy: "scroll",
+    Poetry: "pen",
+  };
 
-  const genres = GENRES.filter(item => item !== 'Semua').slice(0, 6)
+  const genres = GENRES.filter((item) => item !== "Semua").slice(0, 6);
 
   return (
-
     <footer className="border-t border-borderSoft bg-primary text-white/70 font-crimson">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 mb-10">
-
           <div>
             <div className="flex items-center gap-2 mb-4">
-              <div className="w-8 h-8 bg-accent rounded-lg flex items-center justify-center">
-                <Icon name="bookOpen" className="w-4 h-4 text-white" strokeWidth={2} />
+              <div className="w-8 h-8 overflow-hidden rounded-lg bg-white flex items-center justify-center">
+                <img
+                  src={aksaraHubLogo}
+                  alt=""
+                  aria-hidden="true"
+                  className="h-full w-full scale-[1.55] object-cover"
+                />
               </div>
-              <span className="font-playfair font-bold text-lg text-white">Folio</span>
+              <span className="font-playfair font-bold text-lg text-white">
+                AksaraHub
+              </span>
             </div>
             <p className="text-sm leading-relaxed">
-              Platform perpustakaan digital untuk menemukan buku lokal
-              dan katalog klasik dari API.
+              Platform perpustakaan digital untuk menemukan buku lokal dan
+              katalog klasik dari API.
             </p>
           </div>
 
@@ -56,12 +62,14 @@ export default function Footer() {
               Navigasi
             </h4>
             <ul className="space-y-2 text-sm">
-              {navItems.map(item => (
+              {navItems.map((item) => (
                 <li key={item.label}>
                   <a
                     href={item.href}
-                    className="inline-flex items-center gap-2
-                               hover:text-accent transition-colors duration-200"
+                    aria-current={activePage === item.page ? "page" : undefined}
+                    className={`inline-flex items-center gap-2 transition-colors duration-200 hover:text-accent ${
+                      activePage === item.page ? "text-accent" : ""
+                    }`}
                   >
                     <Icon name={item.icon} className="w-3.5 h-3.5" />
                     {item.label}
@@ -76,14 +84,17 @@ export default function Footer() {
               Genre Populer
             </h4>
             <ul className="space-y-2 text-sm">
-              {genres.map(item => (
+              {genres.map((item) => (
                 <li key={item}>
                   <a
-                    href="#koleksi"
+                    href="#/koleksi"
                     className="inline-flex items-center gap-2
                                hover:text-accent transition-colors duration-200"
                   >
-                    <Icon name={genreIcons[item] || 'tag'} className="w-3.5 h-3.5" />
+                    <Icon
+                      name={genreIcons[item] || "tag"}
+                      className="w-3.5 h-3.5"
+                    />
                     {item}
                   </a>
                 </li>
@@ -104,6 +115,15 @@ export default function Footer() {
               method="post"
               aria-label="Form berlangganan newsletter"
               className="flex gap-2"
+              onSubmit={(event) => {
+                event.preventDefault();
+                event.currentTarget.reset();
+                onToast?.(
+                  "Newsletter tersimpan",
+                  "Rekomendasi buku akan dikirim ke email kamu.",
+                  "success",
+                );
+              }}
             >
               <label htmlFor="newsletter-email" className="sr-only">
                 Alamat email
@@ -132,13 +152,15 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="border-t border-white/10 pt-6
-                        flex flex-col sm:flex-row justify-between items-center gap-4">
+        <div
+          className="border-t border-white/10 pt-6
+                     flex flex-col sm:flex-row justify-between items-center gap-4"
+        >
           <p className="text-xs text-white/40">
-            © 2024 Folio Book Library. Dibuat untuk para pembaca.
+            &copy; 2026 AksaraHub. Dibuat untuk para pembaca.
           </p>
           <div className="flex gap-6 text-xs">
-            {['Privasi', 'Syarat', 'Kontak'].map(item => (
+            {["Privasi", "Syarat", "Kontak"].map((item) => (
               <a
                 key={item}
                 href="#"
@@ -149,8 +171,7 @@ export default function Footer() {
             ))}
           </div>
         </div>
-
       </div>
     </footer>
-  )
+  );
 }

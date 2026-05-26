@@ -1,7 +1,13 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { GENRES, SORT_OPTIONS } from "../data/books";
 
-export default function SearchFilter({ onFilter }) {
+export default function SearchFilter({
+  onFilter,
+  onChange,
+  onToast,
+  resetSignal = 0,
+  externalValues,
+}) {
   const defaults = {
     q: "",
     author: "",
@@ -13,18 +19,65 @@ export default function SearchFilter({ onFilter }) {
     sort: "default",
   };
 
+  const isDefaultValues = (candidate) =>
+    Object.entries(defaults).every(([key, value]) => candidate[key] === value);
+
   const [values, setValues] = useState(defaults);
-  const set = (key, val) =>
-    setValues((current) => ({ ...current, [key]: val }));
+  const [filterMessage, setFilterMessage] = useState("");
+  const set = (key, val) => {
+    const nextValues = { ...values, [key]: val };
+    setValues(nextValues);
+    setFilterMessage("");
+    onChange?.(isDefaultValues(nextValues) ? null : nextValues);
+  };
+
+  useEffect(() => {
+    if (resetSignal > 0) {
+      setValues(defaults);
+      setFilterMessage("");
+      onChange?.(null);
+    }
+  }, [resetSignal]);
+
+  useEffect(() => {
+    if (externalValues) {
+      const nextValues = { ...defaults, ...externalValues };
+      setValues(nextValues);
+      setFilterMessage("");
+      onChange?.(isDefaultValues(nextValues) ? null : nextValues);
+    }
+  }, [externalValues]);
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    const isDefaultFilter = isDefaultValues(values);
+
+    if (isDefaultFilter) {
+      setFilterMessage("");
+      onChange?.(null);
+      onFilter(null);
+      onToast?.(
+        "Menampilkan buku default",
+        "Koleksi kembali ke daftar awal.",
+        "info",
+      );
+      return;
+    }
+
+    setFilterMessage("");
     onFilter(values);
   };
 
   const handleReset = () => {
     setValues(defaults);
+    setFilterMessage("");
+    onChange?.(null);
     onFilter(null);
+    onToast?.(
+      "Filter direset",
+      "Koleksi buku kembali ke tampilan awal.",
+      "info",
+    );
   };
 
   return (
@@ -78,11 +131,23 @@ export default function SearchFilter({ onFilter }) {
               name="q"
               placeholder="Cari judul buku..."
               autoComplete="off"
+              aria-invalid={filterMessage ? "true" : undefined}
+              aria-describedby={
+                filterMessage ? "collection-filter-message" : undefined
+              }
               className="input-field pl-9"
               value={values.q}
               onChange={(event) => set("q", event.target.value)}
             />
           </div>
+          {filterMessage && (
+            <p
+              id="collection-filter-message"
+              className="mt-2 text-sm font-semibold text-accentHover"
+            >
+              {filterMessage}
+            </p>
+          )}
         </div>
 
         <div>
@@ -241,6 +306,7 @@ export default function SearchFilter({ onFilter }) {
         </svg>
         Terapkan Filter
       </button>
+
     </form>
   );
 }

@@ -1,4 +1,11 @@
-export default function BookCard({ book, onSelect }) {
+import Icon from "./Icon";
+
+export default function BookCard({
+  book,
+  onSelect,
+  isFavorite = false,
+  onToggleFavorite,
+}) {
   const gradients = [
     "from-primary to-secondary",
     "from-textMain to-primary",
@@ -23,7 +30,7 @@ export default function BookCard({ book, onSelect }) {
 
   return (
     <article
-      className="book-card group flex h-full flex-col"
+      className="book-card group mx-auto flex h-full w-full max-w-sm flex-col sm:max-w-none"
       aria-label={`Buku: ${title} oleh ${authors}`}
     >
       <figure className="relative aspect-[2/3] shrink-0 overflow-hidden border-b border-borderSoft bg-cream">
@@ -65,6 +72,31 @@ export default function BookCard({ book, onSelect }) {
           {book.available ? "Tersedia" : "Dipinjam"}
         </span>
 
+        {onToggleFavorite && (
+          <button
+            type="button"
+            className={`absolute left-2 top-2 z-20 h-9 w-9 ${
+              isFavorite ? "btn-favorite-icon-active" : "btn-favorite-icon"
+            }`}
+            aria-label={
+              isFavorite
+                ? `Hapus ${title} dari favorit`
+                : `Simpan ${title} ke favorit`
+            }
+            aria-pressed={isFavorite}
+            onClick={(event) => {
+              event.stopPropagation();
+              onToggleFavorite(book);
+            }}
+          >
+            <Icon
+              name="heart"
+              className="h-4 w-4"
+              strokeWidth={isFavorite ? 2.4 : 2}
+            />
+          </button>
+        )}
+
         <div
           className="absolute inset-0 z-10 flex translate-y-2 items-center justify-center bg-primary/70
                      opacity-0 transition-all duration-300 ease-out group-hover:translate-y-0 group-hover:opacity-100"
@@ -83,7 +115,7 @@ export default function BookCard({ book, onSelect }) {
         </div>
       </figure>
 
-      <div className="flex flex-1 flex-col p-4">
+      <div className="flex flex-1 flex-col p-3.5 sm:p-4">
         <p className="section-label mb-1 min-h-[1rem] truncate">
           {uniqueGenres.slice(0, 2).join(" / ") || "General"}
         </p>
@@ -98,7 +130,7 @@ export default function BookCard({ book, onSelect }) {
           {authors}
         </p>
 
-        <div className="mt-auto flex items-center justify-between">
+        <div className="mt-auto flex flex-wrap items-center justify-between gap-2">
           <div
             className="flex items-center gap-1"
             aria-label={rating ? `Rating ${rating}` : "Rating belum tersedia"}
@@ -125,15 +157,25 @@ export default function BookCard({ book, onSelect }) {
           </span>
         </div>
 
+        {onToggleFavorite && (
+          <button
+            type="button"
+            className={`mt-3 min-h-9 w-full px-3 py-2 text-xs ${
+              isFavorite ? "btn-favorite-active" : "btn-favorite"
+            }`}
+            aria-pressed={isFavorite}
+            onClick={() => onToggleFavorite(book)}
+          >
+            <Icon name="heart" className="h-3.5 w-3.5" strokeWidth={2} />
+            {isFavorite ? "Hapus dari Favorit" : "Simpan ke Favorit"}
+          </button>
+        )}
+
         {uniqueGenres.length > 0 && (
           <div className="mt-3 flex min-h-[1.5rem] flex-wrap gap-1">
             {uniqueGenres.slice(0, 4).map((tag) => (
-              <span
-                key={tag}
-                className="text-[10px] font-crimson bg-cream
-                           text-secondary px-2 py-0.5 rounded-full"
-              >
-                {tag}
+              <span key={tag} className="genre-chip">
+                <span className="genre-chip-text">{tag}</span>
               </span>
             ))}
           </div>
