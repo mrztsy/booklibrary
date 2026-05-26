@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import BookCard from "../components/BookCard";
 import BookCardSkeleton from "../components/BookCardSkeleton";
 import BookModal from "../components/BookModal";
@@ -106,6 +106,58 @@ export default function LibraryPage({
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const endIndex = startIndex + ITEMS_PER_PAGE;
   const paginatedBooks = filteredBooks.slice(startIndex, endIndex);
+  const libraryStats = useMemo(() => {
+    const genreCounts = filteredBooks.reduce((counts, book) => {
+      getBookGenres(book).forEach((genre) => {
+        counts.set(genre, (counts.get(genre) || 0) + 1);
+      });
+      return counts;
+    }, new Map());
+    const popularGenre = [...genreCounts.entries()].sort(
+      (a, b) => b[1] - a[1] || a[0].localeCompare(b[0]),
+    )[0];
+    const topRatedBooks = [...filteredBooks]
+      .filter((book) => Number(book.rating) > 0)
+      .sort((a, b) => Number(b.rating) - Number(a.rating))
+      .slice(0, 5);
+
+    return {
+      totalBooks: filteredBooks.length,
+      availableBooks: filteredBooks.filter((book) => book.available).length,
+      borrowedBooks: filteredBooks.filter((book) => !book.available).length,
+      popularGenre,
+      topRatedBooks,
+    };
+  }, [filteredBooks]);
+  const statCards = [
+    {
+      label: "Total Buku",
+      value: libraryStats.totalBooks,
+      icon: "collection",
+      className: "bg-[#173F3A] text-white",
+    },
+    {
+      label: "Buku Tersedia",
+      value: libraryStats.availableBooks,
+      icon: "check",
+      className: "bg-[#177E8E] text-white",
+    },
+    {
+      label: "Buku Dipinjam",
+      value: libraryStats.borrowedBooks,
+      icon: "bookmark",
+      className: "bg-[#A33B2F] text-white",
+    },
+    {
+      label: "Genre Terpopuler",
+      value: libraryStats.popularGenre?.[0] || "-",
+      helper: libraryStats.popularGenre
+        ? `${libraryStats.popularGenre[1]} buku`
+        : "Belum ada data",
+      icon: "tag",
+      className: "bg-[#8B4F2F] text-white",
+    },
+  ];
 
   const handleSearchSubmit = (event) => {
     event.preventDefault();
@@ -179,7 +231,7 @@ export default function LibraryPage({
       <section
         id="katalog"
         aria-labelledby="library-heading"
-        className="border-y border-accent/70 bg-gradient-to-br from-primary via-primary to-accentHover py-12 text-white"
+        className="border-y border-accent/70 bg-primary py-12 text-white"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
@@ -600,35 +652,90 @@ export default function LibraryPage({
         )}
 
         {/* Statistik rating — hanya muncul jika books punya field rating */}
-        {filteredBooks.some((b) => b.rating) && (
+        {hasFilteredBooks && (
           <section
             aria-labelledby="stats-heading"
-            className="bg-white border border-borderSoft rounded-lg p-6 mb-8"
+            className="mb-8 overflow-hidden rounded-lg border border-borderSoft bg-white shadow-book"
           >
-            <p className="section-label mb-1">Statistik</p>
-            <h3
-              id="stats-heading"
-              className="font-playfair font-semibold text-textMain mb-5"
-            >
-              Top 5 Rating Tertinggi
-            </h3>
-            <div className="space-y-3">
-              {[...filteredBooks]
-                .sort((a, b) => b.rating - a.rating)
-                .slice(0, 5)
-                .map((book, i) => (
-                  <div key={book.key || i} className="flex items-center gap-3">
-                    <span className="w-5 text-xs font-bold text-textSecondary font-crimson">
+            <div className="grid gap-0 lg:grid-cols-[minmax(0,1.05fr)_minmax(320px,0.95fr)]">
+              <div className="border-b border-borderSoft p-5 sm:p-6 lg:border-b-0 lg:border-r">
+                <p className="section-label mb-1">Statistik</p>
+                <h3
+                  id="stats-heading"
+                  className="font-playfair text-2xl font-bold text-textMain"
+                >
+                  Ringkasan Koleksi
+                </h3>
+
+                <div className="mt-5 grid gap-3 sm:grid-cols-2">
+                  {statCards.map((stat) => (
+                    <div
+                      key={stat.label}
+                      className={`rounded-lg p-4 shadow-sm ${stat.className}`}
+                    >
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="min-w-0">
+                          <p className="text-xs font-semibold uppercase tracking-[0.12em] text-white/70">
+                            {stat.label}
+                          </p>
+                          <p className="mt-2 truncate font-playfair text-3xl font-extrabold leading-none">
+                            {stat.value}
+                          </p>
+                          {stat.helper && (
+                            <p className="mt-2 text-xs font-semibold text-white/70">
+                              {stat.helper}
+                            </p>
+                          )}
+                        </div>
+                        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-white/15">
+                          <Icon name={stat.icon} className="h-4 w-4" />
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="p-5 sm:p-6">
+                <div className="mb-5 flex items-end justify-between gap-3">
+                  <div>
+                    <p className="section-label mb-1">Top 5 Rating</p>
+                    <h3 className="font-playfair text-xl font-bold text-textMain">
+                      Rating Tertinggi
+                    </h3>
+                  </div>
+                  <span className="rounded-full bg-cream px-3 py-1 text-xs font-bold text-accentHover">
+                    {libraryStats.topRatedBooks.length} buku
+                  </span>
+                </div>
+
+                <div className="space-y-2.5">
+                  {libraryStats.topRatedBooks.map((book, i) => (
+                  <div
+                    key={book.key || book.id || i}
+                    className="top-rating-item"
+                  >
+                    <span className="top-rating-rank">
                       {i + 1}
                     </span>
-                    <span className="font-crimson text-sm text-secondary flex-1 truncate">
+                    <span className="top-rating-title">
                       {book.title}
                     </span>
-                    <span className="text-xs text-textSecondary font-crimson whitespace-nowrap">
+                    <span className="top-rating-score">
+                      <Icon name="star" className="h-3.5 w-3.5 text-accent" />
+                      {book.rating}
+                    </span>
+                    <span className="sr-only">
                       ★ {book.rating}
                     </span>
                   </div>
                 ))}
+                  {libraryStats.topRatedBooks.length === 0 && (
+                    <p className="rounded-lg border border-borderSoft bg-cream px-3 py-4 text-sm text-textSecondary">
+                      Belum ada data rating untuk hasil ini.
+                    </p>
+                  )}
+                </div>
+              </div>
             </div>
           </section>
         )}

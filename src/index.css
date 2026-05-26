@@ -265,6 +265,30 @@
     color: #FFFFFF;
   }
 
+  .top-rating-item {
+    @apply grid grid-cols-[2rem_minmax(0,1fr)_auto] items-center gap-3
+           rounded-lg border px-3 py-2.5;
+    border-color: #D8CFC0;
+    background-color: rgb(246 241 232 / 0.7);
+  }
+
+  .top-rating-rank {
+    @apply flex h-7 w-7 items-center justify-center rounded-full text-xs
+           font-extrabold shadow-sm;
+    background-color: #FFFFFF;
+    color: #18332F;
+  }
+
+  .top-rating-title {
+    @apply truncate text-sm font-semibold;
+    color: #5F6F64;
+  }
+
+  .top-rating-score {
+    @apply inline-flex items-center gap-1 whitespace-nowrap text-sm font-bold;
+    color: #7A2E2E;
+  }
+
   .book-list-description {
     display: none;
     -webkit-box-orient: vertical;
@@ -402,6 +426,24 @@ html.dark textarea::placeholder {
 }
 
 html.dark .section-label {
+  color: #E7C06B;
+}
+
+html.dark .top-rating-item {
+  border-color: #33423C;
+  background-color: #20312D;
+}
+
+html.dark .top-rating-rank {
+  background-color: #F8F6F0;
+  color: #18332F;
+}
+
+html.dark .top-rating-title {
+  color: #F5EFE4;
+}
+
+html.dark .top-rating-score {
   color: #E7C06B;
 }
 
