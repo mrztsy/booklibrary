@@ -75,10 +75,8 @@ export default function BookCard({
         {onToggleFavorite && (
           <button
             type="button"
-            className={`absolute left-2 top-2 z-20 inline-flex h-9 w-9 items-center justify-center rounded-full border transition-all duration-200 ${
-              isFavorite
-                ? "border-accent bg-accent text-white"
-                : "border-white/40 bg-primary/70 text-white hover:border-accent hover:bg-accent"
+            className={`absolute left-2 top-2 z-20 h-9 w-9 ${
+              isFavorite ? "btn-favorite-icon-active" : "btn-favorite-icon"
             }`}
             aria-label={
               isFavorite
@@ -162,10 +160,8 @@ export default function BookCard({
         {onToggleFavorite && (
           <button
             type="button"
-            className={`mt-3 inline-flex min-h-9 w-full items-center justify-center gap-2 rounded-lg border px-3 py-2 text-xs font-semibold transition-all duration-200 ${
-              isFavorite
-                ? "border-accent bg-accent text-white hover:bg-accentHover"
-                : "border-borderSoft bg-white text-secondary hover:border-accent hover:text-accentHover"
+            className={`mt-3 min-h-9 w-full px-3 py-2 text-xs ${
+              isFavorite ? "btn-favorite-active" : "btn-favorite"
             }`}
             aria-pressed={isFavorite}
             onClick={() => onToggleFavorite(book)}

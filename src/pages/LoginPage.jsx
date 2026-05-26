@@ -90,7 +90,7 @@ export default function LoginPage({
                 </a>
                 <button
                   type="button"
-                  className="btn-secondary"
+                  className="btn-logout px-5 py-2.5"
                   onClick={() => setLogoutModalOpen(true)}
                 >
                   Keluar

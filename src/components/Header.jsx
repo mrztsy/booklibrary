@@ -135,7 +135,7 @@ export default function Header({
                     </div>
                     <button
                       type="button"
-                      className="mt-2 flex w-full items-center justify-center rounded-lg px-3 py-2 text-sm font-semibold text-accentHover transition-colors hover:bg-cream"
+                      className="btn-logout mt-2 w-full px-3 py-2 text-sm"
                       onClick={openLogoutModal}
                     >
                       Keluar
@@ -251,7 +251,7 @@ export default function Header({
             </div>
             <button
               type="button"
-              className="mt-1 w-full rounded-lg bg-white px-3 py-2 text-sm font-semibold text-accentHover transition-colors hover:bg-cream"
+              className="btn-logout mt-1 w-full px-3 py-2 text-sm"
               onClick={openLogoutModal}
             >
               Keluar

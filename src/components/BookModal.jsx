@@ -88,6 +88,11 @@ export default function BookModal({
     : isBorrowed
       ? "Kembalikan Buku"
       : "Pinjam Buku";
+  const borrowButtonClass = !isBorrowable
+    ? "btn-borrow-disabled"
+    : isBorrowed
+      ? "btn-return"
+      : "btn-borrow";
   const bookInfo = [
     { label: "Penulis", value: author },
     { label: "Tahun Terbit", value: book.year || "-" },
@@ -201,7 +206,7 @@ export default function BookModal({
             <div className="flex flex-wrap gap-3">
               <button
                 type="button"
-                className="btn-primary text-sm py-2.5"
+                className={`${borrowButtonClass} px-5 py-2.5 text-sm`}
                 disabled={!isBorrowable && !isBorrowed}
                 onClick={handleBorrowToggle}
               >
@@ -209,7 +214,9 @@ export default function BookModal({
               </button>
               <button
                 type="button"
-                className="btn-secondary text-sm py-2.5"
+                className={`px-5 py-2.5 text-sm ${
+                  isFavorite ? "btn-favorite-active" : "btn-favorite"
+                }`}
                 onClick={() => onToggleFavorite?.(book)}
               >
                 <Icon name="heart" className="h-4 w-4" strokeWidth={2} />

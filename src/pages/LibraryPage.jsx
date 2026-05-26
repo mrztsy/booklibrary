@@ -548,10 +548,10 @@ export default function LibraryPage({
                     <div className="col-span-2 grid grid-cols-2 gap-2 sm:col-span-1 sm:flex sm:flex-wrap sm:justify-end">
                       <button
                         type="button"
-                        className={`inline-flex min-h-9 items-center justify-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-semibold transition-all sm:text-sm ${
+                        className={`min-h-9 px-3 py-1.5 text-xs sm:text-sm ${
                           isBookFavorite(book)
-                            ? "border-accent bg-accent text-white hover:bg-accentHover"
-                            : "border-borderSoft bg-white text-secondary hover:border-accent hover:text-accentHover"
+                            ? "btn-favorite-active"
+                            : "btn-favorite"
                         }`}
                         aria-pressed={isBookFavorite(book)}
                         onClick={() => onToggleFavorite?.(book)}

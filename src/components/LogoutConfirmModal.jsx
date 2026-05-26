@@ -62,7 +62,7 @@ export default function LogoutConfirmModal({
           <button type="button" className="btn-secondary" onClick={onClose}>
             Batal
           </button>
-          <button type="button" className="btn-primary" onClick={onConfirm}>
+          <button type="button" className="btn-logout-solid px-5 py-2.5" onClick={onConfirm}>
             Keluar
           </button>
         </div>
