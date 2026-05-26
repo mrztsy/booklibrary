@@ -526,18 +526,15 @@ export default function LibraryPage({
                       </p>
                       <div className="mt-2 flex flex-wrap gap-1">
                         {bookGenres.slice(0, 4).map((genre) => (
-                          <span
-                            key={genre}
-                            className="rounded-full bg-cream px-2 py-0.5 text-[10px] font-semibold leading-none text-secondary"
-                          >
-                            {genre}
+                          <span key={genre} className="genre-chip">
+                            <span className="genre-chip-text">{genre}</span>
                           </span>
                         ))}
                         <span
-                          className={`rounded-full px-2 py-0.5 text-[10px] font-semibold leading-none ${
+                          className={`status-chip ${
                             book.available
-                              ? "bg-cream text-primary"
-                              : "bg-accentHover text-white"
+                              ? ""
+                              : "status-chip-borrowed"
                           }`}
                         >
                           {book.available ? "Tersedia" : "Dipinjam"}

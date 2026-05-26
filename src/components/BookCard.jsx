@@ -174,12 +174,8 @@ export default function BookCard({
         {uniqueGenres.length > 0 && (
           <div className="mt-3 flex min-h-[1.5rem] flex-wrap gap-1">
             {uniqueGenres.slice(0, 4).map((tag) => (
-              <span
-                key={tag}
-                className="text-[10px] font-crimson bg-cream
-                           text-secondary px-2 py-0.5 rounded-full"
-              >
-                {tag}
+              <span key={tag} className="genre-chip">
+                <span className="genre-chip-text">{tag}</span>
               </span>
             ))}
           </div>

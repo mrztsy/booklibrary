@@ -232,6 +232,39 @@
     color: #7A2E2E;
   }
 
+  .genre-chip,
+  .status-chip {
+    @apply inline-flex h-5 max-w-full items-center justify-center rounded-full
+           px-2.5 text-[11px] font-semibold leading-none;
+    min-width: 3.25rem;
+    letter-spacing: 0;
+    white-space: nowrap;
+  }
+
+  .genre-chip {
+    background-color: #F3EEE4;
+    color: #5F6F64;
+  }
+
+  .genre-chip-text {
+    display: block;
+    max-width: 7.25rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    line-height: 1;
+  }
+
+  .status-chip {
+    background-color: #F3EEE4;
+    color: #18332F;
+  }
+
+  .status-chip-borrowed {
+    background-color: #7A2E2E;
+    color: #FFFFFF;
+  }
+
   .book-list-description {
     display: none;
     -webkit-box-orient: vertical;
