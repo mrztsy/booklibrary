@@ -90,6 +90,22 @@
     @apply text-xs font-semibold font-crimson tracking-[0.14em] uppercase;
     color: #7A2E2E;
   }
+
+  .book-list-description {
+    display: none;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  @media (min-width: 768px) {
+    .book-list-description {
+      display: -webkit-box;
+    }
+  }
 }
 
 .btn-primary:hover {

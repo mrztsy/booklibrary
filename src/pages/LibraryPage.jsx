@@ -468,6 +468,10 @@ export default function LibraryPage({
             <div className="mb-10 space-y-3">
               {paginatedBooks.map((book, i) => {
                 const bookGenres = [...new Set(getBookGenres(book))];
+                const synopsis =
+                  book.synopsis ||
+                  book.description ||
+                  "Deskripsi pendek buku belum tersedia.";
 
                 return (
                   <article
@@ -517,6 +521,9 @@ export default function LibraryPage({
                           {book.rating || "-"}
                         </span>
                       </div>
+                      <p className="book-list-description mt-2 text-sm leading-relaxed text-textSecondary">
+                        {synopsis}
+                      </p>
                       <div className="mt-2 flex flex-wrap gap-1">
                         {bookGenres.slice(0, 4).map((genre) => (
                           <span

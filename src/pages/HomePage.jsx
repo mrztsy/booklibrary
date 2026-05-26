@@ -754,7 +754,7 @@ export default function HomePage({
                             <span className="text-borderSoft">/</span>
                             <span>{book.year || "-"}</span>
                           </div>
-                          <p className="mt-2 hidden text-sm leading-relaxed text-textSecondary line-clamp-2 md:block">
+                          <p className="book-list-description mt-2 text-sm leading-relaxed text-textSecondary">
                             {synopsis}
                           </p>
                           <div className="mt-2 flex flex-wrap gap-1">
