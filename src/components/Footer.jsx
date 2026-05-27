@@ -119,8 +119,8 @@ export default function Footer({ onToast, activePage = "home" }) {
                 event.preventDefault();
                 event.currentTarget.reset();
                 onToast?.(
-                  "Newsletter tersimpan",
-                  "Rekomendasi buku akan dikirim ke email kamu.",
+                  "Terima kasih sudah bergabung",
+                  "Rekomendasi buku akan mampir ke email kamu.",
                   "success",
                 );
               }}

@@ -1,5 +1,5 @@
 
-export default function LoadingSpinner({ message = 'Memuat data...' }) {
+export default function LoadingSpinner({ message = 'Menyiapkan data...' }) {
   return (
     <div
       role="status"
@@ -33,7 +33,7 @@ export default function LoadingSpinner({ message = 'Memuat data...' }) {
 
       <div className="text-center">
         <p className="font-playfair text-lg text-primary">{message}</p>
-        <p className="font-crimson text-sm text-textSecondary mt-1">Mohon tunggu sebentar</p>
+        <p className="font-crimson text-sm text-textSecondary mt-1">Sebentar, ya</p>
       </div>
 
       <div className="hidden sm:grid grid-cols-3 gap-4 mt-4 max-w-lg w-full px-4">

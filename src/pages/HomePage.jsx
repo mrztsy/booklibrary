@@ -147,8 +147,8 @@ export default function HomePage({
     setFilterResetSignal((current) => current + 1);
     fetchData(null);
     onToast?.(
-      "Filter direset",
-      "Koleksi buku kembali ke tampilan awal.",
+      "Filter dibersihkan",
+      "Koleksi kembali tampil utuh.",
       "info",
     );
   };
@@ -170,7 +170,7 @@ export default function HomePage({
     fetchData(popularFilters);
     onToast?.(
       "Mencari buku populer",
-      "Kami memuat rekomendasi populer dari katalog.",
+      "Sebentar, kami pilihkan yang sedang banyak dicari.",
       "info",
     );
   };
@@ -238,10 +238,10 @@ export default function HomePage({
         <div className="max-w-md rounded-lg border border-borderSoft bg-white p-6 text-center shadow-book">
           <p className="section-label mb-2">Koleksi Buku</p>
           <h1 className="font-playfair text-2xl font-bold text-textMain mb-2">
-            Data buku belum tersedia
+            Koleksi belum siap
           </h1>
           <p className="font-crimson text-textSecondary">
-            Tunggu sebentar sampai data dari API selesai dimuat.
+            Sebentar lagi daftar bukunya akan tampil di sini.
           </p>
         </div>
       </section>
@@ -303,7 +303,7 @@ export default function HomePage({
               <p className="mb-6 max-w-2xl text-sm leading-relaxed text-white/70 line-clamp-3 sm:text-base">
                 {heroBook.synopsis ||
                   heroBook.description ||
-                  "Deskripsi buku belum tersedia dari katalog Open Library."}
+                  "Deskripsi buku ini belum hadir dari katalog Open Library."}
               </p>
               <div className="mb-8 flex min-h-[2rem] flex-wrap gap-2">
                 {(heroBook.genres || heroBook.tags || [heroBook.genre])
@@ -483,7 +483,7 @@ export default function HomePage({
                   {editorBook.title}
                 </h3>
                 <p className="mt-1 text-sm font-semibold text-textSecondary">
-                  {editorBook.author || "Penulis tidak diketahui"}
+                  {editorBook.author || "Penulis belum tercatat"}
                 </p>
 
                 <div className="mt-4 flex flex-wrap items-center gap-3 text-sm text-textSecondary">
@@ -500,7 +500,7 @@ export default function HomePage({
                 <p className="mt-4 line-clamp-3 text-sm leading-relaxed text-textSecondary">
                   {editorBook.synopsis ||
                     editorBook.description ||
-                    "Deskripsi pendek buku belum tersedia dari katalog Open Library."}
+                    "Deskripsi pendeknya belum tersedia dari Open Library."}
                 </p>
 
                 <div className="mt-auto pt-5">
@@ -550,7 +550,7 @@ export default function HomePage({
                       {book.title}
                     </h3>
                     <p className="mt-1 text-xs text-textSecondary line-clamp-1">
-                      {book.author || "Penulis tidak diketahui"}
+                      {book.author || "Penulis belum tercatat"}
                     </p>
                     <div className="mt-2 flex flex-wrap items-center gap-2 text-xs text-textSecondary">
                       <span className="inline-flex items-center gap-1 font-semibold text-accentHover">
@@ -698,7 +698,7 @@ export default function HomePage({
                     const synopsis =
                       book.synopsis ||
                       book.description ||
-                      "Deskripsi pendek buku belum tersedia.";
+                      "Deskripsi pendeknya belum tersedia.";
 
                     return (
                       <article
@@ -734,7 +734,7 @@ export default function HomePage({
                           </h3>
                           <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-textSecondary sm:text-sm">
                             <span className="line-clamp-1 font-semibold">
-                              {book.author || "Penulis tidak diketahui"}
+                              {book.author || "Penulis belum tercatat"}
                             </span>
                             <span className="hidden text-borderSoft sm:inline">
                               /
@@ -805,10 +805,10 @@ export default function HomePage({
                   <Icon name="search" className="h-7 w-7" strokeWidth={2} />
                 </div>
                 <p className="font-playfair text-xl font-semibold text-textMain mb-2">
-                  Buku tidak ditemukan
+                  Belum ada hasil yang cocok
                 </p>
                 <p className="mx-auto max-w-md font-crimson text-sm text-textSecondary mb-5">
-                  Coba gunakan kata kunci lain, ubah genre, atau reset filter.
+                  Coba kata kunci lain, ubah genre, atau bersihkan filternya.
                 </p>
                 <div className="flex flex-wrap justify-center gap-3">
                   <button
@@ -816,7 +816,7 @@ export default function HomePage({
                     className="btn-secondary"
                     onClick={resetCollectionFilters}
                   >
-                    Reset Filter
+                    Bersihkan Filter
                   </button>
                   <button
                     type="button"

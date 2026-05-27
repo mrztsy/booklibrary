@@ -31,18 +31,18 @@ export default function LoginPage({
     const name = values.name.trim() || email.split("@")[0] || "Pembaca";
 
     if (!email || !password) {
-      setMessage("Email dan password wajib diisi.");
+      setMessage("Email dan password perlu diisi dulu, ya.");
       return;
     }
 
     onLogin?.({ name, email });
-    onToast?.("Login berhasil", `Selamat datang, ${name}.`, "success");
+    onToast?.("Selamat datang", `${name}, rak bacamu siap menemani.`, "success");
     window.location.hash = redirectTo === "favorit" ? "#/favorit" : "#/";
   };
 
   const handleConfirmLogout = () => {
     onLogout?.();
-    onToast?.("Logout berhasil", "Sesi akun sudah keluar.", "info");
+    onToast?.("Sudah keluar", "Sesi akunmu ditutup dengan aman.", "info");
     setLogoutModalOpen(false);
   };
 

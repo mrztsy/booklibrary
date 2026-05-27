@@ -200,8 +200,8 @@ export default function LibraryPage({
     setSearchMessage("");
     fetchData?.(null);
     onToast?.(
-      "Pencarian direset",
-      "Katalog API kembali menampilkan semua hasil.",
+      "Pencarian dibersihkan",
+      "Katalog kembali menampilkan semua buku.",
       "info",
     );
   };
@@ -226,7 +226,7 @@ export default function LibraryPage({
     });
     onToast?.(
       "Mencari buku populer",
-      "Katalog menampilkan hasil dengan kata kunci populer.",
+      "Sebentar, kami ambilkan pilihan yang ramai dicari.",
       "info",
     );
   };
@@ -265,7 +265,7 @@ export default function LibraryPage({
                 }`}
                 aria-hidden="true"
               />
-              {showLoading ? "Mengambil data..." : "Fetch API aktif"}
+              {showLoading ? "Mengambil data..." : "Katalog terhubung"}
             </div>
           </div>
         </div>
@@ -546,7 +546,7 @@ export default function LibraryPage({
                 const synopsis =
                   book.synopsis ||
                   book.description ||
-                  "Deskripsi pendek buku belum tersedia.";
+                  "Deskripsi pendeknya belum tersedia.";
 
                 return (
                   <article
@@ -581,7 +581,7 @@ export default function LibraryPage({
                       </h3>
                       <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-textSecondary sm:text-sm">
                         <span className="line-clamp-1 font-semibold">
-                          {book.author || "Penulis tidak diketahui"}
+                          {book.author || "Penulis belum tercatat"}
                         </span>
                         <span className="hidden text-borderSoft sm:inline">
                           /
@@ -650,10 +650,10 @@ export default function LibraryPage({
               <Icon name="search" className="h-7 w-7" strokeWidth={2} />
             </div>
             <p className="font-playfair text-xl font-semibold text-textMain">
-              Buku tidak ditemukan
+              Belum ada hasil yang cocok
             </p>
             <p className="mx-auto mt-2 max-w-md font-crimson text-sm text-textSecondary">
-              Coba gunakan kata kunci lain, ubah genre, atau reset filter.
+              Coba kata kunci lain, pilih topik berbeda, atau bersihkan filter.
             </p>
             <div className="mt-5 flex flex-wrap justify-center gap-3">
               <button
@@ -661,7 +661,7 @@ export default function LibraryPage({
                 className="btn-secondary"
                 onClick={resetLibraryFilters}
               >
-                Reset Filter
+                Bersihkan Filter
               </button>
               <button
                 type="button"
@@ -754,7 +754,7 @@ export default function LibraryPage({
                 ))}
                   {libraryStats.topRatedBooks.length === 0 && (
                     <p className="rounded-lg border border-borderSoft bg-cream px-3 py-4 text-sm text-textSecondary">
-                      Belum ada data rating untuk hasil ini.
+                      Rating untuk hasil ini belum tersedia.
                     </p>
                   )}
                 </div>

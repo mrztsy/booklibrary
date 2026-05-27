@@ -13,9 +13,9 @@ export default function BookCard({
     "from-primary to-accent",
   ];
 
-  const title = book.title || "Judul tidak tersedia";
+  const title = book.title || "Judul belum tersedia";
   const authors =
-    book.author || book.author_name?.join(", ") || "Penulis tidak diketahui";
+    book.author || book.author_name?.join(", ") || "Penulis belum tercatat";
   const year = book.year || book.first_publish_year || "-";
   const rating = Number(book.rating) || 0;
   const coverUrl = book.cover;
@@ -133,7 +133,7 @@ export default function BookCard({
         <div className="mt-auto flex flex-wrap items-center justify-between gap-2">
           <div
             className="flex items-center gap-1"
-            aria-label={rating ? `Rating ${rating}` : "Rating belum tersedia"}
+            aria-label={rating ? `Rating ${rating}` : "Rating belum tercatat"}
           >
             {[1, 2, 3, 4, 5].map((star) => (
               <svg

@@ -57,8 +57,8 @@ export default function SearchFilter({
       onChange?.(null);
       onFilter(null);
       onToast?.(
-        "Menampilkan buku default",
-        "Koleksi kembali ke daftar awal.",
+        "Koleksi dibuka lagi",
+        "Semua buku kembali terlihat.",
         "info",
       );
       return;
@@ -74,8 +74,8 @@ export default function SearchFilter({
     onChange?.(null);
     onFilter(null);
     onToast?.(
-      "Filter direset",
-      "Koleksi buku kembali ke tampilan awal.",
+      "Filter dibersihkan",
+      "Koleksi kembali tampil utuh.",
       "info",
     );
   };
@@ -101,7 +101,7 @@ export default function SearchFilter({
           onClick={handleReset}
           className="text-xs font-semibold font-crimson text-textSecondary hover:text-accentHover transition-colors"
         >
-          Reset
+          Bersihkan
         </button>
       </div>
 

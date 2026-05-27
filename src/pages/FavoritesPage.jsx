@@ -54,11 +54,11 @@ export default function FavoritesPage({
           <div className="rounded-lg border border-borderSoft bg-white p-8 text-center shadow-book">
             <Icon name="heart" className="mx-auto mb-3 h-8 w-8 text-accent" />
             <p className="font-playfair text-lg font-semibold text-textMain">
-              Belum ada buku favorit
+              Rak favorit masih kosong
             </p>
             <p className="mx-auto mt-1 max-w-md text-sm text-textSecondary">
-              Simpan buku dari beranda atau katalog API untuk membuat rak
-              favorit pribadi.
+              Simpan buku dari beranda atau katalog untuk mulai menyusun rak
+              kecilmu.
             </p>
             <a href="#/" className="btn-primary mt-5">
               Jelajahi Buku

@@ -30,7 +30,7 @@ export default function BookModal({
     const fallbackSynopsis =
       book.synopsis ||
       book.description ||
-      "Sinopsis buku belum tersedia dari katalog Open Library.";
+      "Sinopsis buku ini belum tersedia dari Open Library.";
 
     setSynopsis(fallbackSynopsis);
 
@@ -81,8 +81,8 @@ export default function BookModal({
   if (!book) return null;
   if (book.isLoading) return <BookModalSkeleton onClose={onClose} />;
 
-  const title = book.title || "Judul tidak tersedia";
-  const author = book.author || "Penulis tidak diketahui";
+  const title = book.title || "Judul belum tersedia";
+  const author = book.author || "Penulis belum tercatat";
   const genres = [book.genre, ...(book.genres || [])].filter(Boolean);
   const uniqueGenres = [...new Set(genres)];
   const isBorrowable = book.available !== false;
@@ -116,7 +116,7 @@ export default function BookModal({
     setIsBorrowed(nextBorrowed);
     onToast?.(
       nextBorrowed ? "Buku dipinjam" : "Buku dikembalikan",
-      title,
+      nextBorrowed ? `${title} masuk ke daftar pinjam.` : `${title} sudah kembali.`,
       "success",
     );
   };

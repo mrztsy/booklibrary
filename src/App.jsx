@@ -84,8 +84,8 @@ export default function App() {
   const toggleFavorite = (book) => {
     if (!currentUser) {
       showToast(
-        "Login diperlukan",
-        "Masuk dulu untuk menyimpan buku favorit.",
+        "Masuk dulu, ya",
+        "Setelah login, buku favoritmu bisa disimpan rapi.",
         "info",
       );
       window.location.hash = "#/login";
@@ -114,8 +114,8 @@ export default function App() {
     });
 
     showToast(
-      alreadySaved ? "Favorit dihapus" : "Favorit disimpan",
-      book.title || "Buku pilihan kamu sudah diperbarui.",
+      alreadySaved ? "Dihapus dari favorit" : "Tersimpan di favorit",
+      book.title || "Rak favoritmu sudah diperbarui.",
       "success",
     );
   };
@@ -124,10 +124,10 @@ export default function App() {
     const nextMode = !isDarkMode;
     setIsDarkMode(nextMode);
     showToast(
-      nextMode ? "Dark mode aktif" : "Light mode aktif",
+      nextMode ? "Mode gelap aktif" : "Mode terang aktif",
       nextMode
-        ? "Tampilan berubah ke mode gelap."
-        : "Tampilan kembali ke mode terang.",
+        ? "Tampilan dibuat lebih teduh untuk membaca."
+        : "Tampilan kembali cerah dan ringan.",
       "info",
     );
   };
@@ -209,7 +209,7 @@ export default function App() {
         );
         return nextBooks;
       });
-      setError("API Open Library belum bisa diakses, menampilkan data contoh.");
+      setError("Open Library sedang sulit dihubungi. Kami tampilkan data contoh dulu, ya.");
       console.error(err);
     } finally {
       setIsLoading(false);
@@ -225,7 +225,7 @@ export default function App() {
       <div className="min-h-screen flex items-center justify-center bg-cream px-4">
         <div className="max-w-md rounded-lg border border-borderSoft bg-white p-6 text-center shadow-book">
           <p className="font-playfair text-xl font-semibold text-textMain mb-2">
-            Data belum bisa dimuat
+            Data belum bisa dibuka
           </p>
           <p className="font-crimson text-textSecondary mb-4">{error}</p>
           <button
@@ -233,7 +233,7 @@ export default function App() {
             className="btn-primary"
             onClick={() => fetchData()}
           >
-            Coba Lagi
+            Coba lagi
           </button>
         </div>
       </div>
