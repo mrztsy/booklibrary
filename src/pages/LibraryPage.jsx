@@ -10,6 +10,7 @@ import BookModal from "../components/BookModal";
 import Icon from "../components/Icon";
 import { SORT_OPTIONS } from "../data/books";
 import { useLanguage } from "../utils/language";
+import { DEFAULT_CATALOG_PREFERENCES } from "../utils/preferences";
 
 const TOPICS = [
   { value: "Semua", label: "Semua", icon: "collection" },
@@ -36,18 +37,23 @@ export default function LibraryPage({
   favoriteIds = new Set(),
   onToggleFavorite,
   onToast,
+  catalogPreferences = DEFAULT_CATALOG_PREFERENCES,
 }) {
   const { t } = useLanguage();
   const ITEMS_PER_PAGE = 10;
+  const preferredTopic = catalogPreferences.defaultTopic || "Semua";
+  const preferredSort = catalogPreferences.sort || "default";
+  const preferredViewMode = catalogPreferences.viewMode || "grid";
+  const preferredAvailableOnly = Boolean(catalogPreferences.availableOnly);
   const [searchTerm, setSearchTerm] = useState("");
   const [authorTerm, setAuthorTerm] = useState("");
-  const [selectedTopic, setSelectedTopic] = useState("Semua");
-  const [submittedTopic, setSubmittedTopic] = useState("Semua");
-  const [sortValue, setSortValue] = useState("default");
+  const [selectedTopic, setSelectedTopic] = useState(preferredTopic);
+  const [submittedTopic, setSubmittedTopic] = useState(preferredTopic);
+  const [sortValue, setSortValue] = useState(preferredSort);
   const [selectedBook, setSelectedBook] = useState(null);
   const [showLoading, setShowLoading] = useState(isLoading);
   const [currentPage, setCurrentPage] = useState(1);
-  const [viewMode, setViewMode] = useState("grid");
+  const [viewMode, setViewMode] = useState(preferredViewMode);
   const [searchMessage, setSearchMessage] = useState("");
 
   const activeKeyword = searchTerm.trim().toLowerCase();
@@ -69,6 +75,14 @@ export default function LibraryPage({
     if (activeKeyword || activeAuthor || submittedTopic !== "Semua")
       setSearchMessage("");
   }, [activeKeyword, activeAuthor, submittedTopic]);
+
+  useEffect(() => {
+    setSelectedTopic(preferredTopic);
+    setSubmittedTopic(preferredTopic);
+    setSortValue(preferredSort);
+    setViewMode(preferredViewMode);
+    setCurrentPage(1);
+  }, [preferredTopic, preferredSort, preferredViewMode, preferredAvailableOnly]);
 
   useEffect(() => {
     let timerId;
@@ -103,8 +117,9 @@ export default function LibraryPage({
     const matchesTopic =
       submittedTopic === "Semua" ||
       searchableText.includes(submittedTopic.toLowerCase());
+    const matchesAvailability = !preferredAvailableOnly || book.available;
 
-    return matchesSearch && matchesAuthor && matchesTopic;
+    return matchesSearch && matchesAuthor && matchesTopic && matchesAvailability;
   });
   const hasFilteredBooks = filteredBooks.length > 0;
 
@@ -172,8 +187,9 @@ export default function LibraryPage({
     const hasAuthor = authorTerm.trim() !== "";
     const hasTopic = selectedTopic !== "Semua";
     const hasSort = sortValue !== "default";
+    const hasAvailability = preferredAvailableOnly;
 
-    if (!hasKeyword && !hasAuthor && !hasTopic && !hasSort) {
+    if (!hasKeyword && !hasAuthor && !hasTopic && !hasSort && !hasAvailability) {
       resetLibraryFilters();
       return;
     }
@@ -186,7 +202,7 @@ export default function LibraryPage({
       genre: selectedTopic,
       yearMin: 1800,
       minRating: 0,
-      available: false,
+      available: preferredAvailableOnly,
       featured: false,
       sort: sortValue,
     });
@@ -195,12 +211,25 @@ export default function LibraryPage({
   const resetLibraryFilters = () => {
     setSearchTerm("");
     setAuthorTerm("");
-    setSelectedTopic("Semua");
-    setSubmittedTopic("Semua");
-    setSortValue("default");
+    setSelectedTopic(preferredTopic);
+    setSubmittedTopic(preferredTopic);
+    setSortValue(preferredSort);
     setCurrentPage(1);
     setSearchMessage("");
-    fetchData?.(null);
+    fetchData?.(
+      preferredTopic === "Semua" && preferredSort === "default" && !preferredAvailableOnly
+        ? null
+        : {
+            q: "",
+            author: "",
+            genre: preferredTopic,
+            yearMin: 1800,
+            minRating: 0,
+            available: preferredAvailableOnly,
+            featured: false,
+            sort: preferredSort,
+          },
+    );
     onToast?.(
       t("Pencarian dibersihkan"),
       t("Katalog kembali menampilkan semua buku."),

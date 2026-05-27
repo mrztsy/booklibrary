@@ -152,11 +152,11 @@ export default function Header({
                       </span>
                     </div>
                     <a
-                      href="#/profile"
+                      href="#/settings"
                       className="btn-secondary mt-2 w-full px-3 py-2 text-sm"
                       onClick={handleNavClick}
                     >
-                      Setting
+                      {t("Setting")}
                     </a>
                     <button
                       type="button"
@@ -283,11 +283,11 @@ export default function Header({
               </span>
             </div>
             <a
-              href="#/profile"
+              href="#/settings"
               className="btn-secondary mt-1 w-full px-3 py-2 text-sm"
               onClick={handleNavClick}
             >
-              Setting
+              {t("Setting")}
             </a>
             <button
               type="button"

@@ -7,132 +7,32 @@ import {
   getRoleLabel,
   normalizeRole,
 } from "../utils/accountRoles";
-
-const LANGUAGE_OPTIONS = ["Indonesia", "English"];
-const FAVORITE_GENRE_OPTIONS = [
-  "Fiction",
-  "Science",
-  "Fantasy",
-  "Mystery",
-  "Romance",
-  "History",
-];
-
-const defaultGenres = ["Fiction", "Science"];
-
-const PROFILE_COPY = {
-  Indonesia: {
-    account: "Profil Akun",
-    preferences: "Preferensi",
-    language: "Bahasa",
-    theme: "Tema",
-    favoriteGenres: "Genre Favorit",
-    setting: "Setting",
-    closeSetting: "Tutup Setting",
-    logout: "Keluar",
-    details: "Detail Profil",
-    displayName: "Nama Tampilan",
-    displayNamePlaceholder: "Nama yang ingin ditampilkan",
-    email: "Email",
-    photo: "Foto Profil",
-    photoPlaceholder: "Tempel URL foto profil",
-    photoHint: "Kosongkan untuk memakai avatar inisial.",
-    role: "Peran Akun",
-    save: "Simpan Profil",
-    removePhoto: "Hapus Foto",
-    noGenres: "Belum dipilih",
-    invalidImage: "Pilih file gambar untuk foto profil, ya.",
-    imageTooLarge: "Ukuran foto maksimal 1 MB agar profil tetap ringan.",
-    emailRequired: "Email profil perlu diisi dulu, ya.",
-    savedTitle: "Profil tersimpan",
-    savedMessage: "Preferensi bacamu sudah diperbarui.",
-    avatarRemovedTitle: "Foto profil dilepas",
-    avatarRemovedMessage: "Avatar inisial akan dipakai lagi.",
-    signedOutTitle: "Sudah keluar",
-    signedOutMessage: "Sesi akunmu ditutup dengan aman.",
-    userHelper: "Menjelajahi katalog dan menyimpan buku favorit.",
-    adminHelper: "Mengatur identitas akun dan kebutuhan pengelolaan koleksi.",
-  },
-  English: {
-    account: "Account Profile",
-    preferences: "Preferences",
-    language: "Language",
-    theme: "Theme",
-    favoriteGenres: "Favorite Genres",
-    setting: "Setting",
-    closeSetting: "Close Setting",
-    logout: "Sign Out",
-    details: "Profile Details",
-    displayName: "Display Name",
-    displayNamePlaceholder: "Name shown in your profile",
-    email: "Email",
-    photo: "Profile Photo",
-    photoPlaceholder: "Paste profile photo URL",
-    photoHint: "Leave it empty to use your initials.",
-    role: "Account Role",
-    save: "Save Profile",
-    removePhoto: "Remove Photo",
-    noGenres: "Not selected yet",
-    invalidImage: "Please choose an image file for your profile photo.",
-    imageTooLarge: "Keep the photo under 1 MB so your profile stays light.",
-    emailRequired: "Please fill in your profile email first.",
-    savedTitle: "Profile saved",
-    savedMessage: "Your reading preferences have been updated.",
-    avatarRemovedTitle: "Profile photo removed",
-    avatarRemovedMessage: "Your initials avatar will be used again.",
-    signedOutTitle: "Signed out",
-    signedOutMessage: "Your account session has been closed safely.",
-    userHelper: "Browse the catalog and save favorite books.",
-    adminHelper: "Manage account identity and collection needs.",
-  },
-};
+import { useLanguage } from "../utils/language";
 
 export default function ProfilePage({
   currentUser,
-  isDarkMode = false,
   onLogin,
   onLogout,
   onToast,
 }) {
+  const { t } = useLanguage();
   const [values, setValues] = useState({
     name: currentUser?.name || "",
     email: currentUser?.email || "",
     avatarUrl: currentUser?.avatarUrl || "",
     role: currentUser?.role || "user",
-    language: currentUser?.language || "Indonesia",
-    preferredGenres:
-      currentUser?.preferredGenres?.length > 0
-        ? currentUser.preferredGenres
-        : defaultGenres,
   });
   const [isEditing, setIsEditing] = useState(false);
   const [message, setMessage] = useState("");
   const [logoutModalOpen, setLogoutModalOpen] = useState(false);
 
-  const activeLanguage = values.language === "English" ? "English" : "Indonesia";
-  const copy = PROFILE_COPY[activeLanguage];
   const role = normalizeRole(values.role);
-  const roleHelper = role === "admin" ? copy.adminHelper : copy.userHelper;
+  const roleOption = ROLE_OPTIONS.find((option) => option.value === role);
   const displayedName = values.name || currentUser?.name || "Pembaca";
   const displayedEmail = values.email || currentUser?.email || "-";
-  const displayedGenres =
-    values.preferredGenres.length > 0
-      ? values.preferredGenres.join(", ")
-      : copy.noGenres;
 
   const handleChange = (key, value) => {
     setValues((currentValues) => ({ ...currentValues, [key]: value }));
-    setMessage("");
-  };
-
-  const toggleGenre = (genre) => {
-    setValues((currentValues) => {
-      const genres = currentValues.preferredGenres.includes(genre)
-        ? currentValues.preferredGenres.filter((item) => item !== genre)
-        : [...currentValues.preferredGenres, genre];
-
-      return { ...currentValues, preferredGenres: genres };
-    });
     setMessage("");
   };
 
@@ -141,12 +41,12 @@ export default function ProfilePage({
     if (!file) return;
 
     if (!file.type.startsWith("image/")) {
-      setMessage(copy.invalidImage);
+      setMessage(t("Pilih file gambar untuk foto profil, ya."));
       return;
     }
 
     if (file.size > 1024 * 1024) {
-      setMessage(copy.imageTooLarge);
+      setMessage(t("Ukuran foto maksimal 1 MB agar profil tetap ringan."));
       return;
     }
 
@@ -164,34 +64,37 @@ export default function ProfilePage({
     const avatarUrl = values.avatarUrl.trim();
 
     if (!email) {
-      setMessage(copy.emailRequired);
+      setMessage(t("Email profil perlu diisi dulu, ya."));
       return;
     }
 
     onLogin?.({
+      ...currentUser,
       name,
       email,
       avatarUrl,
       role,
-      language: values.language,
-      preferredGenres: values.preferredGenres,
     });
     setIsEditing(false);
     onToast?.(
-      copy.savedTitle,
-      copy.savedMessage,
+      t("Profil tersimpan"),
+      t("Detail profilmu sudah diperbarui."),
       "success",
     );
   };
 
   const removeAvatar = () => {
     handleChange("avatarUrl", "");
-    onToast?.(copy.avatarRemovedTitle, copy.avatarRemovedMessage, "info");
+    onToast?.(
+      t("Foto profil dilepas"),
+      t("Avatar inisial akan dipakai lagi."),
+      "info",
+    );
   };
 
   const handleConfirmLogout = () => {
     onLogout?.();
-    onToast?.(copy.signedOutTitle, copy.signedOutMessage, "info");
+    onToast?.(t("Sudah keluar"), t("Sesi akunmu ditutup dengan aman."), "info");
     setLogoutModalOpen(false);
   };
 
@@ -206,7 +109,7 @@ export default function ProfilePage({
           />
 
           <div className="min-w-0 flex-1">
-            <p className="section-label mb-2">{copy.account}</p>
+            <p className="section-label mb-2">{t("Profil Akun")}</p>
             <h1 className="truncate font-playfair text-3xl font-bold text-textMain">
               {displayedName}
             </h1>
@@ -220,43 +123,40 @@ export default function ProfilePage({
           </div>
         </div>
 
-        <div className="mt-8 border-t border-borderSoft pt-6">
-          <p className="section-label mb-4">{copy.preferences}</p>
-          <dl className="grid gap-3 text-sm sm:grid-cols-3">
-            <div className="rounded-lg bg-cream px-4 py-3">
-              <dt className="font-semibold text-textSecondary">{copy.language}</dt>
-              <dd className="mt-1 font-bold text-textMain">{values.language}</dd>
-            </div>
-            <div className="rounded-lg bg-cream px-4 py-3">
-              <dt className="font-semibold text-textSecondary">{copy.theme}</dt>
-              <dd className="mt-1 font-bold text-textMain">
-                {isDarkMode ? "Dark" : "Light"}
-              </dd>
-            </div>
-            <div className="rounded-lg bg-cream px-4 py-3 sm:col-span-1">
-              <dt className="font-semibold text-textSecondary">
-                {copy.favoriteGenres}
-              </dt>
-              <dd className="mt-1 font-bold text-textMain">{displayedGenres}</dd>
-            </div>
-          </dl>
+        <div className="mt-8 grid gap-3 sm:grid-cols-2">
+          <div className="rounded-lg bg-cream px-4 py-3">
+            <p className="section-label mb-1">{t("Peran Akun")}</p>
+            <p className="font-semibold text-textSecondary">
+              {t(roleOption?.helper)}
+            </p>
+          </div>
+          <a
+            href="#/settings"
+            className="rounded-lg border border-borderSoft bg-white px-4 py-3 text-textMain transition-all hover:border-accent hover:bg-cream"
+          >
+            <span className="section-label mb-1 block">{t("Setting")}</span>
+            <span className="inline-flex items-center gap-2 font-semibold">
+              <Icon name="monitor" className="h-4 w-4 text-accentHover" />
+              {t("Kelola bahasa, tema, dan katalog")}
+            </span>
+          </a>
         </div>
 
         <div className="mt-6 flex flex-wrap gap-3">
           <button
             type="button"
-            className="btn-secondary"
+            className="btn-primary"
             onClick={() => setIsEditing((current) => !current)}
           >
             <Icon name="users" className="h-4 w-4" />
-            {isEditing ? copy.closeSetting : copy.setting}
+            {isEditing ? t("Tutup Edit Profil") : t("Edit Profil")}
           </button>
           <button
             type="button"
             className="btn-logout px-5 py-2.5"
             onClick={() => setLogoutModalOpen(true)}
           >
-            {copy.logout}
+            {t("Keluar")}
           </button>
         </div>
       </div>
@@ -267,19 +167,19 @@ export default function ProfilePage({
           noValidate
           className="mt-6 rounded-lg border border-borderSoft bg-white p-6 shadow-book"
         >
-          <p className="section-label mb-5">{copy.details}</p>
+          <p className="section-label mb-5">{t("Detail Profil")}</p>
 
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
               <label htmlFor="profile-name" className="section-label mb-1.5 block">
-                {copy.displayName}
+                {t("Nama Tampilan")}
               </label>
               <input
                 id="profile-name"
                 type="text"
                 autoComplete="name"
                 className="input-field"
-                placeholder={copy.displayNamePlaceholder}
+                placeholder={t("Nama yang ingin ditampilkan")}
                 value={values.name}
                 onChange={(event) => handleChange("name", event.target.value)}
               />
@@ -287,7 +187,7 @@ export default function ProfilePage({
 
             <div>
               <label htmlFor="profile-email" className="section-label mb-1.5 block">
-                {copy.email}
+                Email
               </label>
               <input
                 id="profile-email"
@@ -302,19 +202,19 @@ export default function ProfilePage({
 
             <div className="sm:col-span-2">
               <label htmlFor="profile-avatar" className="section-label mb-1.5 block">
-                {copy.photo}
+                {t("Foto Profil")}
               </label>
               <input
                 id="profile-avatar"
                 type="url"
                 inputMode="url"
                 className="input-field"
-                placeholder={copy.photoPlaceholder}
+                placeholder={t("Tempel URL foto profil")}
                 value={values.avatarUrl}
                 onChange={(event) => handleChange("avatarUrl", event.target.value)}
               />
               <p className="mt-1.5 text-xs text-textSecondary">
-                {copy.photoHint}
+                {t("Kosongkan untuk memakai avatar inisial.")}
               </p>
               <input
                 type="file"
@@ -324,9 +224,9 @@ export default function ProfilePage({
               />
             </div>
 
-            <div>
+            <div className="sm:col-span-2">
               <label htmlFor="profile-role" className="section-label mb-1.5 block">
-                {copy.role}
+                {t("Peran Akun")}
               </label>
               <select
                 id="profile-role"
@@ -334,55 +234,16 @@ export default function ProfilePage({
                 value={values.role}
                 onChange={(event) => handleChange("role", event.target.value)}
               >
-                {ROLE_OPTIONS.map((roleOption) => (
-                  <option key={roleOption.value} value={roleOption.value}>
-                    {roleOption.label}
+                {ROLE_OPTIONS.map((roleOptionItem) => (
+                  <option key={roleOptionItem.value} value={roleOptionItem.value}>
+                    {roleOptionItem.label}
                   </option>
                 ))}
               </select>
               <p className="mt-1.5 text-xs text-textSecondary">
-                {roleHelper}
+                {t(roleOption?.helper)}
               </p>
             </div>
-
-            <div>
-              <label htmlFor="profile-language" className="section-label mb-1.5 block">
-                {copy.language}
-              </label>
-              <select
-                id="profile-language"
-                className="select-field"
-                value={values.language}
-                onChange={(event) => handleChange("language", event.target.value)}
-              >
-                {LANGUAGE_OPTIONS.map((language) => (
-                  <option key={language} value={language}>
-                    {language}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <fieldset className="sm:col-span-2">
-              <legend className="section-label mb-2">
-                {copy.favoriteGenres}
-              </legend>
-              <div className="flex flex-wrap gap-2">
-                {FAVORITE_GENRE_OPTIONS.map((genre) => (
-                  <label key={genre} className="cursor-pointer">
-                    <input
-                      type="checkbox"
-                      className="sr-only peer"
-                      checked={values.preferredGenres.includes(genre)}
-                      onChange={() => toggleGenre(genre)}
-                    />
-                    <span className="inline-flex min-h-9 items-center rounded-lg border border-borderSoft bg-white px-3 py-1.5 text-sm font-semibold text-textSecondary transition-all peer-checked:border-primary peer-checked:bg-primary peer-checked:text-white">
-                      {genre}
-                    </span>
-                  </label>
-                ))}
-              </div>
-            </fieldset>
           </div>
 
           {message && (
@@ -393,7 +254,7 @@ export default function ProfilePage({
 
           <div className="mt-6 flex flex-wrap gap-3">
             <button type="submit" className="btn-primary">
-              {copy.save}
+              {t("Simpan Profil")}
             </button>
             {values.avatarUrl && (
               <button
@@ -401,7 +262,7 @@ export default function ProfilePage({
                 className="btn-secondary"
                 onClick={removeAvatar}
               >
-                {copy.removePhoto}
+                {t("Hapus Foto")}
               </button>
             )}
           </div>

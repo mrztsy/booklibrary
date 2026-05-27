@@ -7,11 +7,17 @@ import FavoritesPage from "./pages/FavoritesPage";
 import AboutPage from "./pages/AboutPage";
 import LoginPage from "./pages/LoginPage";
 import ProfilePage from "./pages/ProfilePage";
+import SettingsPage from "./pages/SettingsPage";
 import ToastContainer from "./components/ToastContainer";
 import { FALLBACK_BOOKS } from "./data/books";
 import { fetchOpenLibraryBooks } from "./services/bookApi";
 import { normalizeRole } from "./utils/accountRoles";
 import { LanguageProvider, translateText } from "./utils/language";
+import {
+  CATALOG_PREFERENCES_STORAGE_KEY,
+  DEFAULT_CATALOG_PREFERENCES,
+  normalizeCatalogPreferences,
+} from "./utils/preferences";
 
 const FAVORITES_STORAGE_KEY = "aksarahub-favorite-books";
 const THEME_STORAGE_KEY = "aksarahub-theme";
@@ -25,6 +31,7 @@ const ROUTES = new Set([
   "koleksi",
   "login",
   "profile",
+  "settings",
 ]);
 
 const getBookId = (book) => book?.key || book?.id || book?.workKey || book?.title;
@@ -65,6 +72,16 @@ export default function App() {
       return window.matchMedia?.("(prefers-color-scheme: dark)").matches || false;
     } catch {
       return false;
+    }
+  });
+  const [catalogPreferences, setCatalogPreferences] = useState(() => {
+    try {
+      const savedPreferences = localStorage.getItem(CATALOG_PREFERENCES_STORAGE_KEY);
+      return savedPreferences
+        ? normalizeCatalogPreferences(JSON.parse(savedPreferences))
+        : DEFAULT_CATALOG_PREFERENCES;
+    } catch {
+      return DEFAULT_CATALOG_PREFERENCES;
     }
   });
   const [favoriteBooks, setFavoriteBooks] = useState(() => {
@@ -134,14 +151,43 @@ export default function App() {
     );
   };
 
-  const toggleTheme = () => {
-    const nextMode = !isDarkMode;
+  const updateTheme = (nextMode) => {
     setIsDarkMode(nextMode);
     showToast(
       nextMode ? t("Mode gelap aktif") : t("Mode terang aktif"),
       nextMode
         ? t("Tampilan dibuat lebih teduh untuk membaca.")
         : t("Tampilan kembali cerah dan ringan."),
+      "info",
+    );
+  };
+
+  const toggleTheme = () => {
+    updateTheme(!isDarkMode);
+  };
+
+  const updateCatalogPreferences = (preferences) => {
+    const nextPreferences = normalizeCatalogPreferences(preferences);
+    setCatalogPreferences(nextPreferences);
+    localStorage.setItem(
+      CATALOG_PREFERENCES_STORAGE_KEY,
+      JSON.stringify(nextPreferences),
+    );
+    showToast(
+      t("Preferensi katalog tersimpan"),
+      t("Katalog akan memakai pilihan ini sebagai bawaan."),
+      "success",
+    );
+  };
+
+  const resetLocalData = () => {
+    setFavoriteBooks([]);
+    setCatalogPreferences(DEFAULT_CATALOG_PREFERENCES);
+    localStorage.removeItem(FAVORITES_STORAGE_KEY);
+    localStorage.removeItem(CATALOG_PREFERENCES_STORAGE_KEY);
+    showToast(
+      t("Data lokal direset"),
+      t("Favorit dan preferensi katalog lokal sudah dibersihkan."),
       "info",
     );
   };
@@ -298,6 +344,7 @@ export default function App() {
             favoriteIds={favoriteIds}
             onToggleFavorite={toggleFavorite}
             onToast={showToast}
+            catalogPreferences={catalogPreferences}
           />
         )}
 
@@ -325,7 +372,6 @@ export default function App() {
           currentUser ? (
             <ProfilePage
               currentUser={currentUser}
-              isDarkMode={isDarkMode}
               onLogin={handleLogin}
               onLogout={handleLogout}
               onToast={showToast}
@@ -337,6 +383,29 @@ export default function App() {
               onLogout={handleLogout}
               onToast={showToast}
               redirectTo="profile"
+            />
+          )
+        )}
+        {activePage === "settings" && (
+          currentUser ? (
+            <SettingsPage
+              currentUser={currentUser}
+              isDarkMode={isDarkMode}
+              catalogPreferences={catalogPreferences}
+              favoriteCount={favoriteBooks.length}
+              onLogin={handleLogin}
+              onSetTheme={updateTheme}
+              onSaveCatalogPreferences={updateCatalogPreferences}
+              onResetLocalData={resetLocalData}
+              onToast={showToast}
+            />
+          ) : (
+            <LoginPage
+              currentUser={currentUser}
+              onLogin={handleLogin}
+              onLogout={handleLogout}
+              onToast={showToast}
+              redirectTo="settings"
             />
           )
         )}

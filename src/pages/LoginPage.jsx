@@ -78,6 +78,8 @@ export default function LoginPage({
         ? "#/favorit"
         : redirectTo === "profile"
           ? "#/profile"
+          : redirectTo === "settings"
+            ? "#/settings"
           : "#/";
   };
 
