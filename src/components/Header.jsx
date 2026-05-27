@@ -4,6 +4,13 @@ import LogoutConfirmModal from "./LogoutConfirmModal";
 import UserAvatar from "./UserAvatar";
 import aksaraHubLogo from "../assets/AksaraHub Logo.png";
 
+const getRoleLabel = (role) => (role === "admin" ? "Admin" : "User");
+
+const getRoleBadgeClass = (role) =>
+  role === "admin"
+    ? "bg-accent text-white"
+    : "bg-cream text-primary";
+
 export default function Header({
   favoriteCount = 0,
   isDarkMode = false,
@@ -118,6 +125,11 @@ export default function Header({
                 >
                   <UserAvatar user={currentUser} size="sm" />
                   <span className="max-w-24 truncate">{currentUser.name}</span>
+                  <span
+                    className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${getRoleBadgeClass(currentUser.role)}`}
+                  >
+                    {getRoleLabel(currentUser.role)}
+                  </span>
                 </button>
 
                 {accountMenuOpen && (
@@ -132,7 +144,19 @@ export default function Header({
                       <p className="truncate text-xs text-textSecondary">
                         {currentUser.email}
                       </p>
+                      <span
+                        className={`mt-2 inline-flex rounded-full px-2.5 py-1 text-xs font-bold ${getRoleBadgeClass(currentUser.role)}`}
+                      >
+                        {getRoleLabel(currentUser.role)}
+                      </span>
                     </div>
+                    <a
+                      href="#/login"
+                      className="btn-secondary mt-2 w-full px-3 py-2 text-sm"
+                      onClick={handleNavClick}
+                    >
+                      Edit Profil
+                    </a>
                     <button
                       type="button"
                       className="btn-logout mt-2 w-full px-3 py-2 text-sm"
@@ -223,6 +247,9 @@ export default function Header({
             >
               <UserAvatar user={currentUser} size="xs" />
               <span>Akun</span>
+              <span className="rounded-full bg-accent px-1.5 py-0.5 text-[9px] font-bold text-white">
+                {getRoleLabel(currentUser.role)}
+              </span>
             </button>
           ) : (
             <a
@@ -248,7 +275,19 @@ export default function Header({
               <p className="truncate text-xs text-white/55">
                 {currentUser.email}
               </p>
+              <span
+                className={`mt-2 inline-flex rounded-full px-2.5 py-1 text-xs font-bold ${getRoleBadgeClass(currentUser.role)}`}
+              >
+                {getRoleLabel(currentUser.role)}
+              </span>
             </div>
+            <a
+              href="#/login"
+              className="btn-secondary mt-1 w-full px-3 py-2 text-sm"
+              onClick={handleNavClick}
+            >
+              Edit Profil
+            </a>
             <button
               type="button"
               className="btn-logout mt-1 w-full px-3 py-2 text-sm"

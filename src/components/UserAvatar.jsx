@@ -1,3 +1,5 @@
+import { useEffect, useState } from "react";
+
 const avatarPalettes = [
   ["#18332F", "#B8892D"],
   ["#7A2E2E", "#B8892D"],
@@ -35,8 +37,14 @@ const getPalette = (user) => {
 };
 
 export default function UserAvatar({ user, size = "sm", className = "" }) {
+  const [imageFailed, setImageFailed] = useState(false);
   const initials = getInitials(user);
   const [from, to] = getPalette(user);
+  const avatarUrl = user?.avatarUrl?.trim();
+
+  useEffect(() => {
+    setImageFailed(false);
+  }, [avatarUrl]);
 
   return (
     <span
@@ -45,7 +53,19 @@ export default function UserAvatar({ user, size = "sm", className = "" }) {
       aria-label={`Foto profil ${user?.name || "pengguna"}`}
       title={user?.name || "Pengguna"}
     >
-      {initials}
+      {avatarUrl && !imageFailed ? (
+        <img
+          src={avatarUrl}
+          alt=""
+          className="h-full w-full object-cover"
+          onError={(event) => {
+            event.currentTarget.style.display = "none";
+            setImageFailed(true);
+          }}
+        />
+      ) : (
+        initials
+      )}
     </span>
   );
 }

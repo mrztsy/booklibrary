@@ -41,7 +41,8 @@ export default function App() {
   const [currentUser, setCurrentUser] = useState(() => {
     try {
       const savedUser = localStorage.getItem(AUTH_STORAGE_KEY);
-      return savedUser ? JSON.parse(savedUser) : null;
+      const parsedUser = savedUser ? JSON.parse(savedUser) : null;
+      return parsedUser ? { role: "user", ...parsedUser } : null;
     } catch {
       return null;
     }
@@ -136,6 +137,8 @@ export default function App() {
     const nextUser = {
       name: user.name,
       email: user.email,
+      avatarUrl: user.avatarUrl || "",
+      role: user.role === "admin" ? "admin" : "user",
       loggedInAt: new Date().toISOString(),
     };
     setCurrentUser(nextUser);
