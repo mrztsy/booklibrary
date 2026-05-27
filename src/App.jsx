@@ -11,6 +11,7 @@ import ToastContainer from "./components/ToastContainer";
 import { FALLBACK_BOOKS } from "./data/books";
 import { fetchOpenLibraryBooks } from "./services/bookApi";
 import { normalizeRole } from "./utils/accountRoles";
+import { LanguageProvider, translateText } from "./utils/language";
 
 const FAVORITES_STORAGE_KEY = "aksarahub-favorite-books";
 const THEME_STORAGE_KEY = "aksarahub-theme";
@@ -45,7 +46,14 @@ export default function App() {
     try {
       const savedUser = localStorage.getItem(AUTH_STORAGE_KEY);
       const parsedUser = savedUser ? JSON.parse(savedUser) : null;
-      return parsedUser ? { role: "user", ...parsedUser } : null;
+      return parsedUser
+        ? {
+            role: "user",
+            language: "Indonesia",
+            preferredGenres: ["Fiction", "Science"],
+            ...parsedUser,
+          }
+        : null;
     } catch {
       return null;
     }
@@ -70,6 +78,8 @@ export default function App() {
 
   const favoriteIds = new Set(favoriteBooks.map(getBookId).filter(Boolean));
   const activePage = activeRoute === "koleksi" ? "home" : activeRoute;
+  const appLanguage = currentUser?.language === "English" ? "English" : "Indonesia";
+  const t = (text) => translateText(text, appLanguage);
 
   const showToast = (title, message = "", type = "success") => {
     const id = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
@@ -88,8 +98,8 @@ export default function App() {
   const toggleFavorite = (book) => {
     if (!currentUser) {
       showToast(
-        "Masuk dulu, ya",
-        "Setelah login, buku favoritmu bisa disimpan rapi.",
+        t("Masuk dulu, ya"),
+        t("Setelah login, buku favoritmu bisa disimpan rapi."),
         "info",
       );
       window.location.hash = "#/login";
@@ -118,8 +128,8 @@ export default function App() {
     });
 
     showToast(
-      alreadySaved ? "Dihapus dari favorit" : "Tersimpan di favorit",
-      book.title || "Rak favoritmu sudah diperbarui.",
+      alreadySaved ? t("Dihapus dari favorit") : t("Favorit disimpan"),
+      book.title || t("Rak favoritmu sudah diperbarui."),
       "success",
     );
   };
@@ -128,10 +138,10 @@ export default function App() {
     const nextMode = !isDarkMode;
     setIsDarkMode(nextMode);
     showToast(
-      nextMode ? "Mode gelap aktif" : "Mode terang aktif",
+      nextMode ? t("Mode gelap aktif") : t("Mode terang aktif"),
       nextMode
-        ? "Tampilan dibuat lebih teduh untuk membaca."
-        : "Tampilan kembali cerah dan ringan.",
+        ? t("Tampilan dibuat lebih teduh untuk membaca.")
+        : t("Tampilan kembali cerah dan ringan."),
       "info",
     );
   };
@@ -142,6 +152,11 @@ export default function App() {
       email: user.email,
       avatarUrl: user.avatarUrl || "",
       role: normalizeRole(user.role),
+      language: user.language || "Indonesia",
+      preferredGenres:
+        user.preferredGenres?.length > 0
+          ? user.preferredGenres
+          : ["Fiction", "Science"],
       loggedInAt: new Date().toISOString(),
     };
     setCurrentUser(nextUser);
@@ -215,7 +230,9 @@ export default function App() {
         );
         return nextBooks;
       });
-      setError("Open Library sedang sulit dihubungi. Kami tampilkan data contoh dulu, ya.");
+      setError(
+        t("Open Library sedang sulit dihubungi. Kami tampilkan data contoh dulu, ya."),
+      );
       console.error(err);
     } finally {
       setIsLoading(false);
@@ -231,7 +248,7 @@ export default function App() {
       <div className="min-h-screen flex items-center justify-center bg-cream px-4">
         <div className="max-w-md rounded-lg border border-borderSoft bg-white p-6 text-center shadow-book">
           <p className="font-playfair text-xl font-semibold text-textMain mb-2">
-            Data belum bisa dibuka
+            {t("Data belum bisa dibuka")}
           </p>
           <p className="font-crimson text-textSecondary mb-4">{error}</p>
           <button
@@ -239,7 +256,7 @@ export default function App() {
             className="btn-primary"
             onClick={() => fetchData()}
           >
-            Coba lagi
+            {t("Coba lagi")}
           </button>
         </div>
       </div>
@@ -247,7 +264,8 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-cream font-crimson transition-colors duration-300">
+    <LanguageProvider language={appLanguage}>
+      <div className="min-h-screen flex flex-col bg-cream font-crimson transition-colors duration-300">
       <Header
         favoriteCount={favoriteBooks.length}
         isDarkMode={isDarkMode}
@@ -307,6 +325,7 @@ export default function App() {
           currentUser ? (
             <ProfilePage
               currentUser={currentUser}
+              isDarkMode={isDarkMode}
               onLogin={handleLogin}
               onLogout={handleLogout}
               onToast={showToast}
@@ -331,8 +350,9 @@ export default function App() {
         )}
       </main>
 
-      <Footer onToast={showToast} activePage={activePage} />
-      <ToastContainer toasts={toasts} onDismiss={dismissToast} />
-    </div>
+        <Footer onToast={showToast} activePage={activePage} />
+        <ToastContainer toasts={toasts} onDismiss={dismissToast} />
+      </div>
+    </LanguageProvider>
   );
 }

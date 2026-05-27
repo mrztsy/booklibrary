@@ -2,6 +2,7 @@ import { useState } from "react";
 import BookCard from "../components/BookCard";
 import BookModal from "../components/BookModal";
 import Icon from "../components/Icon";
+import { useLanguage } from "../utils/language";
 
 const getBookId = (book) => book?.key || book?.id || book?.workKey || book?.title;
 
@@ -11,6 +12,7 @@ export default function FavoritesPage({
   onToggleFavorite,
   onToast,
 }) {
+  const { t } = useLanguage();
   const [selectedBook, setSelectedBook] = useState(null);
   const isBookFavorite = (book) => favoriteIds.has(getBookId(book));
 
@@ -23,17 +25,17 @@ export default function FavoritesPage({
       >
         <div className="mb-6 flex flex-wrap items-end justify-between gap-3">
           <div>
-            <p className="section-label">Rak Pribadi</p>
+            <p className="section-label">{t("Rak Pribadi")}</p>
             <h1
               id="favorite-heading"
               className="font-playfair text-3xl font-bold text-textMain"
             >
-              Buku Favorit
+              {t("Buku Favorit")}
             </h1>
           </div>
           <div className="inline-flex items-center gap-2 rounded-lg border border-borderSoft bg-white px-3 py-1.5 text-sm font-semibold text-textSecondary shadow-book">
             <Icon name="heart" className="h-4 w-4 text-accent" />
-            {favoriteBooks.length} buku
+            {favoriteBooks.length} {t("buku")}
           </div>
         </div>
 
@@ -54,14 +56,13 @@ export default function FavoritesPage({
           <div className="rounded-lg border border-borderSoft bg-white p-8 text-center shadow-book">
             <Icon name="heart" className="mx-auto mb-3 h-8 w-8 text-accent" />
             <p className="font-playfair text-lg font-semibold text-textMain">
-              Rak favorit masih kosong
+              {t("Rak favorit masih kosong")}
             </p>
             <p className="mx-auto mt-1 max-w-md text-sm text-textSecondary">
-              Simpan buku dari beranda atau katalog untuk mulai menyusun rak
-              kecilmu.
+              {t("Simpan buku dari beranda atau katalog untuk mulai menyusun rak kecilmu.")}
             </p>
             <a href="#/" className="btn-primary mt-5">
-              Jelajahi Buku
+              {t("Jelajahi Buku")}
             </a>
           </div>
         )}

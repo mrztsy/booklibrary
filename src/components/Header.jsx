@@ -4,6 +4,7 @@ import LogoutConfirmModal from "./LogoutConfirmModal";
 import UserAvatar from "./UserAvatar";
 import aksaraHubLogo from "../assets/AksaraHub Logo.png";
 import { getRoleLabel } from "../utils/accountRoles";
+import { useLanguage } from "../utils/language";
 
 const getRoleBadgeClass = (role) =>
   role === "admin"
@@ -18,15 +19,16 @@ export default function Header({
   currentUser,
   onLogout,
 }) {
+  const { t } = useLanguage();
   const [menuOpen, setMenuOpen] = useState(false);
   const [logoutModalOpen, setLogoutModalOpen] = useState(false);
   const [accountMenuOpen, setAccountMenuOpen] = useState(false);
 
   const navLinks = [
-    { href: "#/", page: "home", label: "Beranda", icon: "home" },
-    { href: "#/katalog", page: "katalog", label: "Katalog API", icon: "cloud" },
-    { href: "#/favorit", page: "favorit", label: "Favorit", icon: "heart" },
-    { href: "#/tentang", page: "tentang", label: "Tentang", icon: "info" },
+    { href: "#/", page: "home", label: t("Beranda"), icon: "home" },
+    { href: "#/katalog", page: "katalog", label: t("Katalog API"), icon: "cloud" },
+    { href: "#/favorit", page: "favorit", label: t("Favorit"), icon: "heart" },
+    { href: "#/tentang", page: "tentang", label: t("Tentang"), icon: "info" },
   ];
 
   const handleNavClick = () => {
@@ -62,13 +64,13 @@ export default function Header({
                 AksaraHub
               </span>
               <span className="hidden sm:block text-[10px] tracking-[0.16em] uppercase text-white/55 -mt-0.5">
-                Digital Library
+                {t("Digital Library")}
               </span>
             </div>
           </a>
 
           <nav
-            aria-label="Navigasi utama"
+            aria-label={t("Navigasi utama")}
             className="hidden md:flex items-center gap-1 bg-white/10 rounded-lg p-1"
           >
             {navLinks.map((link) => (
@@ -87,7 +89,7 @@ export default function Header({
                 {link.page === "favorit" && (
                   <span
                     className="ml-0.5 inline-flex min-w-5 items-center justify-center rounded-full bg-accent px-1.5 py-0.5 text-[10px] font-bold text-white"
-                    aria-label={`${favoriteCount} buku favorit`}
+                    aria-label={`${favoriteCount} ${t("buku favorit")}`}
                   >
                     {favoriteCount}
                   </span>
@@ -101,7 +103,7 @@ export default function Header({
               type="button"
               className="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-white/15 bg-white/10 text-white/80 shadow-sm transition-all duration-200 hover:border-accent hover:bg-white hover:text-primary"
               aria-label={
-                isDarkMode ? "Aktifkan light mode" : "Aktifkan dark mode"
+                isDarkMode ? t("Aktifkan light mode") : t("Aktifkan dark mode")
               }
               aria-pressed={isDarkMode}
               onClick={onToggleTheme}
@@ -154,14 +156,14 @@ export default function Header({
                       className="btn-secondary mt-2 w-full px-3 py-2 text-sm"
                       onClick={handleNavClick}
                     >
-                      Edit Profil
+                      Setting
                     </a>
                     <button
                       type="button"
                       className="btn-logout mt-2 w-full px-3 py-2 text-sm"
                       onClick={openLogoutModal}
                     >
-                      Keluar
+                      {t("Keluar")}
                     </button>
                   </div>
                 )}
@@ -172,13 +174,13 @@ export default function Header({
                 className="hidden sm:flex items-center gap-2 rounded-lg border border-white/15 bg-white/10 px-3 py-2 text-sm font-semibold text-white/80 shadow-sm transition-all duration-200 hover:border-accent hover:bg-white hover:text-primary"
               >
                 <Icon name="users" className="h-3.5 w-3.5" />
-                Masuk
+                {t("Masuk")}
               </a>
             )}
 
             <button
               type="button"
-              aria-label={menuOpen ? "Tutup menu navigasi" : "Buka menu navigasi"}
+              aria-label={menuOpen ? t("Tutup menu navigasi") : t("Buka menu navigasi")}
               aria-expanded={menuOpen}
               aria-controls="mobile-nav"
               onClick={() => setMenuOpen((prev) => !prev)}
@@ -208,7 +210,7 @@ export default function Header({
 
       <nav
         id="mobile-nav"
-        aria-label="Navigasi mobile"
+        aria-label={t("Navigasi mobile")}
         className={`md:hidden border-t border-white/10 bg-primary transition-all duration-300 overflow-hidden ${
           menuOpen ? "max-h-80 opacity-100" : "max-h-0 opacity-0"
         }`}
@@ -245,7 +247,7 @@ export default function Header({
               className="flex flex-col items-center gap-1 py-2 text-xs font-semibold font-crimson text-white/70 rounded-lg hover:bg-white/10 hover:text-accent transition-colors duration-200"
             >
               <UserAvatar user={currentUser} size="xs" />
-              <span>Akun</span>
+              <span>{t("Akun")}</span>
               <span className="rounded-full bg-accent px-1.5 py-0.5 text-[9px] font-bold text-white">
                 {getRoleLabel(currentUser.role)}
               </span>
@@ -260,7 +262,7 @@ export default function Header({
               }`}
             >
               <Icon name="users" className="w-4 h-4" />
-              <span>Masuk</span>
+              <span>{t("Masuk")}</span>
             </a>
           )}
         </div>
@@ -285,14 +287,14 @@ export default function Header({
               className="btn-secondary mt-1 w-full px-3 py-2 text-sm"
               onClick={handleNavClick}
             >
-              Edit Profil
+              Setting
             </a>
             <button
               type="button"
               className="btn-logout mt-1 w-full px-3 py-2 text-sm"
               onClick={openLogoutModal}
             >
-              Keluar
+              {t("Keluar")}
             </button>
           </div>
         )}

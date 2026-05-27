@@ -1,14 +1,16 @@
 import Icon from "./Icon";
 import { GENRES } from "../data/books";
 import aksaraHubLogo from "../assets/AksaraHub Logo.png";
+import { useLanguage } from "../utils/language";
 
 export default function Footer({ onToast, activePage = "home" }) {
+  const { t } = useLanguage();
   const navItems = [
-    { label: "Beranda", href: "#/", page: "home", icon: "home" },
-    { label: "Koleksi Buku", href: "#/koleksi", page: "home", icon: "collection" },
-    { label: "Katalog API", href: "#/katalog", page: "katalog", icon: "cloud" },
-    { label: "Favorit", href: "#/favorit", page: "favorit", icon: "heart" },
-    { label: "Tentang", href: "#/tentang", page: "tentang", icon: "info" },
+    { label: t("Beranda"), href: "#/", page: "home", icon: "home" },
+    { label: t("Koleksi Buku"), href: "#/koleksi", page: "home", icon: "collection" },
+    { label: t("Katalog API"), href: "#/katalog", page: "katalog", icon: "cloud" },
+    { label: t("Favorit"), href: "#/favorit", page: "favorit", icon: "heart" },
+    { label: t("Tentang"), href: "#/tentang", page: "tentang", icon: "info" },
   ];
 
   const genreIcons = {
@@ -52,14 +54,13 @@ export default function Footer({ onToast, activePage = "home" }) {
               </span>
             </div>
             <p className="text-sm leading-relaxed">
-              Platform perpustakaan digital untuk menemukan buku lokal dan
-              katalog klasik dari API.
+              {t("Platform perpustakaan digital untuk menemukan buku lokal dan katalog klasik dari API.")}
             </p>
           </div>
 
-          <nav aria-label="Navigasi footer">
+          <nav aria-label={t("Navigasi")}>
             <h4 className="font-playfair font-semibold text-white mb-4 text-sm">
-              Navigasi
+              {t("Navigasi")}
             </h4>
             <ul className="space-y-2 text-sm">
               {navItems.map((item) => (
@@ -81,7 +82,7 @@ export default function Footer({ onToast, activePage = "home" }) {
 
           <div>
             <h4 className="font-playfair font-semibold text-white mb-4 text-sm">
-              Genre Populer
+              {t("Genre Populer")}
             </h4>
             <ul className="space-y-2 text-sm">
               {genres.map((item) => (
@@ -104,10 +105,10 @@ export default function Footer({ onToast, activePage = "home" }) {
 
           <div>
             <h4 className="font-playfair font-semibold text-white mb-4 text-sm">
-              Newsletter
+              {t("Newsletter")}
             </h4>
             <p className="text-sm mb-4 leading-relaxed">
-              Dapatkan rekomendasi buku terbaru langsung di email kamu.
+              {t("Dapatkan rekomendasi buku terbaru langsung di email kamu.")}
             </p>
 
             <form
@@ -119,20 +120,20 @@ export default function Footer({ onToast, activePage = "home" }) {
                 event.preventDefault();
                 event.currentTarget.reset();
                 onToast?.(
-                  "Terima kasih sudah bergabung",
-                  "Rekomendasi buku akan mampir ke email kamu.",
+                  t("Terima kasih sudah bergabung"),
+                  t("Rekomendasi buku akan mampir ke email kamu."),
                   "success",
                 );
               }}
             >
               <label htmlFor="newsletter-email" className="sr-only">
-                Alamat email
+                {t("Email")}
               </label>
               <input
                 id="newsletter-email"
                 type="email"
                 name="email"
-                placeholder="Email kamu..."
+                placeholder={t("Email kamu...")}
                 autoComplete="email"
                 required
                 className="flex-1 bg-secondary border border-borderSoft/30 text-white text-sm
@@ -142,7 +143,7 @@ export default function Footer({ onToast, activePage = "home" }) {
               />
               <button
                 type="submit"
-                aria-label="Daftar newsletter"
+                aria-label={t("Daftar newsletter")}
                 className="bg-accent hover:bg-accentHover text-white
                            px-3 py-2 rounded-lg transition-colors duration-200"
               >
@@ -157,7 +158,7 @@ export default function Footer({ onToast, activePage = "home" }) {
                      flex flex-col sm:flex-row justify-between items-center gap-4"
         >
           <p className="text-xs text-white/40">
-            &copy; 2026 AksaraHub. Dibuat untuk para pembaca.
+            &copy; 2026 AksaraHub. {t("Dibuat untuk para pembaca.")}
           </p>
           <div className="flex gap-6 text-xs">
             {["Privasi", "Syarat", "Kontak"].map((item) => (
@@ -166,7 +167,7 @@ export default function Footer({ onToast, activePage = "home" }) {
                 href="#"
                 className="text-white/40 hover:text-accent transition-colors duration-200"
               >
-                {item}
+                {t(item)}
               </a>
             ))}
           </div>

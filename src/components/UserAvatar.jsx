@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useLanguage } from "../utils/language";
 
 const avatarPalettes = [
   ["#18332F", "#B8892D"],
@@ -37,6 +38,7 @@ const getPalette = (user) => {
 };
 
 export default function UserAvatar({ user, size = "sm", className = "" }) {
+  const { t } = useLanguage();
   const [imageFailed, setImageFailed] = useState(false);
   const initials = getInitials(user);
   const [from, to] = getPalette(user);
@@ -50,8 +52,8 @@ export default function UserAvatar({ user, size = "sm", className = "" }) {
     <span
       className={`inline-flex shrink-0 items-center justify-center overflow-hidden rounded-full border border-white/30 font-bold text-white shadow-sm ${sizeClasses[size] || sizeClasses.sm} ${className}`}
       style={{ background: `linear-gradient(135deg, ${from}, ${to})` }}
-      aria-label={`Foto profil ${user?.name || "pengguna"}`}
-      title={user?.name || "Pengguna"}
+      aria-label={`${t("Foto Profil")} ${user?.name || t("pengguna")}`}
+      title={user?.name || t("Pengguna")}
     >
       {avatarUrl && !imageFailed ? (
         <img

@@ -9,6 +9,7 @@ import BookCardSkeleton, {
 import BookModal from "../components/BookModal";
 import Icon from "../components/Icon";
 import { SORT_OPTIONS } from "../data/books";
+import { useLanguage } from "../utils/language";
 
 const TOPICS = [
   { value: "Semua", label: "Semua", icon: "collection" },
@@ -36,6 +37,7 @@ export default function LibraryPage({
   onToggleFavorite,
   onToast,
 }) {
+  const { t } = useLanguage();
   const ITEMS_PER_PAGE = 10;
   const [searchTerm, setSearchTerm] = useState("");
   const [authorTerm, setAuthorTerm] = useState("");
@@ -136,29 +138,29 @@ export default function LibraryPage({
   }, [filteredBooks]);
   const statCards = [
     {
-      label: "Total Buku",
+      label: t("Total Buku"),
       value: libraryStats.totalBooks,
       icon: "collection",
       className: "bg-[#173F3A] text-white",
     },
     {
-      label: "Buku Tersedia",
+      label: t("Buku Tersedia"),
       value: libraryStats.availableBooks,
       icon: "check",
       className: "bg-[#177E8E] text-white",
     },
     {
-      label: "Buku Dipinjam",
+      label: t("Buku Dipinjam"),
       value: libraryStats.borrowedBooks,
       icon: "bookmark",
       className: "bg-[#A33B2F] text-white",
     },
     {
-      label: "Genre Terpopuler",
+      label: t("Genre Terpopuler"),
       value: libraryStats.popularGenre?.[0] || "-",
       helper: libraryStats.popularGenre
-        ? `${libraryStats.popularGenre[1]} buku`
-        : "Belum ada data",
+        ? `${libraryStats.popularGenre[1]} ${t("buku")}`
+        : t("Belum ada data"),
       icon: "tag",
       className: "bg-[#8B4F2F] text-white",
     },
@@ -200,8 +202,8 @@ export default function LibraryPage({
     setSearchMessage("");
     fetchData?.(null);
     onToast?.(
-      "Pencarian dibersihkan",
-      "Katalog kembali menampilkan semua buku.",
+      t("Pencarian dibersihkan"),
+      t("Katalog kembali menampilkan semua buku."),
       "info",
     );
   };
@@ -225,8 +227,8 @@ export default function LibraryPage({
       sort: "rating-desc",
     });
     onToast?.(
-      "Mencari buku populer",
-      "Sebentar, kami ambilkan pilihan yang ramai dicari.",
+      t("Mencari buku populer"),
+      t("Sebentar, kami ambilkan pilihan yang ramai dicari."),
       "info",
     );
   };
@@ -242,16 +244,16 @@ export default function LibraryPage({
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
             <div>
               <p className="section-label text-accent mb-2">
-                Data Langsung dari API
+                {t("Data Langsung dari API")}
               </p>
               <h2
                 id="library-heading"
                 className="font-playfair font-bold text-3xl lg:text-4xl leading-tight"
               >
-                Perpustakaan Digital
+                {t("Perpustakaan Digital")}
               </h2>
               <p className="font-crimson text-white/60 mt-2 text-lg">
-                Sumber: <span className="text-accent">Open Library API</span>
+                {t("Sumber")}: <span className="text-accent">Open Library API</span>
               </p>
             </div>
             <div
@@ -265,14 +267,14 @@ export default function LibraryPage({
                 }`}
                 aria-hidden="true"
               />
-              {showLoading ? "Mengambil data..." : "Katalog terhubung"}
+              {showLoading ? t("Mengambil data...") : t("Katalog terhubung")}
             </div>
           </div>
         </div>
       </section>
 
       <section
-        aria-label="Form pencarian katalog API"
+        aria-label={t("Form pencarian katalog API")}
         className="border-b border-borderSoft bg-white"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
@@ -304,13 +306,13 @@ export default function LibraryPage({
                       />
                     </svg>
                     <label htmlFor="api-search" className="sr-only">
-                      Cari judul buku
+                    {t("Cari judul buku")}
                     </label>
                     <input
                       id="api-search"
                       type="search"
                       name="search"
-                      placeholder="Cari judul buku..."
+                      placeholder={t("Cari judul buku...")}
                       autoComplete="off"
                       aria-invalid={searchMessage ? "true" : undefined}
                       aria-describedby={
@@ -324,13 +326,13 @@ export default function LibraryPage({
 
                   <div>
                     <label htmlFor="api-author" className="sr-only">
-                      Cari nama penulis
+                    {t("Cari nama penulis")}
                     </label>
                     <input
                       id="api-author"
                       type="text"
                       name="author"
-                      placeholder="Cari penulis..."
+                      placeholder={t("Cari penulis...")}
                       autoComplete="off"
                       value={authorTerm}
                       onChange={(event) => setAuthorTerm(event.target.value)}
@@ -340,7 +342,7 @@ export default function LibraryPage({
 
                   <div className="relative">
                     <label htmlFor="api-sort" className="sr-only">
-                      Urutkan hasil
+                    {t("Urutkan hasil")}
                     </label>
                     <select
                       id="api-sort"
@@ -351,7 +353,7 @@ export default function LibraryPage({
                     >
                       {SORT_OPTIONS.map((option) => (
                         <option key={option.value} value={option.value}>
-                          {option.label}
+                          {t(option.label)}
                         </option>
                       ))}
                     </select>
@@ -381,14 +383,14 @@ export default function LibraryPage({
                 )}
 
                 <fieldset className="flex flex-wrap items-center gap-2">
-                  <legend className="sr-only">Pilih topik buku</legend>
-                  {TOPICS.map((t) => (
-                    <label key={t.value} className="cursor-pointer">
+                  <legend className="sr-only">{t("Pilih topik buku")}</legend>
+                  {TOPICS.map((topic) => (
+                    <label key={topic.value} className="cursor-pointer">
                       <input
                         type="radio"
                         name="topic"
-                        value={t.value}
-                        checked={selectedTopic === t.value}
+                        value={topic.value}
+                        checked={selectedTopic === topic.value}
                         onChange={(event) =>
                           setSelectedTopic(event.target.value)
                         }
@@ -401,8 +403,8 @@ export default function LibraryPage({
                                       hover:border-accent hover:text-accentHover
                                       peer-checked:border-primary peer-checked:bg-primary peer-checked:text-white"
                       >
-                        <Icon name={t.icon} className="w-3.5 h-3.5" />
-                        {t.label}
+                        <Icon name={topic.icon} className="w-3.5 h-3.5" />
+                        {t(topic.label)}
                       </span>
                     </label>
                   ))}
@@ -415,7 +417,7 @@ export default function LibraryPage({
                   className="btn-primary min-h-11 whitespace-nowrap"
                 >
                   <Icon name="search" className="w-4 h-4" strokeWidth={2} />
-                  Cari
+                  {t("Cari")}
                 </button>
                 {(searchTerm ||
                   authorTerm ||
@@ -426,7 +428,7 @@ export default function LibraryPage({
                     className="btn-secondary min-h-11 whitespace-nowrap"
                     onClick={resetLibraryFilters}
                   >
-                    Reset
+                    {t("Reset")}
                   </button>
                 )}
               </div>
@@ -450,20 +452,20 @@ export default function LibraryPage({
         ) : (
           <div className="flex items-center justify-between mb-6 flex-wrap gap-3">
             <div>
-              <p className="section-label">Hasil API</p>
+              <p className="section-label">{t("Hasil API")}</p>
               <h2
                 id="results-heading"
                 className="font-playfair font-semibold text-xl text-textMain"
               >
-                Topik:{" "}
-                <span className="text-amber-700">{selectedTopicLabel}</span>
+                {t("Topik")}:{" "}
+                  <span className="text-amber-700">{t(selectedTopicLabel)}</span>
                 <span className="font-crimson font-normal text-base text-slate-400 ml-2">
-                  / Halaman {currentPage}
+                  / {t("Halaman")} {currentPage}
                 </span>
               </h2>
               {hasSearch && (
                 <p className="font-crimson text-sm text-textSecondary mt-1">
-                  Hasil pencarian untuk "{searchSummary}"
+                  {t("Hasil pencarian untuk")} "{searchSummary}"
                 </p>
               )}
             </div>
@@ -473,8 +475,8 @@ export default function LibraryPage({
             >
               <Icon name="collection" className="w-4 h-4 text-accent" />
               {/* Pakai books.length bukan PLACEHOLDER_BOOKS */}
-              {startIndex + 1}-{Math.min(endIndex, filteredBooks.length)} dari{" "}
-              {filteredBooks.length} buku
+              {startIndex + 1}-{Math.min(endIndex, filteredBooks.length)} {t("dari")}{" "}
+              {filteredBooks.length} {t("buku")}
             </div>
             <div
               className="inline-flex rounded-lg border border-borderSoft bg-white p-1 shadow-book"
@@ -581,7 +583,7 @@ export default function LibraryPage({
                       </h3>
                       <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-textSecondary sm:text-sm">
                         <span className="line-clamp-1 font-semibold">
-                          {book.author || "Penulis belum tercatat"}
+                          {book.author || t("Penulis belum tercatat")}
                         </span>
                         <span className="hidden text-borderSoft sm:inline">
                           /
@@ -612,7 +614,7 @@ export default function LibraryPage({
                               : "status-chip-borrowed"
                           }`}
                         >
-                          {book.available ? "Tersedia" : "Dipinjam"}
+                          {book.available ? t("Tersedia") : t("Dipinjam")}
                         </span>
                       </div>
                     </div>
@@ -629,14 +631,14 @@ export default function LibraryPage({
                         onClick={() => onToggleFavorite?.(book)}
                       >
                         <Icon name="heart" className="h-3.5 w-3.5" />
-                        {isBookFavorite(book) ? "Hapus" : "Favorit"}
+                        {isBookFavorite(book) ? t("Hapus") : t("Favorit")}
                       </button>
                       <button
                         type="button"
                         className="btn-primary min-h-9 px-3 py-1.5 text-xs sm:text-sm"
                         onClick={() => setSelectedBook(book)}
                       >
-                        Lihat Detail
+                        {t("Lihat Detail")}
                       </button>
                     </div>
                   </article>
@@ -650,10 +652,10 @@ export default function LibraryPage({
               <Icon name="search" className="h-7 w-7" strokeWidth={2} />
             </div>
             <p className="font-playfair text-xl font-semibold text-textMain">
-              Belum ada hasil yang cocok
+              {t("Belum ada hasil yang cocok")}
             </p>
             <p className="mx-auto mt-2 max-w-md font-crimson text-sm text-textSecondary">
-              Coba kata kunci lain, pilih topik berbeda, atau bersihkan filter.
+              {t("Coba kata kunci lain, pilih topik berbeda, atau bersihkan filter.")}
             </p>
             <div className="mt-5 flex flex-wrap justify-center gap-3">
               <button
@@ -661,14 +663,14 @@ export default function LibraryPage({
                 className="btn-secondary"
                 onClick={resetLibraryFilters}
               >
-                Bersihkan Filter
+                {t("Bersihkan Filter")}
               </button>
               <button
                 type="button"
                 className="btn-primary"
                 onClick={searchPopularBooks}
               >
-                Cari Buku Populer
+                {t("Cari Buku Populer")}
               </button>
             </div>
           </div>
@@ -682,12 +684,12 @@ export default function LibraryPage({
           >
             <div className="grid gap-0 lg:grid-cols-[minmax(0,1.05fr)_minmax(320px,0.95fr)]">
               <div className="border-b border-borderSoft p-5 sm:p-6 lg:border-b-0 lg:border-r">
-                <p className="section-label mb-1">Statistik</p>
+                <p className="section-label mb-1">{t("Statistik")}</p>
                 <h3
                   id="stats-heading"
                   className="font-playfair text-2xl font-bold text-textMain"
                 >
-                  Ringkasan Koleksi
+                  {t("Ringkasan Koleksi")}
                 </h3>
 
                 <div className="mt-5 grid gap-3 sm:grid-cols-2">
@@ -721,9 +723,9 @@ export default function LibraryPage({
               <div className="p-5 sm:p-6">
                 <div className="mb-5 flex items-end justify-between gap-3">
                   <div>
-                    <p className="section-label mb-1">Top 5 Rating</p>
+                    <p className="section-label mb-1">{t("Top 5 Rating")}</p>
                     <h3 className="font-playfair text-xl font-bold text-textMain">
-                      Rating Tertinggi
+                      {t("Rating Tertinggi")}
                     </h3>
                   </div>
                   <span className="rounded-full bg-cream px-3 py-1 text-xs font-bold text-accentHover">
@@ -754,7 +756,7 @@ export default function LibraryPage({
                 ))}
                   {libraryStats.topRatedBooks.length === 0 && (
                     <p className="rounded-lg border border-borderSoft bg-cream px-3 py-4 text-sm text-textSecondary">
-                      Rating untuk hasil ini belum tersedia.
+                      {t("Rating untuk hasil ini belum tersedia.")}
                     </p>
                   )}
                 </div>
@@ -779,7 +781,7 @@ export default function LibraryPage({
                   ?.scrollIntoView({ behavior: "smooth" });
               }}
             >
-              Sebelumnya
+              {t("Sebelumnya")}
             </button>
             <div className="flex items-center gap-2">
               {Array.from({ length: totalPages }, (_, i) => i + 1).map(
@@ -815,7 +817,7 @@ export default function LibraryPage({
                   ?.scrollIntoView({ behavior: "smooth" });
               }}
             >
-              Berikutnya
+              {t("Berikutnya")}
             </button>
           </nav>
         )}

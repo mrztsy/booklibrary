@@ -4,6 +4,7 @@ import {
   BookModalSkeleton,
   ModalSynopsisSkeleton,
 } from "./BookCardSkeleton";
+import { useLanguage } from "../utils/language";
 
 const normalizeOpenLibraryDescription = (description) => {
   if (!description) return "";
@@ -19,6 +20,7 @@ export default function BookModal({
   onToggleFavorite,
   onToast,
 }) {
+  const { t } = useLanguage();
   const [isBorrowed, setIsBorrowed] = useState(false);
   const [synopsis, setSynopsis] = useState("");
   const [isSynopsisLoading, setIsSynopsisLoading] = useState(false);
@@ -30,7 +32,7 @@ export default function BookModal({
     const fallbackSynopsis =
       book.synopsis ||
       book.description ||
-      "Sinopsis buku ini belum tersedia dari Open Library.";
+      t("Sinopsis buku ini belum tersedia dari Open Library.");
 
     setSynopsis(fallbackSynopsis);
 
@@ -81,29 +83,29 @@ export default function BookModal({
   if (!book) return null;
   if (book.isLoading) return <BookModalSkeleton onClose={onClose} />;
 
-  const title = book.title || "Judul belum tersedia";
-  const author = book.author || "Penulis belum tercatat";
+  const title = book.title || t("Judul belum tersedia");
+  const author = book.author || t("Penulis belum tercatat");
   const genres = [book.genre, ...(book.genres || [])].filter(Boolean);
   const uniqueGenres = [...new Set(genres)];
   const isBorrowable = book.available !== false;
   const isAvailable = isBorrowable && !isBorrowed;
-  const statusLabel = isAvailable ? "Tersedia" : "Dipinjam";
+  const statusLabel = isAvailable ? t("Tersedia") : t("Dipinjam");
   const borrowButtonLabel = !isBorrowable
-    ? "Sedang Dipinjam"
+    ? t("Sedang Dipinjam")
     : isBorrowed
-      ? "Kembalikan Buku"
-      : "Pinjam Buku";
+      ? t("Kembalikan Buku")
+      : t("Pinjam Buku");
   const borrowButtonClass = !isBorrowable
     ? "btn-borrow-disabled"
     : isBorrowed
       ? "btn-return"
       : "btn-borrow";
   const bookInfo = [
-    { label: "Penulis", value: author },
-    { label: "Tahun Terbit", value: book.year || "-" },
-    { label: "Jumlah Halaman", value: book.pages ? `${book.pages} hal` : "-" },
+    { label: t("Penulis"), value: author },
+    { label: t("Tahun Terbit"), value: book.year || "-" },
+    { label: t("Jumlah Halaman"), value: book.pages ? `${book.pages} ${t("hal")}` : "-" },
     {
-      label: "Genre",
+      label: t("Genre"),
       value: uniqueGenres.length > 0 ? uniqueGenres.join(", ") : "General",
     },
     { label: "Rating", value: book.rating ? `${book.rating} / 5.0` : "-" },
@@ -115,8 +117,8 @@ export default function BookModal({
     const nextBorrowed = !isBorrowed;
     setIsBorrowed(nextBorrowed);
     onToast?.(
-      nextBorrowed ? "Buku dipinjam" : "Buku dikembalikan",
-      nextBorrowed ? `${title} masuk ke daftar pinjam.` : `${title} sudah kembali.`,
+      nextBorrowed ? t("Buku dipinjam") : t("Buku dikembalikan"),
+      nextBorrowed ? `${title} ${t("masuk ke daftar pinjam.")}` : `${title} ${t("sudah kembali.")}`,
       "success",
     );
   };
@@ -127,7 +129,7 @@ export default function BookModal({
       style={{ backgroundColor: "rgba(24, 51, 47, 0.76)" }}
       role="dialog"
       aria-modal="true"
-      aria-label={`Detail buku: ${title}`}
+      aria-label={`${t("Detail buku")}: ${title}`}
       onClick={onClose}
     >
       <div
@@ -170,11 +172,11 @@ export default function BookModal({
               <button
                 type="button"
                 className="inline-flex items-center gap-1.5 rounded-lg border border-borderSoft bg-white px-3 py-1.5 text-sm font-semibold text-textSecondary transition-colors hover:border-accent hover:text-accentHover"
-                aria-label="Tutup detail buku"
+                aria-label={t("Tutup detail buku")}
                 onClick={onClose}
               >
                 <Icon name="close" className="h-4 w-4" strokeWidth={2} />
-                Tutup
+                {t("Tutup")}
               </button>
             </div>
 
@@ -183,7 +185,7 @@ export default function BookModal({
             </h2>
 
             <div className="mb-5 mt-4">
-              <p className="section-label mb-2">Informasi Buku</p>
+              <p className="section-label mb-2">{t("Informasi Buku")}</p>
               <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                 {bookInfo.map(({ label, value }) => (
                   <div
@@ -202,7 +204,7 @@ export default function BookModal({
             </div>
 
             <div className="mb-5 rounded-lg border border-borderSoft bg-white px-4 py-3">
-              <p className="section-label mb-1">Sinopsis</p>
+              <p className="section-label mb-1">{t("Sinopsis")}</p>
               {isSynopsisLoading ? (
                 <ModalSynopsisSkeleton />
               ) : (
@@ -229,7 +231,7 @@ export default function BookModal({
                 onClick={() => onToggleFavorite?.(book)}
               >
                 <Icon name="heart" className="h-4 w-4" strokeWidth={2} />
-                {isFavorite ? "Hapus Favorit" : "Simpan Favorit"}
+                {isFavorite ? t("Hapus Favorit") : t("Simpan Favorit")}
               </button>
             </div>
           </div>

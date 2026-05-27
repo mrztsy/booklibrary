@@ -1,4 +1,5 @@
 import Icon from "./Icon";
+import { useLanguage } from "../utils/language";
 
 export default function BookCard({
   book,
@@ -6,6 +7,7 @@ export default function BookCard({
   isFavorite = false,
   onToggleFavorite,
 }) {
+  const { t } = useLanguage();
   const gradients = [
     "from-primary to-secondary",
     "from-textMain to-primary",
@@ -13,9 +15,9 @@ export default function BookCard({
     "from-primary to-accent",
   ];
 
-  const title = book.title || "Judul belum tersedia";
+  const title = book.title || t("Judul belum tersedia");
   const authors =
-    book.author || book.author_name?.join(", ") || "Penulis belum tercatat";
+    book.author || book.author_name?.join(", ") || t("Penulis belum tercatat");
   const year = book.year || book.first_publish_year || "-";
   const rating = Number(book.rating) || 0;
   const coverUrl = book.cover;
@@ -31,7 +33,7 @@ export default function BookCard({
   return (
     <article
       className="book-card group mx-auto flex h-full w-full max-w-sm flex-col sm:max-w-none"
-      aria-label={`Buku: ${title} oleh ${authors}`}
+      aria-label={`${t("Buku")}: ${title} ${t("oleh")} ${authors}`}
     >
       <figure className="relative aspect-[2/3] shrink-0 overflow-hidden border-b border-borderSoft bg-cream">
         <div
@@ -60,7 +62,7 @@ export default function BookCard({
         </figcaption>
 
         <span
-          aria-label={book.available ? "Tersedia" : "Sedang dipinjam"}
+          aria-label={book.available ? t("Tersedia") : t("Sedang dipinjam")}
           className={`absolute top-2 right-2 z-20 text-xs font-semibold font-crimson
                       px-2 py-0.5 rounded-full
             ${
@@ -69,7 +71,7 @@ export default function BookCard({
                 : "bg-accentHover text-white"
             }`}
         >
-          {book.available ? "Tersedia" : "Dipinjam"}
+          {book.available ? t("Tersedia") : t("Dipinjam")}
         </span>
 
         {onToggleFavorite && (
@@ -80,8 +82,8 @@ export default function BookCard({
             }`}
             aria-label={
               isFavorite
-                ? `Hapus ${title} dari favorit`
-                : `Simpan ${title} ke favorit`
+                ? `${t("Hapus dari Favorit")}: ${title}`
+                : `${t("Simpan ke Favorit")}: ${title}`
             }
             aria-pressed={isFavorite}
             onClick={(event) => {
@@ -107,10 +109,10 @@ export default function BookCard({
               className="btn-primary text-sm py-2 px-4"
               onClick={() => onSelect(book)}
             >
-              Lihat Detail
+              {t("Lihat Detail")}
             </button>
           ) : (
-            <span className="btn-primary text-sm py-2 px-4">Lihat Detail</span>
+            <span className="btn-primary text-sm py-2 px-4">{t("Lihat Detail")}</span>
           )}
         </div>
       </figure>
@@ -133,7 +135,7 @@ export default function BookCard({
         <div className="mt-auto flex flex-wrap items-center justify-between gap-2">
           <div
             className="flex items-center gap-1"
-            aria-label={rating ? `Rating ${rating}` : "Rating belum tercatat"}
+            aria-label={rating ? `Rating ${rating}` : t("Rating belum tercatat")}
           >
             {[1, 2, 3, 4, 5].map((star) => (
               <svg
@@ -167,7 +169,7 @@ export default function BookCard({
             onClick={() => onToggleFavorite(book)}
           >
             <Icon name="heart" className="h-3.5 w-3.5" strokeWidth={2} />
-            {isFavorite ? "Hapus dari Favorit" : "Simpan ke Favorit"}
+            {isFavorite ? t("Hapus dari Favorit") : t("Simpan ke Favorit")}
           </button>
         )}
 

@@ -8,6 +8,7 @@ import {
   getRoleLabel,
   normalizeRole,
 } from "../utils/accountRoles";
+import { useLanguage } from "../utils/language";
 
 export default function LoginPage({
   currentUser,
@@ -16,6 +17,7 @@ export default function LoginPage({
   onToast,
   redirectTo = "home",
 }) {
+  const { t } = useLanguage();
   const [values, setValues] = useState({
     name: currentUser?.name || "",
     email: currentUser?.email || "",
@@ -36,12 +38,12 @@ export default function LoginPage({
     if (!file) return;
 
     if (!file.type.startsWith("image/")) {
-      setMessage("Pilih file gambar untuk foto profil, ya.");
+      setMessage(t("Pilih file gambar untuk foto profil, ya."));
       return;
     }
 
     if (file.size > 1024 * 1024) {
-      setMessage("Ukuran foto maksimal 1 MB agar profil tetap ringan.");
+      setMessage(t("Ukuran foto maksimal 1 MB agar profil tetap ringan."));
       return;
     }
 
@@ -61,13 +63,13 @@ export default function LoginPage({
     const role = normalizeRole(values.role);
 
     if (!email || !password) {
-      setMessage("Email dan password perlu diisi dulu, ya.");
+      setMessage(t("Email dan password perlu diisi dulu, ya."));
       return;
     }
 
     onLogin?.({ name, email, avatarUrl, role });
     onToast?.(
-      "Selamat datang",
+      t("Selamat datang"),
       `${name}, kamu masuk sebagai ${getRoleLabel(role)}.`,
       "success",
     );
@@ -81,7 +83,7 @@ export default function LoginPage({
 
   const handleConfirmLogout = () => {
     onLogout?.();
-    onToast?.("Sudah keluar", "Sesi akunmu ditutup dengan aman.", "info");
+    onToast?.(t("Sudah keluar"), t("Sesi akunmu ditutup dengan aman."), "info");
     setLogoutModalOpen(false);
   };
 
@@ -97,20 +99,19 @@ export default function LoginPage({
               className="h-full w-full scale-[1.55] object-cover"
             />
           </div>
-          <p className="section-label mb-3">Akun AksaraHub</p>
+          <p className="section-label mb-3">{t("Akun AksaraHub")}</p>
           <h1 className="font-playfair text-4xl font-extrabold leading-tight text-textMain lg:text-5xl">
-            Masuk untuk melanjutkan perjalanan membaca.
+            {t("Masuk untuk melanjutkan perjalanan membaca.")}
           </h1>
           <p className="mt-4 max-w-xl text-base leading-relaxed text-textSecondary">
-            Simpan buku favorit, kelola profil pembaca, dan jelajahi katalog
-            dengan pengalaman yang lebih personal.
+            {t("Simpan buku favorit, kelola profil pembaca, dan jelajahi katalog dengan pengalaman yang lebih personal.")}
           </p>
         </div>
 
         <div className="rounded-lg border border-borderSoft bg-white p-6 shadow-book">
           {currentUser ? (
             <div>
-              <p className="section-label mb-2">Akun Aktif</p>
+              <p className="section-label mb-2">{t("Akun Aktif")}</p>
               <div className="flex items-center gap-3">
                 <UserAvatar user={currentUser} size="lg" />
                 <div className="min-w-0">
@@ -129,37 +130,37 @@ export default function LoginPage({
               <div className="mt-6 flex flex-wrap gap-3">
                 <a href="#/profile" className="btn-primary">
                   <Icon name="users" className="h-4 w-4" />
-                  Edit Profil
+                  {t("Edit Profil")}
                 </a>
                 <button
                   type="button"
                   className="btn-logout px-5 py-2.5"
                   onClick={() => setLogoutModalOpen(true)}
                 >
-                  Keluar
+                  {t("Keluar")}
                 </button>
               </div>
             </div>
           ) : (
             <form onSubmit={handleSubmit} noValidate>
               <div className="mb-5">
-                <p className="section-label mb-1">Login</p>
+                <p className="section-label mb-1">{t("Masuk")}</p>
                 <h2 className="font-playfair text-2xl font-bold text-textMain">
-                  Masuk ke AksaraHub
+                  {t("Masuk ke AksaraHub")}
                 </h2>
               </div>
 
               <div className="space-y-4">
                 <div>
                   <label htmlFor="login-name" className="section-label mb-1.5 block">
-                    Nama
+                    {t("Nama")}
                   </label>
                   <input
                     id="login-name"
                     type="text"
                     autoComplete="name"
                     className="input-field"
-                    placeholder="Nama kamu"
+                    placeholder={t("Nama kamu")}
                     value={values.name}
                     onChange={(event) => handleChange("name", event.target.value)}
                   />
@@ -182,7 +183,7 @@ export default function LoginPage({
 
                 <div>
                   <label htmlFor="login-avatar" className="section-label mb-1.5 block">
-                    Foto Profil
+                    {t("Foto Profil")}
                   </label>
                   <div className="flex items-center gap-3">
                     <UserAvatar
@@ -198,7 +199,7 @@ export default function LoginPage({
                       type="url"
                       inputMode="url"
                       className="input-field"
-                      placeholder="URL foto, opsional"
+                      placeholder={t("URL foto, opsional")}
                       value={values.avatarUrl}
                       onChange={(event) =>
                         handleChange("avatarUrl", event.target.value)
@@ -215,7 +216,7 @@ export default function LoginPage({
 
                 <div>
                   <label htmlFor="login-role" className="section-label mb-1.5 block">
-                    Peran Akun
+                    {t("Peran Akun")}
                   </label>
                   <select
                     id="login-role"
@@ -230,7 +231,7 @@ export default function LoginPage({
                     ))}
                   </select>
                   <p className="mt-1.5 text-xs text-textSecondary">
-                    {ROLE_OPTIONS.find((role) => role.value === values.role)?.helper}
+                    {t(ROLE_OPTIONS.find((role) => role.value === values.role)?.helper)}
                   </p>
                 </div>
 
@@ -246,7 +247,7 @@ export default function LoginPage({
                     type="password"
                     autoComplete="current-password"
                     className="input-field"
-                    placeholder="Masukkan password"
+                    placeholder={t("Masukkan password")}
                     value={values.password}
                     onChange={(event) =>
                       handleChange("password", event.target.value)
@@ -263,7 +264,7 @@ export default function LoginPage({
 
               <button type="submit" className="btn-primary mt-6 w-full">
                 <Icon name="users" className="h-4 w-4" />
-                Masuk
+                {t("Masuk")}
               </button>
             </form>
           )}

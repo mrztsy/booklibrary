@@ -11,6 +11,7 @@ import BookModal from "../components/BookModal";
 import SearchFilter from "../components/SearchFilter";
 import Icon from "../components/Icon";
 import { GENRES } from "../data/books";
+import { useLanguage } from "../utils/language";
 
 const getBookId = (book) => book?.key || book?.id || book?.workKey || book?.title;
 
@@ -77,6 +78,7 @@ export default function HomePage({
   onToggleFavorite,
   onToast,
 }) {
+  const { t } = useLanguage();
   const ITEMS_PER_PAGE = 12;
   const [filters, setFilters] = useState(null);
   const [selectedBook, setSelectedBook] = useState(null);
@@ -147,8 +149,8 @@ export default function HomePage({
     setFilterResetSignal((current) => current + 1);
     fetchData(null);
     onToast?.(
-      "Filter dibersihkan",
-      "Koleksi kembali tampil utuh.",
+      t("Filter dibersihkan"),
+      t("Koleksi kembali tampil utuh."),
       "info",
     );
   };
@@ -169,8 +171,8 @@ export default function HomePage({
     setFilterExternalValues({ ...popularFilters });
     fetchData(popularFilters);
     onToast?.(
-      "Mencari buku populer",
-      "Sebentar, kami pilihkan yang sedang banyak dicari.",
+      t("Mencari buku populer"),
+      t("Sebentar, kami pilihkan yang sedang banyak dicari."),
       "info",
     );
   };
@@ -236,12 +238,12 @@ export default function HomePage({
         className="min-h-[60vh] flex items-center justify-center bg-cream px-4"
       >
         <div className="max-w-md rounded-lg border border-borderSoft bg-white p-6 text-center shadow-book">
-          <p className="section-label mb-2">Koleksi Buku</p>
+          <p className="section-label mb-2">{t("Koleksi Buku")}</p>
           <h1 className="font-playfair text-2xl font-bold text-textMain mb-2">
-            Koleksi belum siap
+            {t("Koleksi belum siap")}
           </h1>
           <p className="font-crimson text-textSecondary">
-            Sebentar lagi daftar bukunya akan tampil di sini.
+            {t("Sebentar lagi daftar bukunya akan tampil di sini.")}
           </p>
         </div>
       </section>
@@ -284,7 +286,7 @@ export default function HomePage({
               className="hero-copy-motion max-w-3xl"
             >
               <p className="section-label mb-3 text-accent">
-                Buku Pilihan Minggu Ini
+                {t("Buku Pilihan Minggu Ini")}
               </p>
               <h1
                 id="hero-heading"
@@ -293,7 +295,7 @@ export default function HomePage({
                 {heroBook.title}
               </h1>
               <p className="mb-6 max-w-xl border-l-2 border-accent pl-4 text-base text-white/82 sm:text-lg">
-                oleh{" "}
+                {t("oleh")}{" "}
                 <span className="text-accent font-semibold">
                   {heroBook.author}
                 </span>
@@ -303,7 +305,7 @@ export default function HomePage({
               <p className="mb-6 max-w-2xl text-sm leading-relaxed text-white/70 line-clamp-3 sm:text-base">
                 {heroBook.synopsis ||
                   heroBook.description ||
-                  "Deskripsi buku ini belum hadir dari katalog Open Library."}
+                  t("Deskripsi buku ini belum hadir dari katalog Open Library.")}
               </p>
               <div className="mb-8 flex min-h-[2rem] flex-wrap gap-2">
                 {(heroBook.genres || heroBook.tags || [heroBook.genre])
@@ -321,7 +323,7 @@ export default function HomePage({
               <div className="flex flex-wrap gap-3">
                 <a href="#/koleksi" className="btn-primary">
                   <Icon name="eye" className="w-4 h-4" strokeWidth={2} />
-                  Lihat Koleksi
+                  {t("Lihat Koleksi")}
                 </a>
                 <a href="#/katalog" className="btn-secondary text-primary">
                   <Icon name="cloud" className="w-4 h-4" />
@@ -339,8 +341,8 @@ export default function HomePage({
                 >
                   <Icon name="heart" className="h-4 w-4" strokeWidth={2} />
                   {isBookFavorite(heroBook)
-                    ? "Hapus dari Favorit"
-                    : "Simpan ke Favorit"}
+                    ? t("Hapus dari Favorit")
+                    : t("Simpan ke Favorit")}
                 </button>
               </div>
               {featuredBooks.length > 1 && (
@@ -401,11 +403,11 @@ export default function HomePage({
               {[
                 {
                   icon: "collection",
-                  label: "Total Koleksi",
+                  label: t("Total Koleksi"),
                   value: books.length,
                 },
-                { icon: "users", label: "Penulis", value: totalAuthors },
-                { icon: "tag", label: "Genre", value: totalGenres },
+                { icon: "users", label: t("Penulis"), value: totalAuthors },
+                { icon: "tag", label: t("Genre"), value: totalGenres },
               ].map((stat) => (
                 <div
                   key={stat.label}
@@ -435,12 +437,12 @@ export default function HomePage({
       >
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mb-6">
-            <p className="section-label">Pilihan Editor</p>
+            <p className="section-label">{t("Pilihan Editor")}</p>
             <h2
               id="featured-heading"
               className="font-playfair text-2xl font-bold text-textMain"
             >
-              Buku Unggulan
+              {t("Buku Unggulan")}
             </h2>
           </div>
 
@@ -460,7 +462,7 @@ export default function HomePage({
                   </div>
                 )}
                 <span className="absolute left-3 top-3 rounded-full bg-accent px-3 py-1 text-xs font-bold text-white shadow-book">
-                  Paling Direkomendasikan
+                  {t("Paling Direkomendasikan")}
                 </span>
               </div>
 
@@ -483,7 +485,7 @@ export default function HomePage({
                   {editorBook.title}
                 </h3>
                 <p className="mt-1 text-sm font-semibold text-textSecondary">
-                  {editorBook.author || "Penulis belum tercatat"}
+                  {editorBook.author || t("Penulis belum tercatat")}
                 </p>
 
                 <div className="mt-4 flex flex-wrap items-center gap-3 text-sm text-textSecondary">
@@ -500,7 +502,7 @@ export default function HomePage({
                 <p className="mt-4 line-clamp-3 text-sm leading-relaxed text-textSecondary">
                   {editorBook.synopsis ||
                     editorBook.description ||
-                    "Deskripsi pendeknya belum tersedia dari Open Library."}
+                    t("Deskripsi pendeknya belum tersedia dari Open Library.")}
                 </p>
 
                 <div className="mt-auto pt-5">
@@ -510,7 +512,7 @@ export default function HomePage({
                     onClick={() => setSelectedBook(editorBook)}
                   >
                     <Icon name="eye" className="h-4 w-4" strokeWidth={2} />
-                    Lihat Detail
+                    {t("Lihat Detail")}
                   </button>
                 </div>
               </div>
@@ -550,7 +552,7 @@ export default function HomePage({
                       {book.title}
                     </h3>
                     <p className="mt-1 text-xs text-textSecondary line-clamp-1">
-                      {book.author || "Penulis belum tercatat"}
+                      {book.author || t("Penulis belum tercatat")}
                     </p>
                     <div className="mt-2 flex flex-wrap items-center gap-2 text-xs text-textSecondary">
                       <span className="inline-flex items-center gap-1 font-semibold text-accentHover">
@@ -564,7 +566,7 @@ export default function HomePage({
                             : "bg-accentHover text-white"
                         }`}
                       >
-                        {book.available ? "Tersedia" : "Dipinjam"}
+                          {book.available ? t("Tersedia") : t("Dipinjam")}
                       </span>
                     </div>
                   </div>
@@ -627,24 +629,24 @@ export default function HomePage({
             <div className="min-w-0 flex-1">
               <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
                 <div>
-                  <p className="section-label">Koleksi Buku</p>
+                  <p className="section-label">{t("Koleksi Buku")}</p>
                   <h2
                     id="koleksi-heading"
                     className="font-playfair text-2xl font-bold text-textMain"
                   >
-                    Semua Buku
+                    {t("Semua Buku")}
                   </h2>
                 </div>
                 <div className="flex flex-wrap items-center gap-3">
                   <p className="font-crimson text-sm text-textSecondary">
-                    Menampilkan{" "}
+                    {t("Menampilkan")}{" "}
                     <span className="font-semibold text-accentHover">
                       {startIndexCollection + 1}-
                       {Math.min(endIndexCollection, filtered.length)}
                     </span>{" "}
-                    dari{" "}
+                    {t("dari")}{" "}
                     <span className="font-semibold">{filtered.length}</span>{" "}
-                    buku
+                    {t("buku")}
                   </p>
                   <div
                     className="inline-flex rounded-lg border border-borderSoft bg-white p-1 shadow-book"
@@ -734,7 +736,7 @@ export default function HomePage({
                           </h3>
                           <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-textSecondary sm:text-sm">
                             <span className="line-clamp-1 font-semibold">
-                              {book.author || "Penulis belum tercatat"}
+                              {book.author || t("Penulis belum tercatat")}
                             </span>
                             <span className="hidden text-borderSoft sm:inline">
                               /
@@ -763,7 +765,7 @@ export default function HomePage({
                                   : "status-chip-borrowed"
                               }`}
                             >
-                              {book.available ? "Tersedia" : "Dipinjam"}
+                              {book.available ? t("Tersedia") : t("Dipinjam")}
                             </span>
                           </div>
                         </div>
@@ -781,14 +783,14 @@ export default function HomePage({
                               onClick={() => onToggleFavorite?.(book)}
                             >
                               <Icon name="heart" className="h-3.5 w-3.5" />
-                              {isBookFavorite(book) ? "Hapus" : "Favorit"}
+                              {isBookFavorite(book) ? t("Hapus") : t("Favorit")}
                             </button>
                             <button
                               type="button"
                               className="btn-primary min-h-9 px-3 py-1.5 text-xs sm:text-sm"
                               onClick={() => setSelectedBook(book)}
                             >
-                              Lihat Detail
+                              {t("Lihat Detail")}
                             </button>
                           </div>
                         </div>
@@ -805,10 +807,10 @@ export default function HomePage({
                   <Icon name="search" className="h-7 w-7" strokeWidth={2} />
                 </div>
                 <p className="font-playfair text-xl font-semibold text-textMain mb-2">
-                  Belum ada hasil yang cocok
+                  {t("Belum ada hasil yang cocok")}
                 </p>
                 <p className="mx-auto max-w-md font-crimson text-sm text-textSecondary mb-5">
-                  Coba kata kunci lain, ubah genre, atau bersihkan filternya.
+                  {t("Coba kata kunci lain, ubah genre, atau bersihkan filternya.")}
                 </p>
                 <div className="flex flex-wrap justify-center gap-3">
                   <button
@@ -816,14 +818,14 @@ export default function HomePage({
                     className="btn-secondary"
                     onClick={resetCollectionFilters}
                   >
-                    Bersihkan Filter
+                    {t("Bersihkan Filter")}
                   </button>
                   <button
                     type="button"
                     className="btn-primary"
                     onClick={searchPopularBooks}
                   >
-                    Cari Buku Populer
+                    {t("Cari Buku Populer")}
                   </button>
                 </div>
               </div>
@@ -847,7 +849,7 @@ export default function HomePage({
                   ?.scrollIntoView({ behavior: "smooth" });
               }}
             >
-              Sebelumnya
+              {t("Sebelumnya")}
             </button>
             <div className="flex items-center gap-2">
               {Array.from(
@@ -884,7 +886,7 @@ export default function HomePage({
                   ?.scrollIntoView({ behavior: "smooth" });
               }}
             >
-              Berikutnya
+              {t("Berikutnya")}
             </button>
           </nav>
         )}

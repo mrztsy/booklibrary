@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import Icon from "./Icon";
+import { useLanguage } from "../utils/language";
 
 const toastStyles = {
   success: "border-primary/20 bg-white text-textMain",
@@ -14,6 +15,7 @@ const toastIcons = {
 };
 
 export default function ToastContainer({ toasts = [], onDismiss }) {
+  const { t } = useLanguage();
   useEffect(() => {
     if (toasts.length === 0) return undefined;
 
@@ -54,7 +56,7 @@ export default function ToastContainer({ toasts = [], onDismiss }) {
           <button
             type="button"
             className="rounded-md p-1 text-textSecondary transition-colors hover:bg-cream hover:text-textMain"
-            aria-label="Tutup notifikasi"
+            aria-label={t("Tutup notifikasi")}
             onClick={() => onDismiss(toast.id)}
           >
             <Icon name="close" className="h-4 w-4" strokeWidth={2} />

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { GENRES, SORT_OPTIONS } from "../data/books";
+import { useLanguage } from "../utils/language";
 
 export default function SearchFilter({
   onFilter,
@@ -8,6 +9,7 @@ export default function SearchFilter({
   resetSignal = 0,
   externalValues,
 }) {
+  const { t } = useLanguage();
   const defaults = {
     q: "",
     author: "",
@@ -57,8 +59,8 @@ export default function SearchFilter({
       onChange?.(null);
       onFilter(null);
       onToast?.(
-        "Koleksi dibuka lagi",
-        "Semua buku kembali terlihat.",
+        t("Koleksi dibuka lagi"),
+        t("Semua buku kembali terlihat."),
         "info",
       );
       return;
@@ -74,8 +76,8 @@ export default function SearchFilter({
     onChange?.(null);
     onFilter(null);
     onToast?.(
-      "Filter dibersihkan",
-      "Koleksi kembali tampil utuh.",
+      t("Filter dibersihkan"),
+      t("Koleksi kembali tampil utuh."),
       "info",
     );
   };
@@ -83,17 +85,17 @@ export default function SearchFilter({
   return (
     <form
       onSubmit={handleSubmit}
-      aria-label="Form pencarian dan filter buku"
+      aria-label={t("Form pencarian dan filter buku")}
       noValidate
       className="bg-white border border-borderSoft rounded-lg shadow-book p-5"
     >
       <div className="flex items-center justify-between mb-5">
         <div>
           <h2 className="font-playfair font-semibold text-textMain">
-            Cari Filter
+            {t("Cari Filter")}
           </h2>
           <p className="text-xs text-textSecondary mt-0.5 font-crimson">
-            Gunakan filter di bawah untuk menemukan buku
+            {t("Gunakan filter di bawah untuk menemukan buku")}
           </p>
         </div>
         <button
@@ -101,14 +103,14 @@ export default function SearchFilter({
           onClick={handleReset}
           className="text-xs font-semibold font-crimson text-textSecondary hover:text-accentHover transition-colors"
         >
-          Bersihkan
+          {t("Bersihkan")}
         </button>
       </div>
 
       <div className="flex flex-col gap-4">
         <div>
           <label htmlFor="search-query" className="section-label block mb-1.5">
-            Judul Buku
+            {t("Judul Buku")}
           </label>
           <div className="relative">
             <svg
@@ -129,7 +131,7 @@ export default function SearchFilter({
               id="search-query"
               type="search"
               name="q"
-              placeholder="Cari judul buku..."
+              placeholder={t("Cari judul buku...")}
               autoComplete="off"
               aria-invalid={filterMessage ? "true" : undefined}
               aria-describedby={
@@ -152,13 +154,13 @@ export default function SearchFilter({
 
         <div>
           <label htmlFor="search-author" className="section-label block mb-1.5">
-            Nama Penulis
+            {t("Nama Penulis")}
           </label>
           <input
             id="search-author"
             type="text"
             name="author"
-            placeholder="Cari nama penulis..."
+            placeholder={t("Cari nama penulis...")}
             autoComplete="off"
             className="input-field"
             value={values.author}
@@ -168,7 +170,7 @@ export default function SearchFilter({
 
         <div>
           <label htmlFor="genre-select" className="section-label block mb-1.5">
-            Genre
+            {t("Genre")}
           </label>
           <div className="relative">
             <select
@@ -180,7 +182,7 @@ export default function SearchFilter({
             >
               {GENRES.map((genre) => (
                 <option key={genre} value={genre}>
-                  {genre}
+                  {t(genre)}
                 </option>
               ))}
             </select>
@@ -203,7 +205,7 @@ export default function SearchFilter({
 
         <div>
           <label htmlFor="year-range" className="section-label block mb-1.5">
-            Tahun Terbit Minimum:{" "}
+            {t("Tahun Terbit Minimum")}:{" "}
             <span className="text-accentHover normal-case">
               {values.yearMin}
             </span>
@@ -226,7 +228,7 @@ export default function SearchFilter({
 
         <div>
           <label htmlFor="min-rating" className="section-label block mb-1.5">
-            Rating Minimum
+            {t("Rating Minimum")}
           </label>
           <input
             id="min-rating"
@@ -241,11 +243,11 @@ export default function SearchFilter({
         </div>
 
         <fieldset>
-          <legend className="section-label mb-2">Filter Tambahan</legend>
+          <legend className="section-label mb-2">{t("Filter Tambahan")}</legend>
           <div className="space-y-2">
             {[
-              { key: "available", label: "Hanya yang tersedia" },
-              { key: "featured", label: "Unggulan saja" },
+              { key: "available", label: t("Hanya yang tersedia") },
+              { key: "featured", label: t("Unggulan saja") },
             ].map(({ key, label }) => (
               <label
                 key={key}
@@ -266,7 +268,7 @@ export default function SearchFilter({
         </fieldset>
 
         <fieldset>
-          <legend className="section-label mb-2">Urutkan</legend>
+          <legend className="section-label mb-2">{t("Urutkan")}</legend>
           <div className="space-y-1.5">
             {SORT_OPTIONS.map((option) => (
               <label
@@ -281,7 +283,7 @@ export default function SearchFilter({
                   onChange={() => set("sort", option.value)}
                 />
                 <span className="text-sm font-crimson text-secondary group-hover:text-textMain transition-colors">
-                  {option.label}
+                  {t(option.label)}
                 </span>
               </label>
             ))}
@@ -304,7 +306,7 @@ export default function SearchFilter({
             d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
           />
         </svg>
-        Terapkan Filter
+        {t("Terapkan Filter")}
       </button>
     </form>
   );

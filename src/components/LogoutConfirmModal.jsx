@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import Icon from "./Icon";
+import { useLanguage } from "../utils/language";
 
 export default function LogoutConfirmModal({
   open,
@@ -7,6 +8,7 @@ export default function LogoutConfirmModal({
   onClose,
   onConfirm,
 }) {
+  const { t } = useLanguage();
   useEffect(() => {
     if (!open) return undefined;
 
@@ -36,18 +38,18 @@ export default function LogoutConfirmModal({
       >
         <div className="flex items-start justify-between gap-4">
           <div>
-            <p className="section-label mb-1">Konfirmasi</p>
+            <p className="section-label mb-1">{t("Konfirmasi")}</p>
             <h2
               id="logout-modal-title"
               className="font-playfair text-xl font-bold text-textMain"
             >
-              Keluar dari akun?
+              {t("Keluar dari akun?")}
             </h2>
           </div>
           <button
             type="button"
             className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-borderSoft text-textSecondary transition-colors hover:border-accent hover:text-accentHover"
-            aria-label="Tutup modal"
+            aria-label={t("Tutup modal")}
             onClick={onClose}
           >
             <Icon name="close" className="h-4 w-4" />
@@ -55,15 +57,15 @@ export default function LogoutConfirmModal({
         </div>
 
         <p className="mt-3 text-sm leading-relaxed text-textSecondary">
-          Sesi {userName} akan ditutup. Kamu bisa masuk lagi kapan saja.
+          {t("Sesi")} {userName} {t("akan ditutup. Kamu bisa masuk lagi kapan saja.")}
         </p>
 
         <div className="mt-5 grid grid-cols-2 gap-3">
           <button type="button" className="btn-secondary" onClick={onClose}>
-            Batal
+            {t("Batal")}
           </button>
           <button type="button" className="btn-logout-solid px-5 py-2.5" onClick={onConfirm}>
-            Keluar
+            {t("Keluar")}
           </button>
         </div>
       </section>
