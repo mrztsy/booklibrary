@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import BookCard from "../components/BookCard";
 import BookCardSkeleton, {
+  LibrarySearchSkeleton,
   PaginationSkeleton,
   ResultsToolbarSkeleton,
   StatsPanelSkeleton,
@@ -275,156 +276,162 @@ export default function LibraryPage({
         className="border-b border-borderSoft bg-white"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
-          <form
-            action="#"
-            method="get"
-            noValidate
-            onSubmit={handleSearchSubmit}
-            className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(260px,1fr)_auto] lg:items-start"
-          >
-            <div className="space-y-3">
-              <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
-                <div className="relative">
-                  <svg
-                    className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-textSecondary"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    aria-hidden="true"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
-                    />
-                  </svg>
-                  <label htmlFor="api-search" className="sr-only">
-                    Cari judul buku
-                  </label>
-                  <input
-                    id="api-search"
-                    type="search"
-                    name="search"
-                    placeholder="Cari judul buku..."
-                    autoComplete="off"
-                    aria-invalid={searchMessage ? "true" : undefined}
-                    aria-describedby={
-                      searchMessage ? "api-search-message" : undefined
-                    }
-                    value={searchTerm}
-                    onChange={(event) => setSearchTerm(event.target.value)}
-                    className="input-field pl-9"
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor="api-author" className="sr-only">
-                    Cari nama penulis
-                  </label>
-                  <input
-                    id="api-author"
-                    type="text"
-                    name="author"
-                    placeholder="Cari penulis..."
-                    autoComplete="off"
-                    value={authorTerm}
-                    onChange={(event) => setAuthorTerm(event.target.value)}
-                    className="input-field"
-                  />
-                </div>
-
-                <div className="relative">
-                  <label htmlFor="api-sort" className="sr-only">
-                    Urutkan hasil
-                  </label>
-                  <select
-                    id="api-sort"
-                    name="sort"
-                    className="select-field"
-                    value={sortValue}
-                    onChange={(event) => setSortValue(event.target.value)}
-                  >
-                    {SORT_OPTIONS.map((option) => (
-                      <option key={option.value} value={option.value}>
-                        {option.label}
-                      </option>
-                    ))}
-                  </select>
-                  <svg
-                    className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-textSecondary pointer-events-none"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    aria-hidden="true"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M19 9l-7 7-7-7"
-                    />
-                  </svg>
-                </div>
-              </div>
-              {searchMessage && (
-                <p
-                  id="api-search-message"
-                  className="text-sm font-semibold text-accentHover"
-                >
-                  {searchMessage}
-                </p>
-              )}
-
-              <fieldset className="flex flex-wrap items-center gap-2">
-                <legend className="sr-only">Pilih topik buku</legend>
-                {TOPICS.map((t) => (
-                  <label key={t.value} className="cursor-pointer">
-                    <input
-                      type="radio"
-                      name="topic"
-                      value={t.value}
-                      checked={selectedTopic === t.value}
-                      onChange={(event) => setSelectedTopic(event.target.value)}
-                      className="sr-only peer"
-                    />
-                    <span
-                      className="inline-flex min-h-10 items-center gap-1.5 rounded-lg border
-                                     border-borderSoft bg-white px-3 py-2 text-xs font-semibold
-                                     font-crimson text-textSecondary transition-all duration-300
-                                     hover:border-accent hover:text-accentHover
-                                     peer-checked:border-primary peer-checked:bg-primary peer-checked:text-white"
+          {showLoading ? (
+            <LibrarySearchSkeleton />
+          ) : (
+            <form
+              action="#"
+              method="get"
+              noValidate
+              onSubmit={handleSearchSubmit}
+              className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(260px,1fr)_auto] lg:items-start"
+            >
+              <div className="space-y-3">
+                <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
+                  <div className="relative">
+                    <svg
+                      className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-textSecondary"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      aria-hidden="true"
                     >
-                      <Icon name={t.icon} className="w-3.5 h-3.5" />
-                      {t.label}
-                    </span>
-                  </label>
-                ))}
-              </fieldset>
-            </div>
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
+                      />
+                    </svg>
+                    <label htmlFor="api-search" className="sr-only">
+                      Cari judul buku
+                    </label>
+                    <input
+                      id="api-search"
+                      type="search"
+                      name="search"
+                      placeholder="Cari judul buku..."
+                      autoComplete="off"
+                      aria-invalid={searchMessage ? "true" : undefined}
+                      aria-describedby={
+                        searchMessage ? "api-search-message" : undefined
+                      }
+                      value={searchTerm}
+                      onChange={(event) => setSearchTerm(event.target.value)}
+                      className="input-field pl-9"
+                    />
+                  </div>
 
-            <div className="flex flex-wrap gap-2 lg:justify-end">
-              <button
-                type="submit"
-                className="btn-primary min-h-11 whitespace-nowrap"
-              >
-                <Icon name="search" className="w-4 h-4" strokeWidth={2} />
-                Cari
-              </button>
-              {(searchTerm ||
-                authorTerm ||
-                selectedTopic !== "Semua" ||
-                sortValue !== "default") && (
+                  <div>
+                    <label htmlFor="api-author" className="sr-only">
+                      Cari nama penulis
+                    </label>
+                    <input
+                      id="api-author"
+                      type="text"
+                      name="author"
+                      placeholder="Cari penulis..."
+                      autoComplete="off"
+                      value={authorTerm}
+                      onChange={(event) => setAuthorTerm(event.target.value)}
+                      className="input-field"
+                    />
+                  </div>
+
+                  <div className="relative">
+                    <label htmlFor="api-sort" className="sr-only">
+                      Urutkan hasil
+                    </label>
+                    <select
+                      id="api-sort"
+                      name="sort"
+                      className="select-field"
+                      value={sortValue}
+                      onChange={(event) => setSortValue(event.target.value)}
+                    >
+                      {SORT_OPTIONS.map((option) => (
+                        <option key={option.value} value={option.value}>
+                          {option.label}
+                        </option>
+                      ))}
+                    </select>
+                    <svg
+                      className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-textSecondary pointer-events-none"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      aria-hidden="true"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M19 9l-7 7-7-7"
+                      />
+                    </svg>
+                  </div>
+                </div>
+                {searchMessage && (
+                  <p
+                    id="api-search-message"
+                    className="text-sm font-semibold text-accentHover"
+                  >
+                    {searchMessage}
+                  </p>
+                )}
+
+                <fieldset className="flex flex-wrap items-center gap-2">
+                  <legend className="sr-only">Pilih topik buku</legend>
+                  {TOPICS.map((t) => (
+                    <label key={t.value} className="cursor-pointer">
+                      <input
+                        type="radio"
+                        name="topic"
+                        value={t.value}
+                        checked={selectedTopic === t.value}
+                        onChange={(event) =>
+                          setSelectedTopic(event.target.value)
+                        }
+                        className="sr-only peer"
+                      />
+                      <span
+                        className="inline-flex min-h-10 items-center gap-1.5 rounded-lg border
+                                      border-borderSoft bg-white px-3 py-2 text-xs font-semibold
+                                      font-crimson text-textSecondary transition-all duration-300
+                                      hover:border-accent hover:text-accentHover
+                                      peer-checked:border-primary peer-checked:bg-primary peer-checked:text-white"
+                      >
+                        <Icon name={t.icon} className="w-3.5 h-3.5" />
+                        {t.label}
+                      </span>
+                    </label>
+                  ))}
+                </fieldset>
+              </div>
+
+              <div className="flex flex-wrap gap-2 lg:justify-end">
                 <button
-                  type="button"
-                  className="btn-secondary min-h-11 whitespace-nowrap"
-                  onClick={resetLibraryFilters}
+                  type="submit"
+                  className="btn-primary min-h-11 whitespace-nowrap"
                 >
-                  Reset
+                  <Icon name="search" className="w-4 h-4" strokeWidth={2} />
+                  Cari
                 </button>
-              )}
-            </div>
-          </form>
+                {(searchTerm ||
+                  authorTerm ||
+                  selectedTopic !== "Semua" ||
+                  sortValue !== "default") && (
+                  <button
+                    type="button"
+                    className="btn-secondary min-h-11 whitespace-nowrap"
+                    onClick={resetLibraryFilters}
+                  >
+                    Reset
+                  </button>
+                )}
+              </div>
+            </form>
+          )}
         </div>
       </section>
 
@@ -433,7 +440,13 @@ export default function LibraryPage({
         className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10"
       >
         {showLoading ? (
-          <ResultsToolbarSkeleton viewMode={viewMode} />
+          <ResultsToolbarSkeleton
+            viewMode={viewMode}
+            eyebrowWidth="w-20"
+            headingWidth="w-52"
+            metaWidth="w-24"
+            countWidth="w-40"
+          />
         ) : (
           <div className="flex items-center justify-between mb-6 flex-wrap gap-3">
             <div>
@@ -495,13 +508,13 @@ export default function LibraryPage({
           <div className="mb-10" role="status" aria-live="polite">
             {viewMode === "grid" ? (
               <div className="book-grid">
-                {Array.from({ length: 8 }, (_, index) => (
+                {Array.from({ length: ITEMS_PER_PAGE }, (_, index) => (
                   <BookCardSkeleton key={index} />
                 ))}
               </div>
             ) : (
               <div className="space-y-3">
-                {Array.from({ length: 8 }, (_, index) => (
+                {Array.from({ length: ITEMS_PER_PAGE }, (_, index) => (
                   <BookCardSkeleton key={index} variant="list" />
                 ))}
               </div>

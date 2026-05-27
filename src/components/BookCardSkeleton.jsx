@@ -73,28 +73,199 @@ export default function BookCardSkeleton({ variant = "grid" }) {
   );
 }
 
-export function ResultsToolbarSkeleton({ viewMode = "grid" }) {
+export function ResultsToolbarSkeleton({
+  viewMode = "grid",
+  eyebrowWidth = "w-24",
+  headingWidth = "w-40",
+  metaWidth = "w-24",
+  countWidth = "w-44",
+}) {
   return (
-    <div className="mb-6 flex flex-wrap items-center justify-between gap-3" aria-hidden="true">
+    <div
+      className="mb-6 flex flex-wrap items-center justify-between gap-3"
+      aria-hidden="true"
+    >
       <div className="min-w-0 space-y-2">
-        <div className="skeleton-line h-3 w-24" />
+        <div className={`skeleton-line h-3 ${eyebrowWidth}`} />
         <div className="flex flex-wrap items-center gap-2">
-          <div className="skeleton-line h-7 w-40" />
-          <div className="skeleton-line h-4 w-24" />
+          <div className={`skeleton-line h-7 ${headingWidth}`} />
+          <div className={`skeleton-line h-4 ${metaWidth}`} />
         </div>
       </div>
-      <div className="skeleton-button h-9 w-44" />
-      <div className="flex rounded-lg border border-borderSoft bg-white p-1 shadow-book">
+      <div className="flex flex-wrap items-center gap-3">
         <div
-          className={`h-9 w-24 rounded-md ${
-            viewMode === "grid" ? "bg-primary" : "skeleton-button"
-          }`}
+          className={`skeleton-button h-9 ${countWidth} border border-borderSoft bg-white`}
         />
-        <div
-          className={`ml-1 h-9 w-24 rounded-md ${
-            viewMode === "list" ? "bg-primary" : "skeleton-button"
-          }`}
-        />
+        <div className="flex rounded-lg border border-borderSoft bg-white p-1 shadow-book">
+          <div
+            className={`h-9 w-24 rounded-md ${
+              viewMode === "grid" ? "bg-primary" : "skeleton-button"
+            }`}
+          />
+          <div
+            className={`ml-1 h-9 w-24 rounded-md ${
+              viewMode === "list" ? "bg-primary" : "skeleton-button"
+            }`}
+          />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export function HomeHeroSkeleton() {
+  return (
+    <section
+      id="beranda"
+      aria-label="Memuat beranda"
+      className="relative min-h-[calc(100vh-76px)] overflow-hidden border-b border-accent/60 bg-primary text-white"
+    >
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_72%_38%,rgba(255,255,255,0.16),transparent_30%),linear-gradient(90deg,rgba(10,26,24,0.78),rgba(10,26,24,0.52),rgba(20,18,16,0.28))]" />
+      <div className="absolute inset-x-0 bottom-0 h-px bg-white/20" />
+
+      <div className="relative mx-auto flex min-h-[calc(100vh-140px)] max-w-7xl items-center px-4 py-14 sm:px-6 lg:px-8 lg:py-20">
+        <div className="grid w-full grid-cols-1 items-center gap-10 lg:grid-cols-[minmax(0,1.1fr)_minmax(280px,0.9fr)] lg:gap-14">
+          <div className="max-w-3xl">
+            <div className="mb-3 h-3 w-44 rounded-full bg-accent/55" />
+            <div className="mb-4 h-11 max-w-2xl rounded-full bg-white/20 sm:h-14" />
+            <div className="mb-5 h-11 max-w-lg rounded-full bg-white/15 sm:h-14" />
+            <div className="mb-6 h-5 max-w-xl rounded-full bg-white/15" />
+            <div className="mb-3 h-4 max-w-2xl rounded-full bg-white/12" />
+            <div className="mb-6 h-4 max-w-lg rounded-full bg-white/10" />
+            <div className="mb-8 flex min-h-[2rem] flex-wrap gap-2">
+              <div className="h-7 w-20 rounded-full border border-white/15 bg-white/10" />
+              <div className="h-7 w-24 rounded-full border border-white/15 bg-white/10" />
+              <div className="h-7 w-16 rounded-full border border-white/15 bg-white/10" />
+            </div>
+            <div className="flex flex-wrap gap-3">
+              <div className="h-11 w-36 rounded-lg bg-accent/70" />
+              <div className="h-11 w-36 rounded-lg bg-white/75" />
+              <div className="h-11 w-44 rounded-lg bg-white/18" />
+            </div>
+            <div className="mt-8 flex items-center gap-2">
+              <div className="h-2.5 w-9 rounded-full bg-accent" />
+              <div className="h-2.5 w-2.5 rounded-full bg-white/30" />
+              <div className="h-2.5 w-2.5 rounded-full bg-white/30" />
+            </div>
+          </div>
+
+          <div className="flex justify-center lg:justify-end">
+            <div className="relative w-44 sm:w-52 lg:w-64">
+              <div className="aspect-[2/3] w-full rounded-lg border border-white/15 bg-white/20 shadow-2xl" />
+              <div className="absolute -bottom-4 -right-4 h-10 w-20 rounded-lg bg-white shadow-book" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="relative border-t border-white/10 bg-white/[0.06] backdrop-blur-sm">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 gap-3 py-4 sm:grid-cols-3">
+            {[1, 2, 3].map((item) => (
+              <div
+                key={item}
+                className="flex items-center gap-3 rounded-lg border border-white/10 bg-white/10 px-4 py-3 shadow-sm sm:py-4"
+              >
+                <div className="h-10 w-10 shrink-0 rounded-lg bg-white/10 sm:h-11 sm:w-11" />
+                <div className="min-w-0 flex-1 space-y-2">
+                  <div className="h-7 w-16 rounded-full bg-white/20" />
+                  <div className="h-3 w-24 rounded-full bg-white/12" />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+export function SearchFilterSkeleton() {
+  return (
+    <form
+      aria-label="Memuat form pencarian dan filter buku"
+      className="rounded-lg border border-borderSoft bg-white p-5 shadow-book"
+    >
+      <div className="mb-5 flex items-center justify-between">
+        <div className="space-y-2">
+          <div className="skeleton-line h-5 w-24" />
+          <div className="skeleton-line h-3 w-44" />
+        </div>
+        <div className="skeleton-line h-3 w-10" />
+      </div>
+
+      <div className="flex flex-col gap-4">
+        {[1, 2, 3].map((item) => (
+          <div key={item}>
+            <div className="skeleton-line mb-1.5 h-3 w-28" />
+            <div className="skeleton-button h-11 w-full" />
+          </div>
+        ))}
+
+        <div>
+          <div className="skeleton-line mb-2 h-3 w-40" />
+          <div className="skeleton-line h-2 w-full" />
+          <div className="mt-2 flex justify-between">
+            <div className="skeleton-line h-3 w-10" />
+            <div className="skeleton-line h-3 w-10" />
+          </div>
+        </div>
+
+        <div>
+          <div className="skeleton-line mb-1.5 h-3 w-28" />
+          <div className="skeleton-button h-11 w-full" />
+        </div>
+
+        <div>
+          <div className="skeleton-line mb-2 h-3 w-32" />
+          <div className="space-y-2">
+            <div className="skeleton-line h-4 w-40" />
+            <div className="skeleton-line h-4 w-32" />
+          </div>
+        </div>
+
+        <div>
+          <div className="skeleton-line mb-2 h-3 w-24" />
+          <div className="space-y-2">
+            {[1, 2, 3, 4].map((item) => (
+              <div key={item} className="skeleton-line h-4 w-36" />
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div className="skeleton-button mt-5 h-11 w-full" />
+    </form>
+  );
+}
+
+export function LibrarySearchSkeleton() {
+  return (
+    <div
+      className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(260px,1fr)_auto] lg:items-start"
+      aria-hidden="true"
+    >
+      <div className="space-y-3">
+        <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
+          <div className="skeleton-button h-11 w-full" />
+          <div className="skeleton-button h-11 w-full" />
+          <div className="skeleton-button h-11 w-full" />
+        </div>
+
+        <div className="flex flex-wrap items-center gap-2">
+          {[64, 76, 82, 92, 84, 86, 78, 92, 84, 72, 76].map((width, index) => (
+            <div
+              key={`${width}-${index}`}
+              className="skeleton-button h-10 rounded-lg border border-borderSoft"
+              style={{ width }}
+            />
+          ))}
+        </div>
+      </div>
+
+      <div className="flex flex-wrap gap-2 lg:justify-end">
+        <div className="skeleton-button h-11 w-24" />
+        <div className="skeleton-button h-11 w-24" />
       </div>
     </div>
   );

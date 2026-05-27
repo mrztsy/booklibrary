@@ -2,8 +2,10 @@ import { useEffect, useMemo, useState } from "react";
 import BookCard from "../components/BookCard";
 import BookCardSkeleton, {
   FeaturedBooksSkeleton,
+  HomeHeroSkeleton,
   PaginationSkeleton,
   ResultsToolbarSkeleton,
+  SearchFilterSkeleton,
 } from "../components/BookCardSkeleton";
 import BookModal from "../components/BookModal";
 import SearchFilter from "../components/SearchFilter";
@@ -191,32 +193,7 @@ export default function HomePage({
   if (!heroBook && isLoading) {
     return (
       <>
-        <section
-          id="beranda"
-          aria-label="Memuat beranda"
-          className="relative min-h-[calc(100vh-76px)] overflow-hidden border-b border-accent/60 bg-primary text-white"
-        >
-          <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(10,26,24,0.9),rgba(10,26,24,0.62),rgba(20,18,16,0.35))]" />
-          <div className="relative mx-auto flex min-h-[calc(100vh-140px)] max-w-7xl items-center px-4 py-14 sm:px-6 lg:px-8 lg:py-20">
-            <div className="grid w-full grid-cols-1 items-center gap-10 lg:grid-cols-[minmax(0,1.1fr)_minmax(280px,0.9fr)] lg:gap-14">
-              <div className="max-w-3xl animate-pulse">
-                <div className="mb-4 h-4 w-44 rounded-full bg-accent/50" />
-                <div className="mb-3 h-12 max-w-xl rounded-full bg-white/20 sm:h-14" />
-                <div className="mb-6 h-12 max-w-lg rounded-full bg-white/15 sm:h-14" />
-                <div className="mb-4 h-5 max-w-md rounded-full bg-white/15" />
-                <div className="mb-8 h-4 max-w-2xl rounded-full bg-white/10" />
-                <div className="flex gap-3">
-                  <div className="h-11 w-32 rounded-lg bg-accent/60" />
-                  <div className="h-11 w-32 rounded-lg bg-white/20" />
-                </div>
-              </div>
-
-              <div className="flex justify-center lg:justify-end">
-                <div className="aspect-[2/3] w-44 animate-pulse rounded-lg border border-white/15 bg-white/20 shadow-2xl sm:w-52 lg:w-64" />
-              </div>
-            </div>
-          </div>
-        </section>
+        <HomeHeroSkeleton />
 
         <FeaturedBooksSkeleton />
 
@@ -225,13 +202,28 @@ export default function HomePage({
           aria-label="Memuat koleksi buku"
           className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8"
         >
-          <ResultsToolbarSkeleton viewMode="grid" />
-          <div className="book-grid">
-            {Array.from({ length: 6 }, (_, index) => (
-              <BookCardSkeleton key={index} />
-            ))}
+          <div className="grid grid-cols-1 gap-8 lg:grid-cols-[16rem_minmax(0,1fr)]">
+            <aside aria-label="Memuat panel filter buku" className="lg:self-start">
+              <SearchFilterSkeleton />
+            </aside>
+
+            <div className="min-w-0 flex-1" role="status" aria-live="polite">
+              <ResultsToolbarSkeleton
+                viewMode="grid"
+                eyebrowWidth="w-24"
+                headingWidth="w-32"
+                metaWidth="w-24"
+                countWidth="w-52"
+              />
+              <div className="book-grid">
+                {Array.from({ length: 6 }, (_, index) => (
+                  <BookCardSkeleton key={index} />
+                ))}
+              </div>
+              <PaginationSkeleton />
+              <span className="sr-only">Mengambil data buku...</span>
+            </div>
           </div>
-          <PaginationSkeleton />
         </section>
       </>
     );
@@ -606,7 +598,13 @@ export default function HomePage({
 
           {isLoading ? (
             <div className="min-w-0 flex-1" role="status" aria-live="polite">
-              <ResultsToolbarSkeleton viewMode={collectionView} />
+              <ResultsToolbarSkeleton
+                viewMode={collectionView}
+                eyebrowWidth="w-24"
+                headingWidth="w-32"
+                metaWidth="w-24"
+                countWidth="w-52"
+              />
 
               {collectionView === "grid" ? (
                 <div className="book-grid">
