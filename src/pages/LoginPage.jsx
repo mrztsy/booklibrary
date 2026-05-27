@@ -67,10 +67,20 @@ export default function LoginPage({
       return;
     }
 
-    onLogin?.({ name, email, avatarUrl, role });
+    const result = onLogin?.({ name, email, avatarUrl, role, password });
+    if (!result?.ok) {
+      setMessage(result?.message || t("Password yang kamu masukkan belum cocok."));
+      return;
+    }
+
+    const authenticatedUser = result.user || {
+      name,
+      email,
+      role,
+    };
     onToast?.(
       t("Selamat datang"),
-      `${name}, kamu masuk sebagai ${getRoleLabel(role)}.`,
+      `${authenticatedUser.name}, kamu masuk sebagai ${getRoleLabel(authenticatedUser.role)}.`,
       "success",
     );
     window.location.hash =

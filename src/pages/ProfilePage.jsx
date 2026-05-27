@@ -11,6 +11,7 @@ import { useLanguage } from "../utils/language";
 
 export default function ProfilePage({
   currentUser,
+  isDarkMode = false,
   onLogin,
   onLogout,
   onToast,
@@ -30,6 +31,35 @@ export default function ProfilePage({
   const roleOption = ROLE_OPTIONS.find((option) => option.value === role);
   const displayedName = values.name || currentUser?.name || "Pembaca";
   const displayedEmail = values.email || currentUser?.email || "-";
+  const displayedLanguage = currentUser?.language || "Indonesia";
+  const displayedGenres =
+    currentUser?.preferredGenres?.length > 0
+      ? currentUser.preferredGenres
+      : [t("Belum dipilih")];
+  const profileSummaryRows = [
+    {
+      label: t("Nama lengkap"),
+      value: displayedName,
+    },
+    {
+      label: "Email",
+      value: displayedEmail,
+    },
+    {
+      label: t("Peran Akun"),
+      value: getRoleLabel(role),
+      helper: t(roleOption?.helper),
+    },
+    {
+      label: t("Bahasa"),
+      value: displayedLanguage,
+    },
+    {
+      label: t("Tema tampilan"),
+      value: isDarkMode ? t("Dark") : t("Light"),
+      helper: isDarkMode ? t("Mode gelap aktif") : t("Mode terang aktif"),
+    },
+  ];
 
   const handleChange = (key, value) => {
     setValues((currentValues) => ({ ...currentValues, [key]: value }));
@@ -116,20 +146,58 @@ export default function ProfilePage({
             <p className="mt-1 truncate text-sm text-textSecondary">
               {displayedEmail}
             </p>
-            <p className="mt-3 text-sm font-semibold text-textMain">
-              Role:{" "}
-              <span className="text-accentHover">{getRoleLabel(role)}</span>
-            </p>
           </div>
         </div>
 
-        <div className="mt-8 grid gap-3 sm:grid-cols-2">
-          <div className="rounded-lg bg-cream px-4 py-3">
-            <p className="section-label mb-1">{t("Peran Akun")}</p>
-            <p className="font-semibold text-textSecondary">
-              {t(roleOption?.helper)}
-            </p>
+        <div className="mt-8 grid gap-4 lg:grid-cols-2">
+          <div className="rounded-lg border border-borderSoft bg-cream px-4 py-4">
+            <p className="section-label mb-2">{t("Foto Profil")}</p>
+            <div className="flex items-center gap-4">
+              <UserAvatar
+                user={{ ...currentUser, ...values }}
+                size="md"
+                className="h-16 w-16 text-lg"
+              />
+              <div>
+                <p className="font-semibold text-textMain">
+                  {currentUser?.avatarUrl
+                    ? t("Foto profil aktif")
+                    : t("Menggunakan avatar inisial")}
+                </p>
+                <p className="mt-1 text-sm text-textSecondary">
+                  {t("Foto profil dipakai untuk identitas akunmu.")}
+                </p>
+              </div>
+            </div>
           </div>
+
+          {profileSummaryRows.map((item) => (
+            <div
+              key={item.label}
+              className="rounded-lg border border-borderSoft bg-cream px-4 py-4"
+            >
+              <p className="section-label mb-1">{item.label}</p>
+              <p className="font-semibold text-textMain">{item.value}</p>
+              {item.helper && (
+                <p className="mt-1.5 text-sm text-textSecondary">{item.helper}</p>
+              )}
+            </div>
+          ))}
+
+          <div className="rounded-lg border border-borderSoft bg-cream px-4 py-4 lg:col-span-2">
+            <p className="section-label mb-2">{t("Genre Favorit")}</p>
+            <div className="flex flex-wrap gap-2">
+              {displayedGenres.map((genre) => (
+                <span
+                  key={genre}
+                  className="inline-flex min-h-9 items-center rounded-lg border border-borderSoft bg-white px-3 py-1.5 text-sm font-semibold text-textSecondary"
+                >
+                  {t(genre)}
+                </span>
+              ))}
+            </div>
+          </div>
+
           <a
             href="#/settings"
             className="rounded-lg border border-borderSoft bg-white px-4 py-3 text-textMain transition-all hover:border-accent hover:bg-cream"

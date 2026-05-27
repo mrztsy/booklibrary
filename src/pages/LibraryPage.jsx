@@ -40,10 +40,10 @@ export default function LibraryPage({
   catalogPreferences = DEFAULT_CATALOG_PREFERENCES,
 }) {
   const { t } = useLanguage();
-  const ITEMS_PER_PAGE = 10;
   const preferredTopic = catalogPreferences.defaultTopic || "Semua";
   const preferredSort = catalogPreferences.sort || "default";
   const preferredViewMode = catalogPreferences.viewMode || "grid";
+  const preferredItemsPerPage = Number(catalogPreferences.itemsPerPage) || 10;
   const preferredAvailableOnly = Boolean(catalogPreferences.availableOnly);
   const [searchTerm, setSearchTerm] = useState("");
   const [authorTerm, setAuthorTerm] = useState("");
@@ -82,7 +82,13 @@ export default function LibraryPage({
     setSortValue(preferredSort);
     setViewMode(preferredViewMode);
     setCurrentPage(1);
-  }, [preferredTopic, preferredSort, preferredViewMode, preferredAvailableOnly]);
+  }, [
+    preferredTopic,
+    preferredSort,
+    preferredViewMode,
+    preferredItemsPerPage,
+    preferredAvailableOnly,
+  ]);
 
   useEffect(() => {
     let timerId;
@@ -124,9 +130,9 @@ export default function LibraryPage({
   const hasFilteredBooks = filteredBooks.length > 0;
 
   // Pagination logic
-  const totalPages = Math.ceil(filteredBooks.length / ITEMS_PER_PAGE);
-  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-  const endIndex = startIndex + ITEMS_PER_PAGE;
+  const totalPages = Math.ceil(filteredBooks.length / preferredItemsPerPage);
+  const startIndex = (currentPage - 1) * preferredItemsPerPage;
+  const endIndex = startIndex + preferredItemsPerPage;
   const paginatedBooks = filteredBooks.slice(startIndex, endIndex);
   const libraryStats = useMemo(() => {
     const genreCounts = filteredBooks.reduce((counts, book) => {

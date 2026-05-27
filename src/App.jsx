@@ -22,6 +22,7 @@ import {
 const FAVORITES_STORAGE_KEY = "aksarahub-favorite-books";
 const THEME_STORAGE_KEY = "aksarahub-theme";
 const AUTH_STORAGE_KEY = "aksarahub-user";
+const ACCOUNT_STORAGE_KEY = "aksarahub-account";
 
 const ROUTES = new Set([
   "home",
@@ -35,6 +36,22 @@ const ROUTES = new Set([
 ]);
 
 const getBookId = (book) => book?.key || book?.id || book?.workKey || book?.title;
+
+const normalizeStoredUser = (candidate = {}) => ({
+  role: "user",
+  language: "Indonesia",
+  preferredGenres: ["Fiction", "Science"],
+  toastNotifications: true,
+  password: "",
+  ...candidate,
+});
+
+const stripSessionFields = (user) => {
+  if (!user) return null;
+
+  const { loggedInAt, ...account } = user;
+  return account;
+};
 
 const getRouteFromHash = () => {
   const rawHash = window.location.hash.replace(/^#\/?/, "");
@@ -53,14 +70,7 @@ export default function App() {
     try {
       const savedUser = localStorage.getItem(AUTH_STORAGE_KEY);
       const parsedUser = savedUser ? JSON.parse(savedUser) : null;
-      return parsedUser
-        ? {
-            role: "user",
-            language: "Indonesia",
-            preferredGenres: ["Fiction", "Science"],
-            ...parsedUser,
-          }
-        : null;
+      return parsedUser ? normalizeStoredUser(parsedUser) : null;
     } catch {
       return null;
     }
@@ -98,7 +108,14 @@ export default function App() {
   const appLanguage = currentUser?.language === "English" ? "English" : "Indonesia";
   const t = (text) => translateText(text, appLanguage);
 
-  const showToast = (title, message = "", type = "success") => {
+  const showToast = (
+    title,
+    message = "",
+    type = "success",
+    options = {},
+  ) => {
+    if (currentUser?.toastNotifications === false && !options.force) return;
+
     const id = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
     setToasts((currentToasts) => [
       { id, title, message, type },
@@ -180,33 +197,171 @@ export default function App() {
     );
   };
 
-  const resetLocalData = () => {
+  const clearFavoriteBooks = () => {
     setFavoriteBooks([]);
-    setCatalogPreferences(DEFAULT_CATALOG_PREFERENCES);
     localStorage.removeItem(FAVORITES_STORAGE_KEY);
-    localStorage.removeItem(CATALOG_PREFERENCES_STORAGE_KEY);
     showToast(
-      t("Data lokal direset"),
-      t("Favorit dan preferensi katalog lokal sudah dibersihkan."),
+      t("Favorit dibersihkan"),
+      t("Semua buku favorit lokal sudah dihapus."),
       "info",
+      { force: true },
+    );
+  };
+
+  const resetSettings = () => {
+    const nextCatalogPreferences = DEFAULT_CATALOG_PREFERENCES;
+    setCatalogPreferences(nextCatalogPreferences);
+    localStorage.setItem(
+      CATALOG_PREFERENCES_STORAGE_KEY,
+      JSON.stringify(nextCatalogPreferences),
+    );
+    setIsDarkMode(false);
+    localStorage.setItem(THEME_STORAGE_KEY, "light");
+
+    setCurrentUser((current) => {
+      if (!current) return current;
+
+      const nextUser = {
+        ...current,
+        language: "Indonesia",
+        preferredGenres: ["Fiction", "Science"],
+        toastNotifications: true,
+      };
+      localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(nextUser));
+      return nextUser;
+    });
+
+    showToast(
+      translateText("Pengaturan direset", "Indonesia"),
+      translateText(
+        "Preferensi aplikasi dan katalog dikembalikan ke bawaan.",
+        "Indonesia",
+      ),
+      "info",
+      { force: true },
     );
   };
 
   const handleLogin = (user) => {
-    const nextUser = {
-      name: user.name,
-      email: user.email,
-      avatarUrl: user.avatarUrl || "",
+    if (currentUser) {
+      const nextUser = normalizeStoredUser({
+        ...currentUser,
+        ...user,
+        role: normalizeRole(user.role || currentUser.role),
+        password: user.password ?? currentUser.password ?? "",
+      });
+      setCurrentUser(nextUser);
+      localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(nextUser));
+      localStorage.setItem(
+        ACCOUNT_STORAGE_KEY,
+        JSON.stringify(stripSessionFields(nextUser)),
+      );
+      return { ok: true, user: nextUser };
+    }
+
+    const email = user.email?.trim() || "";
+    const password = user.password?.trim() || "";
+    const fallbackName = email.split("@")[0] || "Pembaca";
+    const submittedUser = normalizeStoredUser({
+      name: user.name?.trim() || fallbackName,
+      email,
+      avatarUrl: user.avatarUrl?.trim() || "",
       role: normalizeRole(user.role),
       language: user.language || "Indonesia",
       preferredGenres:
         user.preferredGenres?.length > 0
           ? user.preferredGenres
           : ["Fiction", "Science"],
+      toastNotifications: user.toastNotifications !== false,
+      password,
+    });
+
+    let storedAccount = null;
+    try {
+      const rawStoredAccount = localStorage.getItem(ACCOUNT_STORAGE_KEY);
+      storedAccount = rawStoredAccount
+        ? normalizeStoredUser(JSON.parse(rawStoredAccount))
+        : null;
+    } catch {
+      storedAccount = null;
+    }
+
+    const sameAccount =
+      storedAccount?.email?.trim().toLowerCase() === email.toLowerCase();
+
+    if (sameAccount) {
+      const savedPassword = storedAccount.password || "";
+      if (savedPassword && savedPassword !== password) {
+        return {
+          ok: false,
+          message: t("Password yang kamu masukkan belum cocok."),
+        };
+      }
+
+      const syncedAccount = normalizeStoredUser({
+        ...storedAccount,
+        password: password || savedPassword,
+      });
+      const nextUser = {
+        ...syncedAccount,
+        loggedInAt: new Date().toISOString(),
+      };
+      setCurrentUser(nextUser);
+      localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(nextUser));
+      localStorage.setItem(
+        ACCOUNT_STORAGE_KEY,
+        JSON.stringify(stripSessionFields(nextUser)),
+      );
+      return { ok: true, user: nextUser };
+    }
+
+    const nextUser = {
+      ...submittedUser,
       loggedInAt: new Date().toISOString(),
     };
     setCurrentUser(nextUser);
     localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(nextUser));
+    localStorage.setItem(
+      ACCOUNT_STORAGE_KEY,
+      JSON.stringify(stripSessionFields(nextUser)),
+    );
+    return { ok: true, user: nextUser };
+  };
+
+  const changePassword = ({ currentPassword = "", newPassword = "" }) => {
+    if (!currentUser) {
+      return {
+        ok: false,
+        message: t("Masuk dulu, ya"),
+      };
+    }
+
+    const savedPassword = currentUser.password || "";
+    if (savedPassword && currentPassword !== savedPassword) {
+      return {
+        ok: false,
+        message: t("Password saat ini belum cocok."),
+      };
+    }
+
+    if (newPassword.trim().length < 6) {
+      return {
+        ok: false,
+        message: t("Password baru minimal 6 karakter."),
+      };
+    }
+
+    const nextUser = {
+      ...currentUser,
+      password: newPassword.trim(),
+    };
+    setCurrentUser(nextUser);
+    localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(nextUser));
+    localStorage.setItem(
+      ACCOUNT_STORAGE_KEY,
+      JSON.stringify(stripSessionFields(nextUser)),
+    );
+    return { ok: true };
   };
 
   const handleLogout = () => {
@@ -372,6 +527,7 @@ export default function App() {
           currentUser ? (
             <ProfilePage
               currentUser={currentUser}
+              isDarkMode={isDarkMode}
               onLogin={handleLogin}
               onLogout={handleLogout}
               onToast={showToast}
@@ -396,7 +552,9 @@ export default function App() {
               onLogin={handleLogin}
               onSetTheme={updateTheme}
               onSaveCatalogPreferences={updateCatalogPreferences}
-              onResetLocalData={resetLocalData}
+              onClearFavorites={clearFavoriteBooks}
+              onResetSettings={resetSettings}
+              onChangePassword={changePassword}
               onToast={showToast}
             />
           ) : (
