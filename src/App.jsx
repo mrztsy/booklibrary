@@ -6,9 +6,11 @@ import LibraryPage from "./pages/LibraryPage";
 import FavoritesPage from "./pages/FavoritesPage";
 import AboutPage from "./pages/AboutPage";
 import LoginPage from "./pages/LoginPage";
+import ProfilePage from "./pages/ProfilePage";
 import ToastContainer from "./components/ToastContainer";
 import { FALLBACK_BOOKS } from "./data/books";
 import { fetchOpenLibraryBooks } from "./services/bookApi";
+import { normalizeRole } from "./utils/accountRoles";
 
 const FAVORITES_STORAGE_KEY = "aksarahub-favorite-books";
 const THEME_STORAGE_KEY = "aksarahub-theme";
@@ -21,6 +23,7 @@ const ROUTES = new Set([
   "tentang",
   "koleksi",
   "login",
+  "profile",
 ]);
 
 const getBookId = (book) => book?.key || book?.id || book?.workKey || book?.title;
@@ -138,7 +141,7 @@ export default function App() {
       name: user.name,
       email: user.email,
       avatarUrl: user.avatarUrl || "",
-      role: user.role === "admin" ? "admin" : "user",
+      role: normalizeRole(user.role),
       loggedInAt: new Date().toISOString(),
     };
     setCurrentUser(nextUser);
@@ -300,6 +303,24 @@ export default function App() {
         )}
 
         {activePage === "tentang" && <AboutPage />}
+        {activePage === "profile" && (
+          currentUser ? (
+            <ProfilePage
+              currentUser={currentUser}
+              onLogin={handleLogin}
+              onLogout={handleLogout}
+              onToast={showToast}
+            />
+          ) : (
+            <LoginPage
+              currentUser={currentUser}
+              onLogin={handleLogin}
+              onLogout={handleLogout}
+              onToast={showToast}
+              redirectTo="profile"
+            />
+          )
+        )}
         {activePage === "login" && (
           <LoginPage
             currentUser={currentUser}

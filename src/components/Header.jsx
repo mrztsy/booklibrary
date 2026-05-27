@@ -3,8 +3,7 @@ import Icon from "./Icon";
 import LogoutConfirmModal from "./LogoutConfirmModal";
 import UserAvatar from "./UserAvatar";
 import aksaraHubLogo from "../assets/AksaraHub Logo.png";
-
-const getRoleLabel = (role) => (role === "admin" ? "Admin" : "User");
+import { getRoleLabel } from "../utils/accountRoles";
 
 const getRoleBadgeClass = (role) =>
   role === "admin"
@@ -151,7 +150,7 @@ export default function Header({
                       </span>
                     </div>
                     <a
-                      href="#/login"
+                      href="#/profile"
                       className="btn-secondary mt-2 w-full px-3 py-2 text-sm"
                       onClick={handleNavClick}
                     >
@@ -282,7 +281,7 @@ export default function Header({
               </span>
             </div>
             <a
-              href="#/login"
+              href="#/profile"
               className="btn-secondary mt-1 w-full px-3 py-2 text-sm"
               onClick={handleNavClick}
             >

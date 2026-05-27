@@ -3,14 +3,11 @@ import Icon from "../components/Icon";
 import LogoutConfirmModal from "../components/LogoutConfirmModal";
 import UserAvatar from "../components/UserAvatar";
 import aksaraHubLogo from "../assets/AksaraHub Logo.png";
-
-const ROLE_OPTIONS = [
-  { value: "user", label: "User", helper: "Menyimpan favorit dan membaca katalog." },
-  { value: "admin", label: "Admin", helper: "Mengelola profil dengan akses admin demo." },
-];
-
-const getRoleLabel = (role) =>
-  ROLE_OPTIONS.find((option) => option.value === role)?.label || "User";
+import {
+  ROLE_OPTIONS,
+  getRoleLabel,
+  normalizeRole,
+} from "../utils/accountRoles";
 
 export default function LoginPage({
   currentUser,
@@ -61,7 +58,7 @@ export default function LoginPage({
     const password = values.password.trim();
     const name = values.name.trim() || email.split("@")[0] || "Pembaca";
     const avatarUrl = values.avatarUrl.trim();
-    const role = values.role === "admin" ? "admin" : "user";
+    const role = normalizeRole(values.role);
 
     if (!email || !password) {
       setMessage("Email dan password perlu diisi dulu, ya.");
@@ -74,32 +71,12 @@ export default function LoginPage({
       `${name}, kamu masuk sebagai ${getRoleLabel(role)}.`,
       "success",
     );
-    window.location.hash = redirectTo === "favorit" ? "#/favorit" : "#/";
-  };
-
-  const handleProfileSubmit = (event) => {
-    event.preventDefault();
-    const name = values.name.trim() || currentUser?.name || "Pembaca";
-    const email = values.email.trim() || currentUser?.email || "";
-    const avatarUrl = values.avatarUrl.trim();
-    const role = values.role === "admin" ? "admin" : "user";
-
-    if (!email) {
-      setMessage("Email profil perlu diisi dulu, ya.");
-      return;
-    }
-
-    onLogin?.({ name, email, avatarUrl, role });
-    onToast?.(
-      "Profil tersimpan",
-      `Profilmu sekarang memakai role ${getRoleLabel(role)}.`,
-      "success",
-    );
-  };
-
-  const removeAvatar = () => {
-    handleChange("avatarUrl", "");
-    onToast?.("Foto profil dilepas", "Avatar inisial akan dipakai lagi.", "info");
+    window.location.hash =
+      redirectTo === "favorit"
+        ? "#/favorit"
+        : redirectTo === "profile"
+          ? "#/profile"
+          : "#/";
   };
 
   const handleConfirmLogout = () => {
@@ -122,120 +99,37 @@ export default function LoginPage({
           </div>
           <p className="section-label mb-3">Akun AksaraHub</p>
           <h1 className="font-playfair text-4xl font-extrabold leading-tight text-textMain lg:text-5xl">
-            Masuk untuk menyimpan dan mengelola rak favorit.
+            Masuk untuk melanjutkan perjalanan membaca.
           </h1>
           <p className="mt-4 max-w-xl text-base leading-relaxed text-textSecondary">
-            Login ini berjalan lokal di browser, cocok untuk demo aplikasi tanpa
-            backend. Data akun tidak dikirim ke server.
+            Simpan buku favorit, kelola profil pembaca, dan jelajahi katalog
+            dengan pengalaman yang lebih personal.
           </p>
         </div>
 
         <div className="rounded-lg border border-borderSoft bg-white p-6 shadow-book">
           {currentUser ? (
-            <form onSubmit={handleProfileSubmit} noValidate>
-              <p className="section-label mb-2">Edit Profil</p>
+            <div>
+              <p className="section-label mb-2">Akun Aktif</p>
               <div className="flex items-center gap-3">
-                <UserAvatar
-                  user={{ ...currentUser, name: values.name, avatarUrl: values.avatarUrl }}
-                  size="lg"
-                />
+                <UserAvatar user={currentUser} size="lg" />
                 <div className="min-w-0">
                   <h2 className="font-playfair text-2xl font-bold text-textMain">
-                    {values.name || currentUser.name}
+                    {currentUser.name}
                   </h2>
                   <p className="mt-1 truncate text-sm text-textSecondary">
-                    {values.email || currentUser.email}
+                    {currentUser.email}
                   </p>
                   <span className="mt-2 inline-flex rounded-full bg-cream px-2.5 py-1 text-xs font-bold text-accentHover">
-                    {getRoleLabel(values.role || currentUser.role)}
+                    {getRoleLabel(currentUser.role)}
                   </span>
                 </div>
               </div>
 
-              <div className="mt-6 space-y-4">
-                <div>
-                  <label htmlFor="profile-name" className="section-label mb-1.5 block">
-                    Nama Tampilan
-                  </label>
-                  <input
-                    id="profile-name"
-                    type="text"
-                    autoComplete="name"
-                    className="input-field"
-                    placeholder="Nama yang ingin ditampilkan"
-                    value={values.name}
-                    onChange={(event) => handleChange("name", event.target.value)}
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor="profile-avatar" className="section-label mb-1.5 block">
-                    Foto Profil
-                  </label>
-                  <input
-                    id="profile-avatar"
-                    type="url"
-                    inputMode="url"
-                    className="input-field"
-                    placeholder="Tempel URL foto profil"
-                    value={values.avatarUrl}
-                    onChange={(event) => handleChange("avatarUrl", event.target.value)}
-                  />
-                  <p className="mt-1.5 text-xs text-textSecondary">
-                    Kosongkan untuk memakai avatar inisial.
-                  </p>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    className="mt-3 block w-full text-sm text-textSecondary file:mr-3 file:rounded-lg file:border-0 file:bg-cream file:px-3 file:py-2 file:text-sm file:font-semibold file:text-primary hover:file:bg-borderSoft/70"
-                    onChange={handleAvatarFileChange}
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor="profile-role" className="section-label mb-1.5 block">
-                    Role Akun
-                  </label>
-                  <select
-                    id="profile-role"
-                    className="select-field"
-                    value={values.role}
-                    onChange={(event) => handleChange("role", event.target.value)}
-                  >
-                    {ROLE_OPTIONS.map((role) => (
-                      <option key={role.value} value={role.value}>
-                        {role.label}
-                      </option>
-                    ))}
-                  </select>
-                  <p className="mt-1.5 text-xs text-textSecondary">
-                    {ROLE_OPTIONS.find((role) => role.value === values.role)?.helper}
-                  </p>
-                </div>
-              </div>
-
-              {message && (
-                <p className="mt-3 text-sm font-semibold text-accentHover">
-                  {message}
-                </p>
-              )}
-
               <div className="mt-6 flex flex-wrap gap-3">
-                <button type="submit" className="btn-primary">
-                  Simpan Profil
-                </button>
-                {values.avatarUrl && (
-                  <button
-                    type="button"
-                    className="btn-secondary"
-                    onClick={removeAvatar}
-                  >
-                    Hapus Foto
-                  </button>
-                )}
-                <a href="#/" className="btn-primary">
-                  <Icon name="home" className="h-4 w-4" />
-                  Ke Beranda
+                <a href="#/profile" className="btn-primary">
+                  <Icon name="users" className="h-4 w-4" />
+                  Edit Profil
                 </a>
                 <button
                   type="button"
@@ -245,7 +139,7 @@ export default function LoginPage({
                   Keluar
                 </button>
               </div>
-            </form>
+            </div>
           ) : (
             <form onSubmit={handleSubmit} noValidate>
               <div className="mb-5">
@@ -321,7 +215,7 @@ export default function LoginPage({
 
                 <div>
                   <label htmlFor="login-role" className="section-label mb-1.5 block">
-                    Role Akun
+                    Peran Akun
                   </label>
                   <select
                     id="login-role"
@@ -352,7 +246,7 @@ export default function LoginPage({
                     type="password"
                     autoComplete="current-password"
                     className="input-field"
-                    placeholder="Minimal isi untuk demo"
+                    placeholder="Masukkan password"
                     value={values.password}
                     onChange={(event) =>
                       handleChange("password", event.target.value)
